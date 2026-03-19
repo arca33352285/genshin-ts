@@ -266,6 +266,7 @@ export function irToGia(ir: IRDocument, opts: IrToGiaOptions): Uint8Array {
     if (nodeType !== 'get_node_graph_variable') return
     const nameArg = irNode.args?.[0]
     if (!nameArg || nameArg.type !== 'str') return
+    if (giaNode.pins.some((pin) => pin.kind === 3 && pin.index === 0)) return
     const p = new Pin(giaNode.ConcreteId!, 3, 0)
     p.setType({ t: 'b', b: 'Str' })
     p.setVal(nameArg.value)
