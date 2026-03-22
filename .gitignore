@@ -9,3 +9,4 @@ __pycache__/
 *.pyc
 examples/test.json
 *.tgz
+/.vs
