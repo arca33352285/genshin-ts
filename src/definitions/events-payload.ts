@@ -1302,7 +1302,7 @@ export type ServerEventPayloads = {
      * 信号来源实体: 使用【发送信号】节点发送该信号的实体
      */
     signalSourceEntity: entity
-  }
+  } & Record<string, any>
   /**
    * This event is triggered on the Player's Node Graph when the Player completes the Deck Selector, or when it is forcibly closed due to time constraints; The output parameters report the Deck Selector's result and the corresponding reason
    *

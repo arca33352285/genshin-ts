@@ -6806,14 +6806,46 @@ export class ServerExecutionFlowFunctions {
    * @param signalName Only literal string is supported
    *
    * 信号名（仅支持字面量字符串）
+   *
+   * @param signalArgs Optional array of custom signal arguments. Each entry has `name`, `type`, and `value`. The argument names, types, and order must match the signal definition registered in the editor's Signal Manager. Array values can be passed as raw JS arrays (auto-wrapped) or using the `list()` helper. Supported types: entity, guid, int, bool, float, str, vec3, config_id, prefab_id, and their `_list` variants (18 types total)
+   *
+   * 신호 커스텀 인자 배열 (선택). 각 항목은 `name`, `type`, `value`로 구성. 인자의 이름, 타입, 순서는 에디터의 신호 관리자에 등록된 신호 정의와 반드시 일치해야 함. 배열 값은 raw JS 배열(자동 래핑) 또는 `list()` 헬퍼로 전달 가능. 지원 타입: entity, guid, int, bool, float, str, vec3, config_id, prefab_id 및 `_list` 변형 (총 18종)
+   *
+   * @example
+   * ```ts
+   * f.sendSignal('DamageSignal', [
+   *   { name: 'target', type: 'entity', value: evt.eventSourceEntity },
+   *   { name: 'amount', type: 'int', value: 100n },
+   *   { name: 'ids', type: 'int_list', value: [1n, 2n, 3n] }
+   * ])
+   * ```
    */
-  sendSignal(signalName: StrValue): void {
+  sendSignal(
+    signalName: StrValue,
+    signalArgs?: Array<{ name: string; type: string; value: any }>
+  ): void {
     const signalNameObj = ensureLiteralStr(signalName, 'signalName')
+    const args: value[] = [signalNameObj]
+    let signalParams: Array<{ name: string; type: string }> | undefined
+    if (signalArgs && signalArgs.length > 0) {
+      signalParams = signalArgs.map((arg) => {
+        let v = arg.value
+        // Auto-wrap raw JS arrays into assembly_list node (conn) for _list types
+        if (arg.type.endsWith('_list') && Array.isArray(v)) {
+          const baseType = arg.type.slice(0, -5)
+          v = this.assemblyList(v, baseType as any)
+        }
+        const parsed = parseValue(v, arg.type as any)
+        args.push(parsed)
+        return { name: arg.name, type: arg.type }
+      })
+    }
     this.registry.registerNode({
       id: 0,
       type: 'exec',
       nodeType: 'send_signal',
-      args: [signalNameObj]
+      args,
+      ...(signalParams ? { signalParams } : {})
     })
   }
 

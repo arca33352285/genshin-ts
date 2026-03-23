@@ -25,12 +25,20 @@ import { getRuntimeOptions } from './runtime_config.js'
 import { installScopedServerGlobals, installServerGlobals } from './server_globals.js'
 import {
   bool,
+  configId,
   dict,
   ensureLiteralStr,
+  entity,
   enumeration,
+  float,
+  guid,
+  int,
   list,
   localVariable,
+  prefabId,
+  str,
   value,
+  vec3,
   type DictValueType
 } from './value.js'
 import {
@@ -178,13 +186,37 @@ export type ServerGraphApi<
    * GSTS Note: You still need to register the signal in the signal manager in the editor; Using signal distribution can avoid some large loop triggering load limits, which can be used for performance optimization
    *
    * GSTS 注: 你仍然需要在编辑器内的信号管理器注册信号; 使用信号分发能够避免一些大循环触发负载限制, 可用于性能优化
+   *
+   * @param signalName The signal name to monitor (literal string)
+   *
+   * 监听할 신호 이름 (리터럴 문자열)
+   *
+   * @param handler Event handler. `evt` contains the 3 fixed outputs (eventSourceEntity, eventSourceGuid, signalSourceEntity) plus any custom signal arguments accessible by name
+   *
+   * 이벤트 핸들러. `evt`에는 고정 출력 3개(eventSourceEntity, eventSourceGuid, signalSourceEntity)와 커스텀 신호 인자가 이름으로 포함됨
+   *
+   * @param signalArgs Optional array of custom signal argument definitions. Each entry has `name` and `type`. The names, types, and order must match the signal definition registered in the editor's Signal Manager. Custom arguments are accessible via `evt.argName` in the handler (starting from output index 3)
+   *
+   * 신호 커스텀 인자 정의 배열 (선택). 각 항목은 `name`과 `type`으로 구성. 이름, 타입, 순서는 에디터의 신호 관리자에 등록된 신호 정의와 반드시 일치해야 함. 커스텀 인자는 핸들러에서 `evt.인자이름`으로 접근 가능 (출력 인덱스 3부터)
+   *
+   * @example
+   * ```ts
+   * .onSignal('DamageSignal', (evt, f) => {
+   *   const target = evt.targetEntity  // custom arg
+   *   const amount = evt.damageAmount  // custom arg
+   * }, [
+   *   { name: 'targetEntity', type: 'entity' },
+   *   { name: 'damageAmount', type: 'int' }
+   * ])
+   * ```
    */
   onSignal(
     signalName: string,
     handler: (
-      evt: ServerEventPayloadsByMode<Mode>['monitorSignal'],
+      evt: ServerEventPayloadsByMode<Mode>['monitorSignal'] & Record<string, any>,
       f: ServerExecutionFlowFunctionsForLang<Vars, Lang, Mode>
-    ) => void
+    ) => void,
+    signalArgs?: Array<{ name: string; type: string }>
   ): ServerGraphApi<Vars, Lang, Mode>
 }
 
@@ -564,6 +596,48 @@ export class MetaCallRegistry {
       }
     })
 
+    // Signal arguments: add dynamic output pins for monitor_signal custom args
+    if (
+      camelToSnake(eventName) === 'monitor_signal' &&
+      (inputArgs as value[] & { _signalArgs?: Array<{ name: string; type: string }> })._signalArgs
+    ) {
+      const signalTypeClassMap: Record<string, new () => value> = {
+        entity,
+        guid,
+        int,
+        bool,
+        float,
+        str,
+        vec3,
+        config_id: configId,
+        prefab_id: prefabId
+      }
+      const _signalArgs = (inputArgs as value[] & { _signalArgs?: Array<{ name: string; type: string }> })
+        ._signalArgs!
+      for (const argDef of _signalArgs) {
+        const isArray = argDef.type.endsWith('_list')
+        const baseTypeName = isArray ? argDef.type.slice(0, -5) : argDef.type
+        if (isArray) {
+          const l = new list(baseTypeName as any)
+          l.markPin(eventNode, argDef.name, eventArgs.length)
+          eventArgs.push(l)
+          // @ts-ignore dynamic signal arg
+          eventObj[argDef.name] = l
+        } else {
+          const typeBase = signalTypeClassMap[baseTypeName]
+          const v = new typeBase()
+          v.markPin(eventNode, argDef.name, eventArgs.length)
+          eventArgs.push(v)
+          // @ts-ignore dynamic signal arg
+          eventObj[argDef.name] = v
+        }
+      }
+      eventNode.signalParams = _signalArgs.map((a) => ({
+        name: a.name,
+        type: a.type
+      }))
+    }
+
     this.flows.push({
       eventNode,
       eventArgs,
@@ -849,12 +923,17 @@ function server<Vars extends VariablesDefinition = VariablesDefinition>(
     onSignal(
       signalName: string,
       handler: (
-        evt: ServerEventPayloadsByMode<ResolvedMode>['monitorSignal'],
+        evt: ServerEventPayloadsByMode<ResolvedMode>['monitorSignal'] & Record<string, any>,
         f: ServerExecutionFlowFunctionsForLang<Vars, ResolvedLang, ResolvedMode>
-      ) => void
+      ) => void,
+      signalArgs?: Array<{ name: string; type: string }>
     ) {
       const signalNameObj = ensureLiteralStr(signalName, 'signalName')
-      runHandler('monitorSignal', handler, [signalNameObj])
+      const inputArgs: value[] & { _signalArgs?: Array<{ name: string; type: string }> } = [signalNameObj]
+      if (signalArgs && signalArgs.length > 0) {
+        inputArgs._signalArgs = signalArgs
+      }
+      runHandler('monitorSignal', handler, inputArgs)
       return this
     }
   }

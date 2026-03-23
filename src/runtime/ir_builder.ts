@@ -157,8 +157,16 @@ const buildBreakLoopNode: NodeBuilder = (record, next) => {
   return node
 }
 
+const buildSignalNode: NodeBuilder = (record, next) => {
+  const node = buildDefaultNode(record, next)
+  if (record.signalParams) node.signalParams = record.signalParams
+  return node
+}
+
 const NODE_BUILDERS: Record<string, NodeBuilder> = {
-  break_loop: buildBreakLoopNode
+  break_loop: buildBreakLoopNode,
+  send_signal: buildSignalNode,
+  monitor_signal: buildSignalNode
 }
 
 function buildNodeFromRecord(record: MetaCallRecord, next?: NextConnection[]): ServerNode {

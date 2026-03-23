@@ -100,6 +100,10 @@ export function setLiteralArgValue(
     return
   }
   if (argType === 'entity' && value === null) {
+    if (nodeType === 'send_signal') {
+      const pin = ensureInputPin(giaNode, pinIndex)
+      pin.setType({ t: 'b', b: 'Ety' })
+    }
     return
   }
 
@@ -133,6 +137,23 @@ export function setLiteralArgValue(
   }
 
   giaNode.setVal(pinIndex, value as BasicValue)
+}
+
+export function ensureInputPinWithType(giaNode: GiaNode, pinIndex: number, argType: string) {
+  const pin = ensureInputPin(giaNode, pinIndex)
+  if (argType.endsWith('_list')) {
+    const listBase = argType.slice(0, -5)
+    const itemBase = toVendorBaseTag(listBase)
+    if (itemBase) {
+      pin.setType({ t: 'l', i: { t: 'b', b: itemBase } })
+    }
+  } else {
+    const base = toVendorBaseTag(argType)
+    if (base) {
+      pin.setType({ t: 'b', b: base })
+    }
+  }
+  return pin
 }
 
 export function setClientExecLiteralArgValue(

@@ -189,7 +189,7 @@ declare global {
    *
    * 信号名（仅支持字面量字符串）
    */
-  function send(signalName: StrValue): void
+  function send(signalName: StrValue, args?: Record<string, any>): void
 
   /**
    * Returns the Player Entity based on Player ID, where the ID indicates which Player they are

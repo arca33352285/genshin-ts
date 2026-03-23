@@ -399,6 +399,30 @@ export const SPECIAL_NODE_IDS: Record<string, number> = {
   modify_structure: 300004
 }
 
+export const SIGNAL_ARG_TYPE_MAP: Record<
+  string,
+  { typeId: number; dataGroup: number; elementTypeId?: number; elementDataGroup?: number }
+> = {
+  entity: { typeId: 1, dataGroup: 0 },
+  guid: { typeId: 2, dataGroup: 1 },
+  int: { typeId: 3, dataGroup: 2 },
+  bool: { typeId: 4, dataGroup: 6 },
+  float: { typeId: 5, dataGroup: 4 },
+  str: { typeId: 6, dataGroup: 5 },
+  vec3: { typeId: 12, dataGroup: 7 },
+  config_id: { typeId: 20, dataGroup: 1 },
+  prefab_id: { typeId: 21, dataGroup: 1 },
+  guid_list: { typeId: 7, dataGroup: 10002, elementTypeId: 2, elementDataGroup: 1 },
+  int_list: { typeId: 8, dataGroup: 10002, elementTypeId: 3, elementDataGroup: 2 },
+  bool_list: { typeId: 9, dataGroup: 10002, elementTypeId: 4, elementDataGroup: 6 },
+  float_list: { typeId: 10, dataGroup: 10002, elementTypeId: 5, elementDataGroup: 4 },
+  str_list: { typeId: 11, dataGroup: 10002, elementTypeId: 6, elementDataGroup: 5 },
+  entity_list: { typeId: 13, dataGroup: 10002, elementTypeId: 1, elementDataGroup: 0 },
+  vec3_list: { typeId: 15, dataGroup: 10002, elementTypeId: 12, elementDataGroup: 7 },
+  config_id_list: { typeId: 22, dataGroup: 10002, elementTypeId: 20, elementDataGroup: 1 },
+  prefab_id_list: { typeId: 23, dataGroup: 10002, elementTypeId: 21, elementDataGroup: 1 }
+}
+
 export const SPECIAL_NODE_MAPPINGS: Record<string, string> = {
   player_plays_one_shot2d_sound_effect: 'player_plays_one_shot_2d_sound_effect',
   query_timestamp_utc0: 'query_timestamp_utc_0',

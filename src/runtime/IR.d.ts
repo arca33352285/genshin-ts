@@ -68,6 +68,7 @@ export interface Node {
   position?: [number, number]
   args?: Argument[]
   next?: NextConnection[]
+  signalParams?: Array<{ name: string; type: string }>
 }
 
 export type ServerNode = SimplifyDeep<

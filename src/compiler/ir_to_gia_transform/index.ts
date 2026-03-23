@@ -15,7 +15,7 @@ import { Graph, Node, NodeIdFor, Pin, wrap_gia, type Root as GiaRoot } from '../
 import { buildExecutionGraph, layoutPositions } from './layout.js'
 import { buildConnTypeIndex, resolveGiaNodeId } from './node_id.js'
 import { optimizeTimerDispatchAggregate } from './optimize_timer_dispatch.js'
-import { setClientExecLiteralArgValue, setEnumArgValue, setLiteralArgValue } from './pins.js'
+import { ensureInputPinWithType, setClientExecLiteralArgValue, setEnumArgValue, setLiteralArgValue } from './pins.js'
 import { expandListLiterals } from './preprocess.js'
 import type { IRNode, NodeId } from './types.js'
 
@@ -331,6 +331,21 @@ export function irToGia(ir: IRDocument, opts: IrToGiaOptions): Uint8Array {
       if (nameArg) {
         setClientExecLiteralArgValue(giaNode, 0, 0, nodeType, nameArg.type, nameArg.value)
       }
+      // Signal arguments: generate input pins for send_signal args
+      if (nodeType === 'send_signal' && irNode.signalParams) {
+        const args = irNode.args ?? []
+        for (let i = 0; i < irNode.signalParams.length; i++) {
+          const param = irNode.signalParams[i]
+          const arg = args[i + 1]
+          if (!arg) continue
+          if (isValueArg(arg)) {
+            setLiteralArgValue(giaNode, i, i, nodeType, arg.type, arg.value)
+          } else {
+            // conn type: create empty InParam pin with type info for Pin.encode() matching
+            ensureInputPinWithType(giaNode, i, param.type)
+          }
+        }
+      }
       return true
     }
 
@@ -404,6 +419,8 @@ export function irToGia(ir: IRDocument, opts: IrToGiaOptions): Uint8Array {
       case 'create_prefab':
       case 'create_prefab_group':
         return idx >= 4 ? idx + 1 : idx // hole at 4
+      case 'send_signal':
+        return idx - 1 // IR toIndex=1 (first arg at args[1]) → InParam index=0 (separate namespace from ClientExec)
       default:
         return idx
     }

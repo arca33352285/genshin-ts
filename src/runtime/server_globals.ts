@@ -553,9 +553,9 @@ function makeFactories(): ServerGlobalFactories {
       ensureServerCtx('print')
       gsts.f.printString(string)
     },
-    send: (signalName: StrValue) => {
+    send: (signalName: StrValue, args?: Record<string, any>) => {
       ensureServerCtx('send')
-      gsts.f.sendSignal(signalName)
+      gsts.f.sendSignal(signalName, args as any)
     },
     player: (playerId: IntValue) => {
       ensureServerCtx('player')

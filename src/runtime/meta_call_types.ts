@@ -7,6 +7,7 @@ export interface MetaCallRecord {
   type: MetaCallRecordType
   nodeType: string
   args: value[]
+  signalParams?: Array<{ name: string; type: string }>
 }
 
 export type MetaCallRecordRef = Readonly<MetaCallRecord>

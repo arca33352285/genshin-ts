@@ -41,7 +41,7 @@ function decodeUtf8(buf: Uint8Array): string | undefined {
 function readFieldMessages(buf: Uint8Array, targetField: number): Uint8Array[] {
   const list: Uint8Array[] = []
   let offset = 0
-  while (offset < buf.length) {
+  while (offset >= 0 && offset < buf.length) {
     const key = readVarint(buf, offset)
     if (!key) break
     offset = key.next
@@ -51,9 +51,10 @@ function readFieldMessages(buf: Uint8Array, targetField: number): Uint8Array[] {
       const lenVar = readVarint(buf, offset)
       if (!lenVar) break
       const len = lenVar.value
+      if (len < 0) break
       const dataStart = lenVar.next
       const dataEnd = dataStart + len
-      if (dataEnd > buf.length) break
+      if (dataEnd > buf.length || dataEnd < 0) break
       const data = buf.subarray(dataStart, dataEnd)
       if (field === targetField) list.push(data)
       offset = dataEnd
@@ -80,7 +81,7 @@ function readFieldMessages(buf: Uint8Array, targetField: number): Uint8Array[] {
 
 function readFieldBytes(buf: Uint8Array, targetField: number): Uint8Array | undefined {
   let offset = 0
-  while (offset < buf.length) {
+  while (offset >= 0 && offset < buf.length) {
     const key = readVarint(buf, offset)
     if (!key) break
     offset = key.next
@@ -90,9 +91,10 @@ function readFieldBytes(buf: Uint8Array, targetField: number): Uint8Array | unde
       const lenVar = readVarint(buf, offset)
       if (!lenVar) break
       const len = lenVar.value
+      if (len < 0) break
       const dataStart = lenVar.next
       const dataEnd = dataStart + len
-      if (dataEnd > buf.length) break
+      if (dataEnd > buf.length || dataEnd < 0) break
       const data = buf.subarray(dataStart, dataEnd)
       if (field === targetField) return data
       offset = dataEnd
@@ -120,7 +122,7 @@ function readFieldBytes(buf: Uint8Array, targetField: number): Uint8Array | unde
 function parseNodeGraphId(buf: Uint8Array): NodeGraphIdInfo {
   const out: NodeGraphIdInfo = {}
   let offset = 0
-  while (offset < buf.length) {
+  while (offset >= 0 && offset < buf.length) {
     const key = readVarint(buf, offset)
     if (!key) break
     offset = key.next
@@ -139,7 +141,9 @@ function parseNodeGraphId(buf: Uint8Array): NodeGraphIdInfo {
     if (wire === 2) {
       const lenVar = readVarint(buf, offset)
       if (!lenVar) break
-      offset = lenVar.next + lenVar.value
+      const newOffset = lenVar.next + lenVar.value
+      if (newOffset < 0) break
+      offset = newOffset
       continue
     }
     if (wire === 1) {
@@ -172,9 +176,19 @@ function parseSignalName(buf: Uint8Array): string | undefined {
 }
 
 function extractSignalNameFromNode(node: {
-  pins?: Array<{ value?: unknown }>
+  pins?: Array<{ value?: unknown; i1?: { kind?: number }; i2?: { kind?: number } }>
 }): string | undefined {
   const pins = node.pins ?? []
+  const PIN_KIND_CLIENT_EXEC = 5
+  // Priority: search ClientExec pins (kind=5) first to avoid matching InParam string values
+  for (const pin of pins) {
+    const kind = pin?.i1?.kind ?? pin?.i2?.kind
+    if (kind === PIN_KIND_CLIENT_EXEC) {
+      const s = extractStringFromVarBase(pin?.value as Record<string, unknown> | undefined)
+      if (s) return s
+    }
+  }
+  // Fallback: search all pins
   for (const pin of pins) {
     const s = extractStringFromVarBase(pin?.value as Record<string, unknown> | undefined)
     if (s) return s
