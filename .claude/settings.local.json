@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git:*)",
+      "Bash(npm run:*)",
+      "Bash(grep -E \"\\\\.\\(ts|js|md\\)$\")",
+      "Bash(wc:*)",
+      "Bash(grep -r \"export\\\\|sendSignal\\\\|onSignal\" /d/MyDrive/Repos/MiliastraWonderland/genshin-ts/tests/generated/group_*.ts)",
+      "Bash(sed 's/[\\(\\)[:space:]]//g')",
+      "Bash(grep -v \"^$\")",
+      "Bash(awk '/^export class ServerExecutionFlowFunctions/,/^}/' /d/MyDrive/Repos/MiliastraWonderland/genshin-ts/src/definitions/nodes.ts)",
+      "Bash(ls -la /d/MyDrive/Repos/MiliastraWonderland/genshin-ts/src/compiler/*/)",
+      "Bash(grep -c \"^\\\\s\\\\*/\\\\s*$\\\\|^\\\\s\\\\*/$\" src/definitions/nodes.ts)",
+      "Bash(mkdir -p \"C:/Users/Rterg/.claude/skill-factory/localize-jsdoc-ko/workspace\")",
+      "Bash(cp \"D:/MyDrive/Repos/MiliastraWonderland/genshin-ts/src/definitions/nodes.ts\" \"C:/Users/Rterg/.claude/skill-factory/localize-jsdoc-ko/workspace/nodes.ts\")",
+      "Bash(cp \"D:/MyDrive/Repos/MiliastraWonderland/genshin-ts/.claude/skills/localize-jsdoc-ko/SKILL.md\" \"C:/Users/Rterg/.claude/skill-factory/localize-jsdoc-ko/draft-skill.md\")",
+      "Skill(localize-jsdoc-ko)",
+      "Bash(awk 'NR>=1700 && NR<=2699' \"D:/MyDrive/Repos/MiliastraWonderland/genshin-ts/src/definitions/nodes.ts\")",
+      "Bash(python3:*)",
+      "Bash(node:*)",
+      "Bash(npx tsc:*)"
+    ]
+  }
+}
