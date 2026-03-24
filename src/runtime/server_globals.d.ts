@@ -27,74 +27,44 @@ import type {
 
 declare global {
   /**
-   * Returns the original value as a JavaScript expression; the compiler does not perform any processing.
-   * Use this to keep JS semantics or bypass node-graph translation.
-   *
-   * 返回 JS 原生表达式结果，编译器不做任何处理。
-   * 用于保留 JS 语义或绕过节点图转换。
+   * JS 표현식 결과를 그대로 반환한다. 컴파일러가 아무런 처리도 하지 않는다.
+   * JS 시맨틱을 유지하거나 노드 그래프 변환을 우회할 때 사용한다.
    */
   function raw<T>(value: T): T
 
   /**
-   * Convert to bool for node-graph conditions.
-   *
-   * 转换为 bool，常用于条件判断。
+   * 노드 그래프 조건 판단을 위해 bool로 변환한다.
    */
   function bool(value: BoolValue | IntValue): boolean
   /**
-   * Convert to int (bigint) for integer-only nodes.
-   * Also usable as an explicit integer literal helper instead of bigint syntax (e.g. `int(123)`), though bigint is still recommended.
-   *
-   * 转换为 int（bigint），用于需要整数的节点。
-   * 也可作为整数字面量的显式声明方式替代 bigint 写法（如 `int(123)`），但通常仍推荐使用 bigint。
+   * 정수 전용 노드를 위해 int(bigint)로 변환한다.
+   * bigint 리터럴 대신 명시적 정수 선언 방식으로도 사용 가능하다(예: `int(123)`). 단, 일반적으로는 bigint 사용을 권장한다.
    */
   function int(value: IntValue | BoolValue | FloatValue): bigint
   /**
-   * genshin-ts uses `bigint` as runtime integer type, but TypeScript array indexing expects `number`.
-   * Wrap bigint/int-like indexes with `idx(...)` to pass TS type-checking:
+   * genshin-ts는 런타임 정수 타입으로 `bigint`를 사용하지만, TypeScript 배열 인덱싱은 `number`를 요구한다.
+   * bigint/int 형 인덱스는 `idx(...)`로 감싸서 TS 타입 검사를 통과시킨다:
    * `arr[idx(i)]`.
    *
-   * `idx(...)` has no runtime effect; it is only used to pass type-checking.
-   * You can apply this automatically via ESLint fix (`gsts/bigint-index-in-server`).
+   * `idx(...)`는 런타임에 영향을 주지 않으며, 타입 검사 통과 용도로만 사용된다.
+   * ESLint 규칙(`gsts/bigint-index-in-server`)으로 자동 수정도 가능하다.
    *
-   * If this appears as a warning (not an error), the TypeScript plugin is usually active and
-   * bigint is already treated as a valid index type in this scope. In that case, you may disable
-   * `gsts/bigint-index-in-server`.
+   * 경고(오류 아님)로 표시된다면 TypeScript 플러그인이 활성화되어 있고
+   * 현재 스코프에서 bigint가 이미 유효한 인덱스 타입으로 처리되는 것이다. 이 경우 `gsts/bigint-index-in-server`를 비활성화해도 된다.
    *
-   * If VSCode/Cursor still shows TS2538 (bigint cannot be used as an index type), switch to
-   * workspace TypeScript:
-   * - `typescript.tsdk = "node_modules/typescript/lib"`
+   * VSCode/Cursor에서 여전히 TS2538(bigint는 인덱스 타입으로 사용 불가)이 표시된다면 워크스페이스 TypeScript로 전환한다:
+   * - `typescript.tsdk = “node_modules/typescript/lib”`
    * - `typescript.enablePromptUseWorkspaceTsdk = true`
-   * - Select "Use Workspace Version"
-   * (genshin-ts project template already includes these settings.)
-   *
-   * genshin-ts 使用 `bigint` 表示运行时整数类型，但 TypeScript 数组下标要求 `number`。
-   * 对 bigint/int 风格下标请使用 `idx(...)` 包裹后再索引：
-   * `arr[idx(i)]`。
-   *
-   * `idx(...)` 不产生运行时作用，仅用于通过类型检查。
-   * 你可以通过 ESLint 规则（`gsts/bigint-index-in-server`）自动修复直接应用。
-   *
-   * 如果这里显示的是“警告”而不是“错误”，通常说明 TypeScript 插件已生效，
-   * 当前作用域已将 bigint 视作可索引类型；此时可按需禁用 `gsts/bigint-index-in-server`。
-   *
-   * 如果 VSCode/Cursor 仍显示 TS2538（bigint 不能作为索引类型），请切换到工作区 TypeScript：
-   * - `typescript.tsdk = "node_modules/typescript/lib"`
-   * - `typescript.enablePromptUseWorkspaceTsdk = true`
-   * - 选择“使用工作区 TypeScript 版本”
-   * （genshin-ts 项目模板已经自带这些设置。）
+   * - “Use Workspace Version” 선택
+   * (genshin-ts 프로젝트 템플릿에는 이 설정이 이미 포함되어 있다.)
    */
   function idx(value: IntValue): number
   /**
-   * Convert to float (number) for float nodes.
-   *
-   * 转换为 float（number），用于需要浮点数的节点。
+   * 부동소수점 노드를 위해 float(number)로 변환한다.
    */
   function float(value: FloatValue | IntValue): number
   /**
-   * Convert to string; useful for logs
-   *
-   * 转为字符串，常用于日志
+   * 문자열로 변환한다. 로그 출력 시 주로 사용한다.
    */
   function str(
     value:
@@ -108,312 +78,217 @@ declare global {
       | Vec3Value
   ): string
   /**
-   * Create a vec3 literal from `[x, y, z]` or an existing vec3.
-   * Usually you can pass `[x, y, z]` directly and let the compiler infer it.
-   * Use this helper mainly in list contexts to disambiguate and force vec3 type.
-   *
-   * 通过 `[x, y, z]` 或已有 vec3 创建 vec3 字面量。
-   * 大多数情况下直接传 `[x, y, z]` 即可自动推断。
-   * 该辅助函数主要用于列表场景消除歧义，确保类型为 vec3。
+   * `[x, y, z]` 또는 기존 vec3로부터 vec3 리터럴을 생성한다.
+   * 대부분의 경우 `[x, y, z]`를 직접 전달하면 자동으로 타입이 추론된다.
+   * 리스트 문맥에서 타입 모호성을 제거하고 vec3 타입을 명시할 때 주로 사용한다.
    */
   function vec3(value: Vec3Value): vec3
   /**
-   * Declare a GUID literal explicitly for generic pins (e.g. set custom variable).
-   * This is not a type conversion; the node graph does not perform runtime conversion.
-   *
-   * 用于显式声明 GUID 类型字面量（如“设置自定义变量”等涉及泛型参数的节点）。
-   * 该辅助函数不可用于数据类型转换（节点图不支持运行期转换）。
+   * 제네릭 핀(예: 커스텀 변수 설정 등)에 GUID 타입 리터럴을 명시적으로 선언한다.
+   * 데이터 타입 변환 용도로는 사용할 수 없다(노드 그래프는 런타임 변환을 지원하지 않는다).
    */
   function guid(value: GuidValue): guid
   /**
-   * Declare a prefab ID literal explicitly for generic pins (e.g. set custom variable).
-   * This is not a type conversion; the node graph does not perform runtime conversion.
-   *
-   * 用于显式声明 prefab ID 类型字面量（如“设置自定义变量”等涉及泛型参数的节点）。
-   * 该辅助函数不可用于数据类型转换（节点图不支持运行期转换）。
+   * 제네릭 핀(예: 커스텀 변수 설정 등)에 프리팹 ID 타입 리터럴을 명시적으로 선언한다.
+   * 데이터 타입 변환 용도로는 사용할 수 없다(노드 그래프는 런타임 변환을 지원하지 않는다).
    */
   function prefabId(value: PrefabIdValue): prefabId
   /**
-   * Declare a config ID literal explicitly for generic pins (e.g. set custom variable).
-   * This is not a type conversion; the node graph does not perform runtime conversion.
-   *
-   * 用于显式声明 config ID 类型字面量（如“设置自定义变量”等涉及泛型参数的节点）。
-   * 该辅助函数不可用于数据类型转换（节点图不支持运行期转换）。
+   * 제네릭 핀(예: 커스텀 변수 설정 등)에 설정 ID 타입 리터럴을 명시적으로 선언한다.
+   * 데이터 타입 변환 용도로는 사용할 수 없다(노드 그래프는 런타임 변환을 지원하지 않는다).
    */
   function configId(value: ConfigIdValue): configId
   /**
-   * Declare a faction literal explicitly for generic pins (e.g. set custom variable).
-   * This is not a type conversion; the node graph does not perform runtime conversion.
-   *
-   * 用于显式声明 faction 类型字面量（如“设置自定义变量”等涉及泛型参数的节点）。
-   * 该辅助函数不可用于数据类型转换（节点图不支持运行期转换）。
+   * 제네릭 핀(예: 커스텀 변수 설정 등)에 진영 타입 리터럴을 명시적으로 선언한다.
+   * 데이터 타입 변환 용도로는 사용할 수 없다(노드 그래프는 런타임 변환을 지원하지 않는다).
    */
   function faction(value: FactionValue): faction
   /**
-   * Resolve an entity in multiple ways:
-   * - `entity(0)` / `entity(null)`: placeholder, keeps the pin unconnected.
-   * - `entity(guidNumber)`: look up by GUID value.
-   * - `entity(otherEntity)`: widen a subtype to a generic entity (bypass subtype constraints).
-   *
-   * 多种用法：
-   * - `entity(0)` / `entity(null)`：占位，保持节点参数引脚为空不连接。
-   * - `entity(guidNumber)`：通过 GUID 获取实体。
-   * - `entity(otherEntity)`：将实体子类型提升为通用实体类型（绕过子类型限制）。
+   * 다음과 같은 다양한 방식으로 엔티티를 해석한다:
+   * - `entity(0)` / `entity(null)`: 플레이스홀더, 핀을 연결하지 않은 상태로 유지한다.
+   * - `entity(guidNumber)`: GUID 값으로 엔티티를 조회한다.
+   * - `entity(otherEntity)`: 엔티티 서브타입을 일반 엔티티 타입으로 넓힌다(서브타입 제약 우회).
    */
   function entity(guidOrEntity: GuidValue | EntityValue | null | 0): entity
 
   /**
-   * Outputs a string to the log, generally used for logic checks and debugging; In the log, this string prints
-   * whenever the logic runs successfully, regardless of whether this Node Graph is toggled
+   * 로그에 문자열을 출력한다. 일반적으로 로직 확인 및 디버깅에 사용한다.
+   * 로그에는 해당 노드 그래프 체크 여부와 무관하게 로직이 성공적으로 실행될 때마다 출력된다.
    *
-   * 打印字符串: 可以在日志中输出一条字符串，一般用于逻辑检测和调试;
-   * 在日志中，无论是否勾选了该节点图，逻辑成功运行时该字符串都会打印
-   *
-   * @param string The string to be printed
-   *
-   * 字符串: 所要打印的字符串
+   * @param string 출력할 문자열
    */
   function print(string: StrValue): void
 
   /**
-   * Send a custom Signal to the global Stage. Before use, select the corresponding Signal name to ensure correct
-   * parameter usage
+   * 스테이지 전역으로 커스텀 시그널을 전송한다. 사용 전에 해당 시그널 이름을 선택해야 시그널 파라미터를 올바르게 사용할 수 있다.
    *
-   * 发送信号: 向关卡全局发送一个自定义信号，使用前需要先选择对应的信号名，然后才能正确的使用该信号的参数
+   * GSTS Note: 에디터의 시그널 매니저에서 시그널을 별도로 등록해야 한다. 시그널 분산을 이용하면 대형 루프의 부하 한도 초과를 방지할 수 있어 성능 최적화에 활용할 수 있다.
    *
-   * GSTS Note: You still need to register the signal in the signal manager in the editor; Using signal distribution can avoid some large loop triggering load limits, which can be used for performance optimization
-   *
-   * GSTS 注: 你仍然需要在编辑器内的信号管理器注册信号; 使用信号分发能够避免一些大循环触发负载限制, 可用于性能优化
-   *
-   * @param signalName Only literal string is supported
-   *
-   * 信号名（仅支持字面量字符串）
+   * @param signalName 시그널 이름 (리터럴 문자열만 지원)
    */
   function send(signalName: StrValue, args?: Record<string, any>): void
 
   /**
-   * Returns the Player Entity based on Player ID, where the ID indicates which Player they are
+   * 플레이어 번호로 플레이어 엔티티를 반환한다. 플레이어 번호는 해당 플레이어의 순서를 나타낸다.
    *
-   * 根据玩家序号获取玩家实体: 根据玩家序号获取玩家实体，玩家序号即该玩家为玩家几
+   * GSTS Note: 번호는 1부터 시작한다.
    *
-   * GSTS Note: The ID starts from 1
-   *
-   * GSTS 注: 从1开始
-   *
-   * @param playerId
-   *
-   * 玩家序号
-   *
-   * @returns
-   *
-   * 玩家实体
+   * @param playerId 플레이어 번호
+   * @returns 플레이어 엔티티
    */
   function player(playerId: IntValue): PlayerEntity
 
   /**
-   * The Stage Entity
-   *
-   * 关卡实体
+   * 스테이지 엔티티
    */
   const stage: StageEntity
 
   /**
-   * The Stage Entity
-   *
-   * 关卡实体
+   * 스테이지 엔티티
    */
   const level: StageEntity
 
   /**
-   * Returns the Entity associated with this Node Graph
+   * 이 노드 그래프에 연결된 엔티티를 반환한다.
    *
-   * 获取自身实体: 返回该节点图所关联的实体
-   *
-   * @returns
-   *
-   * 自身实体
+   * @returns 자기 자신 엔티티
    */
   const self: entity
 
   /**
-   * Unity-style Math helpers (server-only)
-   *
-   * Unity 风格数学工具（仅 server）
+   * Unity 스타일 수학 유틸리티 (server 전용)
    */
   const Mathf: {
     /**
-     * Absolute value
-     *
-     * 绝对值
+     * 절댓값
      */
     Abs(value: FloatValue | IntValue): number | bigint
     /**
-     * Floor to integer
-     *
-     * 向下取整
+     * 내림하여 정수 반환
      */
     FloorToInt(value: FloatValue | IntValue): bigint
     /**
-     * Ceil to integer
-     *
-     * 向上取整
+     * 올림하여 정수 반환
      */
     CeilToInt(value: FloatValue | IntValue): bigint
     /**
-     * Round to nearest integer
-     *
-     * 四舍五入
+     * 반올림하여 정수 반환
      */
     RoundToInt(value: FloatValue | IntValue): bigint
     /**
-     * Square root
-     *
-     * 开平方
+     * 제곱근
      */
     Sqrt(value: FloatValue | IntValue): number
     /**
-     * Power
-     *
-     * 次方
+     * 거듭제곱
      */
     Pow(base: FloatValue | IntValue, exponent: FloatValue | IntValue): number | bigint
     /**
-     * Logarithm (base e when base omitted)
-     *
-     * 对数（base 省略时使用 e）
+     * 로그 (base 생략 시 자연로그)
      */
     Log(value: FloatValue | IntValue, base?: FloatValue | IntValue): number
     /**
-     * Sine (radian)
-     *
-     * 正弦（弧度）
+     * 사인 (라디안)
      */
     Sin(radian: FloatValue | IntValue): number
     /**
-     * Cosine (radian)
-     *
-     * 余弦（弧度）
+     * 코사인 (라디안)
      */
     Cos(radian: FloatValue | IntValue): number
     /**
-     * Tangent (radian)
-     *
-     * 正切（弧度）
+     * 탄젠트 (라디안)
      */
     Tan(radian: FloatValue | IntValue): number
   }
 
   /**
-   * Unity-style random helpers (server-only)
-   *
-   * Unity 风格随机工具（仅 server）
+   * Unity 스타일 랜덤 유틸리티 (server 전용)
    */
   const Random: {
     /**
-     * Random in range (inclusive)
-     *
-     * 范围随机（闭区间）
+     * 범위 내 랜덤 값 (닫힌 구간)
      */
     Range(min: FloatValue, max: FloatValue): number
     Range(min: IntValue, max: IntValue): bigint
     /**
-     * Random value in [0, 1] (inclusive)
-     *
-     * 0~1 随机值（闭区间）
+     * [0, 1] 범위의 랜덤 값 (닫힌 구간)
      */
     readonly value: number
   }
 
   /**
-   * Unity-style Vector3 helpers (server-only)
-   *
-   * Unity 风格 Vector3 工具（仅 server）
+   * Unity 스타일 Vector3 유틸리티 (server 전용)
    */
   const Vector3: {
-    /** Zero vector / 零向量 */
+    /** 영벡터 */
     readonly zero: vec3
-    /** One vector / 全 1 向量 */
+    /** 전체 요소가 1인 벡터 */
     readonly one: vec3
-    /** Up / 上方向 */
+    /** 위 방향 */
     readonly up: vec3
-    /** Down / 下方向 */
+    /** 아래 방향 */
     readonly down: vec3
-    /** Left / 左方向 */
+    /** 왼쪽 방향 */
     readonly left: vec3
-    /** Right / 右方向 */
+    /** 오른쪽 방향 */
     readonly right: vec3
-    /** Forward / 前方向 */
+    /** 앞 방향 */
     readonly forward: vec3
-    /** Back / 后方向 */
+    /** 뒤 방향 */
     readonly back: vec3
-    /** Dot product / 点乘 */
+    /** 내적 */
     Dot(a: Vec3Value, b: Vec3Value): number
-    /** Cross product / 叉乘 */
+    /** 외적 */
     Cross(a: Vec3Value, b: Vec3Value): vec3
-    /** Distance / 距离 */
+    /** 거리 */
     Distance(a: Vec3Value, b: Vec3Value): number
-    /** Angle / 夹角 */
+    /** 두 벡터 사이의 각도 */
     Angle(a: Vec3Value, b: Vec3Value): number
-    /** Normalize / 归一化 */
+    /** 정규화 */
     Normalize(v: Vec3Value): vec3
-    /** Magnitude / 模长 */
+    /** 벡터의 크기 */
     Magnitude(v: Vec3Value): number
-    /** Add / 相加 */
+    /** 덧셈 */
     Add(a: Vec3Value, b: Vec3Value): vec3
-    /** Sub / 相减 */
+    /** 뺄셈 */
     Sub(a: Vec3Value, b: Vec3Value): vec3
-    /** Scale / 缩放 */
+    /** 스케일 */
     Scale(v: Vec3Value, s: FloatValue | IntValue): vec3
-    /** Rotation / 旋转 */
+    /** 회전 */
     Rotation(rotate: Vec3Value, v: Vec3Value): vec3
-    /** Lerp / 线性插值 */
+    /** 선형 보간 */
     Lerp(a: Vec3Value, b: Vec3Value, t: FloatValue | IntValue): vec3
-    /** Clamp magnitude / 限制模长 */
+    /** 크기 제한 */
     ClampMagnitude(v: Vec3Value, max: FloatValue | IntValue): vec3
   }
 
   /**
-   * Unity-style GameObject helpers (server-only)
-   *
-   * Unity 风格 GameObject 工具（仅 server）
+   * Unity 스타일 GameObject 유틸리티 (server 전용)
    */
   const GameObject: {
     /**
-     * Find by guid
-     *
-     * 通过 guid 查询实体
+     * GUID로 엔티티 조회
      */
     Find(guidValue: GuidValue): entity
     /**
-     * Find first by tag index
-     *
-     * 通过标签索引查询首个实体
+     * 태그 인덱스로 첫 번째 엔티티 조회
      */
     FindWithTag(tag: IntValue): entity
     /**
-     * Find all by tag index
-     *
-     * 通过标签索引查询实体列表
+     * 태그 인덱스로 모든 엔티티 목록 조회
      */
     FindGameObjectsWithTag(tag: IntValue): entity[]
     /**
-     * Find by prefab id (returns list)
-     *
-     * 通过 prefabId 查询实体列表
+     * 프리팹 ID로 엔티티 목록 조회
      */
     FindByPrefabId(prefab: PrefabIdValue): entity[]
   }
 
   /**
-   * Combines up to 50 Key-Value Pairs into one Dictionary.
-   * Use `dict(k, v, 0)` for typed empty placeholders (pin stays unconnected), or `dict(0)` / `dict(null)` when type can be inferred.
+   * 최대 50개의 키-값 쌍을 하나의 딕셔너리로 조합한다.
+   * 타입 지정 플레이스홀더는 `dict(k, v, 0)`을 사용하고(핀 미연결 유지), 타입 추론이 가능한 경우 `dict(0)` / `dict(null)`을 사용한다.
    *
-   * 拼装字典: 将至多 50 个键值对拼合为一个字典。
-   * 需要类型占位请用 `dict(k, v, 0)`（保持节点参数引脚为空不连接），可推断时可用 `dict(0)` / `dict(null)`。
-   *
-   * GSTS Note: The dictionary declared by this method cannot be modified, and a node graph variable dictionary must be declared if modification is required.
-   *
-   * GSTS 注: 该方法声明的字典无法进行修改, 需要修改时必须声明节点图变量字典
+   * GSTS Note: 이 방법으로 선언된 딕셔너리는 수정할 수 없다. 수정이 필요한 경우 노드 그래프 변수 딕셔너리를 선언해야 한다.
    */
   function dict(value: null | 0): ReadonlyDict<never, never>
   function dict<K extends DictKeyType, V extends DictValueType>(
@@ -659,13 +534,9 @@ declare global {
     pairs: { k: RuntimeParameterValueTypeMap[K]; v: RuntimeParameterValueTypeMap[V] }[]
   ): ReadonlyDict<K, V>
   /**
-   * Creates a typed list or a placeholder list.
-   * Use `list(t, items)` for literals, `list(t, [])` for empty lists, and `list(t, 0)` / `list(t, null)` for typed placeholders.
-   * Use `list(0)` / `list(null)` only when the type can be inferred by the target pin (pin stays unconnected).
-   *
-   * 创建带类型的列表或占位列表。
-   * 字面量用 `list(t, items)`，空列表用 `list(t, [])`，类型占位用 `list(t, 0)` / `list(t, null)`。
-   * 仅在目标能推断类型时使用 `list(0)` / `list(null)`（保持节点参数引脚为空不连接）。
+   * 타입이 지정된 리스트 또는 플레이스홀더 리스트를 생성한다.
+   * 리터럴은 `list(t, items)`, 빈 리스트는 `list(t, [])`, 타입 플레이스홀더는 `list(t, 0)` / `list(t, null)`을 사용한다.
+   * `list(0)` / `list(null)`은 대상 핀에서 타입을 추론할 수 있는 경우에만 사용한다(핀 미연결 유지).
    */
   function list(type: null | 0): never[]
   function list<
@@ -686,13 +557,9 @@ declare global {
   ): RuntimeReturnValueTypeMap[`${T}_list`]
 
   /**
-   * JS-like setTimeout for node graph timers, if not in node graph scope, use JS native setTimeout.
+   * 노드 그래프 타이머용 setTimeout (JS 스타일). 노드 그래프 스코프 밖에서는 JS 네이티브 setTimeout을 사용한다.
    *
-   * 节点图定时器版本的 setTimeout（JS 风格）, 在节点图作用域外则仍用JS原生setTimeout
-   *
-   * GSTS Note: The internal tick of node graph system is unstable, the delay cannot be guaranteed precisely, please test the effect yourself, the delay has been passed to the node graph timer as it is.
-   *
-   * GSTS注: 节点图系统内部tick不稳定, 延时无法保证精确, 务必自行测试效果, 此处延时已如实传递给节点图定时器
+   * GSTS Note: 노드 그래프 시스템 내부 틱이 불안정하여 딜레이를 정확하게 보장할 수 없다. 직접 효과를 테스트할 것. 딜레이는 노드 그래프 타이머에 그대로 전달된다.
    */
   function setTimeout(
     handler: (
@@ -702,13 +569,9 @@ declare global {
     delayMs?: FloatValue
   ): string
   /**
-   * JS-like setInterval for node graph timers, if not in node graph scope, use JS native setInterval.
+   * 노드 그래프 타이머용 setInterval (JS 스타일). 노드 그래프 스코프 밖에서는 JS 네이티브 setInterval을 사용한다.
    *
-   * 节点图定时器版本的 setInterval（JS 风格）, 在节点图作用域外则仍用JS原生setInterval
-   *
-   * GSTS Note: The internal tick of node graph system is unstable, the delay cannot be guaranteed precisely, please test the effect yourself, the delay has been passed to the node graph timer as it is.
-   *
-   * GSTS注: 节点图系统内部tick不稳定, 延时无法保证精确, 务必自行测试效果, 此处延时已如实传递给节点图定时器
+   * GSTS Note: 노드 그래프 시스템 내부 틱이 불안정하여 딜레이를 정확하게 보장할 수 없다. 직접 효과를 테스트할 것. 딜레이는 노드 그래프 타이머에 그대로 전달된다.
    */
   function setInterval(
     handler: (
@@ -718,72 +581,64 @@ declare global {
     delayMs?: FloatValue
   ): string
   /**
-   * Clear a timer created by setTimeout.
-   *
-   * 清理 setTimeout 创建的定时器。
+   * setTimeout으로 생성된 타이머를 제거한다.
    */
   function clearTimeout(timerName: StrValue): void
   /**
-   * Clear a timer created by setInterval.
-   *
-   * 清理 setInterval 创建的定时器。
+   * setInterval로 생성된 타이머를 제거한다.
    */
   function clearInterval(timerName: StrValue): void
 
   /**
-   * Math functions are compiled to node graph equivalents in server scope.
-   *
-   * server 作用域内的 Math 会编译为节点图等价实现。
+   * server 스코프 내 Math는 노드 그래프 동등 구현으로 컴파일된다.
    */
   interface Math {
-    /** Absolute value / 绝对值 */
+    /** 절댓값 */
     abs(x: number): number
-    /** Round down / 向下取整 */
+    /** 내림 */
     floor(x: number): number
-    /** Round up / 向上取整 */
+    /** 올림 */
     ceil(x: number): number
-    /** Round to nearest / 四舍五入 */
+    /** 반올림 */
     round(x: number): number
-    /** Truncate / 截尾取整 */
+    /** 정수 방향으로 절삭 */
     trunc(x: number): number
-    /** Power / 次方 */
+    /** 거듭제곱 */
     pow(x: number, y: number): number
-    /** Square root / 开平方 */
+    /** 제곱근 */
     sqrt(x: number): number
-    /** Natural log / 自然对数 */
+    /** 자연로그 */
     log(x: number): number
-    /** Base-10 log / 常用对数 */
+    /** 상용로그(밑 10) */
     log10(x: number): number
-    /** Base-2 log / 以 2 为底 */
+    /** 밑 2 로그 */
     log2(x: number): number
-    /** Sine (radian) / 正弦（弧度） */
+    /** 사인 (라디안) */
     sin(x: number): number
-    /** Cosine (radian) / 余弦（弧度） */
+    /** 코사인 (라디안) */
     cos(x: number): number
-    /** Tangent (radian) / 正切（弧度） */
+    /** 탄젠트 (라디안) */
     tan(x: number): number
-    /** Arc-sine / 反正弦 */
+    /** 역사인 */
     asin(x: number): number
-    /** Arc-cosine / 反余弦 */
+    /** 역코사인 */
     acos(x: number): number
-    /** Arc-tangent / 反正切 */
+    /** 역탄젠트 */
     atan(x: number): number
-    /** Arc-tangent with two args / 反正切（双参） */
+    /** 역탄젠트 (인자 2개) */
     atan2(y: number, x: number): number
-    /** Hypotenuse / 斜边长度 */
+    /** 빗변 길이 */
     hypot(x: number, y: number, z?: number): number
-    /** Cube root / 立方根 */
+    /** 세제곱근 */
     cbrt(x: number): number
-    /** Minimum / 最小值 */
+    /** 최솟값 */
     min(...values: number[]): number
-    /** Maximum / 最大值 */
+    /** 최댓값 */
     max(...values: number[]): number
-    /** Sign / 符号 */
+    /** 부호 */
     sign(x: number): number
     /**
-     * Random in [0, 1] (inclusive in GSTS)
-     *
-     * 随机数（GSTS 为闭区间）
+     * [0, 1] 범위의 랜덤 값 (GSTS에서는 닫힌 구간)
      */
     random(): number
   }
