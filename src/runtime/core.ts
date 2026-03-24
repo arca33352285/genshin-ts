@@ -53,9 +53,7 @@ export type { MetaCallRecord, MetaCallRecordRef, MetaCallRecordType } from './me
 export type IRBuildOptions = {
   optimizeA?: boolean
   /**
-   * [ZH] 默认图名（当 g.server 未指定 name 时使用；通常由 runner 传入入口文件名）
-   *
-   * [EN] Default graph name when g.server() doesn't provide one (usually from runner entry filename)
+   * g.server()에 name이 지정되지 않았을 때 사용할 기본 그래프 이름 (보통 runner가 입력 파일명으로 전달)
    */
   defaultName?: string
 }
@@ -64,43 +62,29 @@ export type ServerLang = 'en' | 'zh'
 
 type ServerGraphOptionsBase<Vars extends VariablesDefinition = VariablesDefinition> = {
   /**
-   * [ZH] 节点图 ID（NodeGraph.id）。
+   * 노드 그래프 ID (NodeGraph.id).
    *
-   * 对应要注入/替换的目标 NodeGraph ID。 起始值为 1073741825
-   *
-   * [EN] Node graph id (NodeGraph.id).
-   *
-   * The target NodeGraph id to inject/replace. The default value is 1073741825.
+   * 인젝션/교체 대상이 될 NodeGraph ID. 기본값은 1073741825.
    */
   id?: number
   /**
-   * [ZH] 节点图显示名称（NodeGraph.name）。
+   * 노드 에디터에 표시될 그래프 이름 (NodeGraph.name).
    *
-   * 若不指定：默认使用入口文件名（由 gsts runner 注入 defaultName）。
-   *
-   * [EN] Display name inside the node editor (NodeGraph.name).
-   *
-   * If omitted: defaults to the entry file name (provided by gsts runner as defaultName).
+   * 생략 시: gsts runner가 defaultName으로 주입하는 입력 파일명이 사용된다.
    */
   name?: string
   /**
-   * [ZH] 是否自动加 `_GSTS` 前缀（默认 true）。
-   * - true: 若 name/defaultName 不以 `_GSTS` 开头，则自动补 `_GSTS_` 前缀
-   * - false: 不做任何前缀处理
-   *
-   * [EN] Whether to auto prefix with `_GSTS` (default true).
+   * `_GSTS` 접두사를 자동으로 붙일지 여부 (기본값 true).
+   * - true: name/defaultName이 `_GSTS`로 시작하지 않으면 자동으로 `_GSTS_` 접두사를 붙임
+   * - false: 접두사 처리를 하지 않음
    */
   prefix?: boolean
   /**
-   * [ZH] 节点图变量声明
-   *
-   * [EN] Node graph variable definitions
+   * 노드 그래프 변수 선언
    */
   variables?: Vars
   /**
-   * [ZH] 语言偏好（仅影响类型提示与中文别名解析）
-   *
-   * [EN] Language hint (affects type hints and zh alias resolution only)
+   * 언어 설정 (타입 힌트 및 중국어 별칭 해석에만 영향)
    */
   lang?: ServerLang
 }
@@ -108,29 +92,21 @@ type ServerGraphOptionsBase<Vars extends VariablesDefinition = VariablesDefiniti
 export type ServerGraphOptions<Vars extends VariablesDefinition = VariablesDefinition> =
   | (ServerGraphOptionsBase<Vars> & {
       /**
-       * [ZH] 节点图模式（默认超限模式 Beyond Mode）。
-       *
-       * [EN] Graph mode (default: Beyond Mode).
+       * 노드 그래프 모드 (기본값: Beyond Mode).
        */
       mode?: 'beyond'
       /**
-       * [ZH] 服务器节点图子类型（默认 `实体节点图`）。
-       *
-       * [EN] Server graph sub type (default: `entity`).
+       * 서버 노드 그래프 서브 타입 (기본값: `entity`).
        */
       type?: ServerGraphSubType
     })
   | (ServerGraphOptionsBase<Vars> & {
       /**
-       * [ZH] 节点图模式（经典模式 Classic Mode）。
-       *
-       * [EN] Graph mode (Classic Mode).
+       * 노드 그래프 모드 (Classic Mode).
        */
       mode: 'classic'
       /**
-       * [ZH] 服务器节点图子类型（默认 `实体节点图`；经典模式不允许 `class`）。
-       *
-       * [EN] Server graph sub type (default: `entity`; Classic Mode disallows `class`).
+       * 서버 노드 그래프 서브 타입 (기본값: `entity`; Classic Mode에서는 `class` 불가).
        */
       type?: Exclude<ServerGraphSubType, 'class'>
     })
@@ -179,26 +155,13 @@ export type ServerGraphApi<
   ? ServerOnOverloads<Vars, Mode, ServerExecutionFlowFunctionsForLang<Vars, 'zh', Mode>, true>
   : ServerOnOverloads<Vars, Mode, ServerExecutionFlowFunctionsForLang<Vars, 'en', Mode>>) & {
   /**
-   * Monitors Signal trigger events defined in the Signal Manager; The Signal name to monitor must be selected first
+   * 시그널 관리자에 정의된 시그널 트리거 이벤트를 감지한다. 먼저 감지할 시그널 이름을 선택해야 한다.
    *
-   * 监听信号: 监听已在信号管理器中定义的信号触发事件; 需先选择需要监听的信号名
+   * GSTS 참고: 에디터의 시그널 관리자에 시그널을 별도로 등록해야 한다. 시그널 분배를 사용하면 대형 루프 트리거 부하 제한을 피할 수 있어 성능 최적화에 활용 가능하다.
    *
-   * GSTS Note: You still need to register the signal in the signal manager in the editor; Using signal distribution can avoid some large loop triggering load limits, which can be used for performance optimization
-   *
-   * GSTS 注: 你仍然需要在编辑器内的信号管理器注册信号; 使用信号分发能够避免一些大循环触发负载限制, 可用于性能优化
-   *
-   * @param signalName The signal name to monitor (literal string)
-   *
-   * 监听할 신호 이름 (리터럴 문자열)
-   *
-   * @param handler Event handler. `evt` contains the 3 fixed outputs (eventSourceEntity, eventSourceGuid, signalSourceEntity) plus any custom signal arguments accessible by name
-   *
-   * 이벤트 핸들러. `evt`에는 고정 출력 3개(eventSourceEntity, eventSourceGuid, signalSourceEntity)와 커스텀 신호 인자가 이름으로 포함됨
-   *
-   * @param signalArgs Optional array of custom signal argument definitions. Each entry has `name` and `type`. The names, types, and order must match the signal definition registered in the editor's Signal Manager. Custom arguments are accessible via `evt.argName` in the handler (starting from output index 3)
-   *
-   * 신호 커스텀 인자 정의 배열 (선택). 각 항목은 `name`과 `type`으로 구성. 이름, 타입, 순서는 에디터의 신호 관리자에 등록된 신호 정의와 반드시 일치해야 함. 커스텀 인자는 핸들러에서 `evt.인자이름`으로 접근 가능 (출력 인덱스 3부터)
-   *
+   * @param signalName 감지할 시그널 이름 (리터럴 문자열)
+   * @param handler 이벤트 핸들러. `evt`에는 고정 출력 3개(eventSourceEntity, eventSourceGuid, signalSourceEntity)와 커스텀 시그널 인자가 이름으로 포함됨
+   * @param signalArgs 시그널 커스텀 인자 정의 배열 (선택). 각 항목은 `name`과 `type`으로 구성. 이름, 타입, 순서는 에디터의 시그널 관리자에 등록된 정의와 반드시 일치해야 한다. 커스텀 인자는 핸들러에서 `evt.인자이름`으로 접근 가능 (출력 인덱스 3부터)
    * @example
    * ```ts
    * .onSignal('DamageSignal', (evt, f) => {
@@ -262,15 +225,11 @@ export type GstsCtxApi = {
 
 export type GstsPublic = {
   /**
-   * context tools entry
-   *
-   * 上下文工具统一入口
+   * 컨텍스트 도구 통합 진입점
    */
   readonly ctx: GstsCtxApi
   /**
-   * only available in g.server().on() handler
-   *
-   * 仅允许在 g.server().on() 下访问，否则 throw
+   * g.server().on() 핸들러 내부에서만 접근 가능. 그 외에서 접근 시 throw
    */
   readonly f: ServerExecutionFlowFunctions
 }
@@ -384,11 +343,11 @@ export class MetaCallRegistry {
   private readonly variableMetaByName: Map<string, NodeGraphVariableMeta>
   private bootstrapFlow?: ExecutionFlow
   /**
-   * return调用计数, 通过回调前后比对确认是否调用过return
+   * return 호출 횟수. 콜백 전후 비교로 return이 호출됐는지 확인
    */
   private returnCallCounter = 0
   /**
-   * 用于记录当前活跃的循环体节点, 方便return时全部break
+   * 현재 활성화된 루프 노드 기록. return 시 전체 break 처리에 사용
    */
   private loopNodeStack: number[] = []
 
@@ -539,7 +498,7 @@ export class MetaCallRegistry {
   }
 
   /**
-   * 获取当前记录的 ID，每次调用后递增
+   * 현재 레코드 ID를 반환하고 호출 시마다 증가시킴
    */
   private get currentRecordId(): number {
     return this.recordCounter++
@@ -656,8 +615,8 @@ export class MetaCallRegistry {
   }
 
   /**
-   * 在指定节点的某个执行输出引脚下注册一段执行链（用于循环体/条件分支）。
-   * 回调内注册的 exec 节点会形成一条独立链，结束后自动把该链的 head 挂到 fromNodeId 的 sourceIndex 上。
+   * 지정된 노드의 특정 실행 출력 핀 아래에 실행 체인을 등록한다 (루프 본문/조건 브랜치 용도).
+   * 콜백 내에서 등록된 exec 노드는 독립적인 체인을 형성하며, 완료 후 해당 체인의 head가 fromNodeId의 sourceIndex에 자동으로 연결된다.
    */
   withExecBranch(fromNodeId: number, sourceIndex: number, fn: () => void) {
     const current = this.currentFlow
@@ -679,8 +638,8 @@ export class MetaCallRegistry {
   }
 
   /**
-   * 标记, 将“接下来注册到的第一个 exec 节点”挂到指定节点的某个执行输出引脚上（一次性）。
-   * 用于像 Finite Loop 的 Loop Complete：循环节点后的顺序代码应连接到 complete 分支。
+   * 다음에 등록될 첫 번째 exec 노드를 지정 노드의 특정 실행 출력 핀에 연결하도록 마킹한다 (일회성).
+   * Finite Loop의 Loop Complete 처럼, 루프 노드 이후의 순차 코드를 complete 브랜치에 연결할 때 사용한다.
    */
   markLinkNextExecFrom(fromNodeId: number, sourceIndex: number) {
     const current = this.currentFlow
@@ -690,7 +649,7 @@ export class MetaCallRegistry {
   }
 
   /**
-   * 设置当前执行链 tail (多路时用)
+   * 현재 실행 체인의 tail을 설정한다 (다중 경로 시 사용)
    */
   setCurrentExecTailEndpoints(tailEndpoints: ExecTailEndpoint[]) {
     const current = this.currentFlow
@@ -700,7 +659,7 @@ export class MetaCallRegistry {
   }
 
   /**
-   * 终止当前执行路径（return / continue / break 语义）：该分支后续不再产生执行连线
+   * 현재 실행 경로를 종료한다 (return / continue / break 의미): 해당 브랜치 이후로 실행 와이어를 생성하지 않는다
    */
   returnFromCurrentExecPath(opts?: { countReturn?: boolean }) {
     const current = this.currentFlow
@@ -771,8 +730,8 @@ export class MetaCallRegistry {
   }
 
   /**
-   * 获取当前 flow 的 return gate 局部变量（不存在则创建：Get Local Variable(false)）。
-   * 用于：return() 标记 + 循环 complete 处的 return gate。
+   * 현재 플로우의 return gate 로컬 변수를 가져온다 (없으면 생성: Get Local Variable(false)).
+   * return() 마킹 및 루프 complete 지점의 return gate에 사용한다.
    */
   getOrCreateReturnGateLocalVariable(): { localVariable: localVariable; value: bool } {
     const flow = this.currentFlow

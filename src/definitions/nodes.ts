@@ -703,13 +703,9 @@ export class ServerExecutionFlowFunctions {
   /**
    * @gsts
    *
-   * Return from the current execution path
+   * 현재 실행 경로에서 반환한다
    *
-   * Note: Does not correspond to some node, just prevents the current branch from connecting to subsequent nodes
-   *
-   * 终止当前分支的后续执行（return 语义）
-   *
-   * 注意：不对应到具体节点，只是让当前分支不再连线到后续节点
+   * 참고: 특정 노드에 대응하지 않으며, 현재 브랜치가 후속 노드에 연결되지 않도록 한다
    */
   return(): void {
     const { localVariable } = this.registry.getOrCreateReturnGateLocalVariable()
@@ -724,13 +720,9 @@ export class ServerExecutionFlowFunctions {
   /**
    * @gsts
    *
-   * Continue the current loop iteration
+   * 현재 루프 이터레이션을 계속한다
    *
-   * Note: Does not correspond to some node, just prevents the current branch from connecting to subsequent nodes
-   *
-   * 跳过当前循环体剩余逻辑，继续下一次迭代
-   *
-   * 注意：不对应到具体节点，只是让当前分支不再连线到后续节点
+   * 참고: 특정 노드에 대응하지 않으며, 현재 브랜치가 후속 노드에 연결되지 않도록 한다
    */
   continue(): void {
     if (!this.registry.getActiveLoopNodeIds().length) {
@@ -740,17 +732,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Converts input parameter types to another type for output. For specific rules, see Basic Concepts - [Conversion Rules Between Basic Data Types]
+   * 입력 파라미터의 타입을 다른 타입으로 변환하여 출력한다. 세부 규칙은 기본 개념 - [기본 데이터 타입 간 변환 규칙] 참조
    *
-   * 数据类型转换: 将输入的参数类型转换为另一种类型输出。具体规则见基础概念-【基础数据类型之间的转换规则】
-   *
-   * @param input
-   *
-   * 输入
-   *
-   * @returns
-   *
-   * 输出
+   * @param input 입력
+   * @returns 출력
    */
   dataTypeConversion<T extends keyof DataTypeConversionMap, U extends DataTypeConversionMap[T]>(
     input: RuntimeParameterValueTypeMap[T],
@@ -805,20 +790,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Determines whether two inputs are equal; Some Parameter Types have special comparison rules:; Floating Point Numbers: Floating Point Numbers are compared using approximate equality. When the difference between two Floating Point Numbers is less than an extremely small value, the two numbers are considered equal. For example: 2.0000001 and 2.0 are considered equal; 3D Vector: The x, y, and z components of a 3D Vector are compared using Floating Point approximate equality
+   * 두 입력이 같은지 판단한다. 일부 파라미터 타입은 특수한 판정 규칙을 따른다: 부동소수점은 근사 비교를 사용하여, 차이가 극소값 미만이면 같다고 판단한다 (예: 2.0000001과 2.0은 같음); Vec3는 x, y, z 각각 부동소수점 근사 비교를 사용한다
    *
-   * 是否相等: 判断两个输入是否相等; 部分参数类型有较为特殊的判定规则：; 浮点数：浮点数采用近似相等进行比较，当两个浮点数小于一个极小值时，这两个浮点数认为相等。例如：2.0000001与2.0认为相等; 三维向量：三维向量的x、y、z分别采用浮点数近似相等比较
-   *
-   * @param input1
-   *
-   * 输入1
-   * @param input2
-   *
-   * 输入2
-   *
-   * @returns Output True if equal, False if not equal
-   *
-   * 结果: 相等输出“是”，不相等输出“否”
+   * @param input1 입력1
+   * @param input2 입력2
+   * @returns 결과: 같으면 True, 다르면 False
    */
   equal(input1: FloatValue, input2: FloatValue): boolean
   equal(input1: IntValue, input2: IntValue): boolean
@@ -888,20 +864,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * After confirming the Enumeration type, determines whether the two input values are equal
+   * 열거형 타입을 확인한 후 두 입력값이 같은지 판단한다
    *
-   * 枚举是否相等: 确认枚举的类型后，判断两个输入的值是否相等
-   *
-   * @param enumeration1
-   *
-   * 枚举1
-   * @param enumeration2
-   *
-   * 枚举2
-   *
-   * @returns Output True if equal, False if not equal
-   *
-   * 结果: 相等输出“是”，不相等输出“否”
+   * @param enumeration1 열거형1
+   * @param enumeration2 열거형2
+   * @returns 결과: 같으면 True, 다르면 False
    */
   enumerationsEqual(enumeration1: ComparisonOperator, enumeration2: ComparisonOperator): boolean
   enumerationsEqual(enumeration1: LogicalOperator, enumeration2: LogicalOperator): boolean
@@ -992,17 +959,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Assembles multiple Input Parameters of the same type (up to 100) into a single List
+   * 같은 타입의 입력 파라미터를 최대 100개까지 하나의 리스트로 조합한다
    *
-   * 拼装列表: 将多个类型相同的入参(至多100个)拼装为一个列表
-   *
-   * @param _0to99 Assembles up to 100 parameters into a list
-   *
-   * 0~99: 将至多100个参数拼装为一个列表
-   *
-   * @returns The assembled list
-   *
-   * 列表: 拼装成的列表
+   * @param _0to99 리스트로 조합할 파라미터 (최대 100개)
+   * @returns 조합된 리스트
    */
   assemblyList(_0to99: FloatValue[]): number[]
   assemblyList(_0to99: FloatValue[], type: 'float'): number[]
@@ -1094,9 +1054,7 @@ export class ServerExecutionFlowFunctions {
   /**
    * @gsts
    *
-   * Create an empty List of the specified type.
-   *
-   * 创建空列表: 仅指定类型创建一个真正的空列表。
+   * 지정한 타입의 빈 리스트를 생성한다.
    */
   emptyList(type: 'bool'): boolean[]
   emptyList(type: 'int'): bigint[]
@@ -1138,9 +1096,7 @@ export class ServerExecutionFlowFunctions {
   /**
    * @gsts
    *
-   * Declare an empty list local variable and return both localVariable/value.
-   *
-   * 创建“空列表”的局部变量，并返回 localVariable/value 两个输出。
+   * 빈 리스트 로컬 변수를 선언하고 localVariable/value를 반환한다.
    */
   emptyLocalVariableList(type: 'bool'): { localVariable: localVariable; value: boolean[] }
   emptyLocalVariableList(type: 'int'): { localVariable: localVariable; value: bigint[] }
@@ -1174,17 +1130,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Combines up to 50 Key-Value Pairs into one Dictionary
+   * 최대 50개의 키-값 쌍을 하나의 딕셔너리로 조합한다
    *
-   * 拼装字典: 将至多50个键值对拼合为一个字典
+   * GSTS 참고: 이 메서드로 선언된 딕셔너리는 수정할 수 없으며, 수정이 필요한 경우 노드 그래프 변수 딕셔너리를 선언해야 한다
    *
-   * GSTS Note: The dictionary declared by this method cannot be modified, and a node graph variable dictionary must be declared if modification is required.
-   *
-   * GSTS 注: 该方法声明的字典无法进行修改, 需要修改时必须声明节点图变量字典
-   *
-   * @returns
-   *
-   * 字典
+   * @returns 딕셔너리
    */
   assemblyDictionary(pairs: { k: IntValue; v: FloatValue }[]): ReadonlyDict<'int', 'float'>
   assemblyDictionary(pairs: { k: IntValue; v: IntValue }[]): ReadonlyDict<'int', 'int'>
@@ -1510,22 +1460,12 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Set the value of the specified Custom Variable on the Target Entity
+   * 대상 엔티티에 있는 지정한 커스텀 변수의 값을 설정한다
    *
-   * 设置自定义变量: 为目标实体上的指定自定义变量设置值
-   *
-   * @param targetEntity The variable is mounted on this entity
-   *
-   * 目标实体: 该变量挂载在该实体上
-   * @param variableName Custom variable name. Must be unique
-   *
-   * 变量名: 自定义变量的命名，不可重复
-   * @param variableValue Value assigned to this variable
-   *
-   * 变量值: 赋予该变量的值
-   * @param triggerEvent Default: False. When set to False, this custom variable editing will not trigger the On Custom Variable Change event
-   *
-   * 是否触发事件: 默认为否。选为否时，这次自定义变量修改不会触发自定义变量变化时事件
+   * @param targetEntity 대상 엔티티: 해당 변수가 마운트된 엔티티
+   * @param variableName 변수명: 커스텀 변수의 이름, 중복 불가
+   * @param variableValue 변수값: 이 변수에 할당할 값
+   * @param triggerEvent 이벤트 트리거 여부: 기본값 False. False로 설정하면 이번 커스텀 변수 수정이 커스텀 변수 변경 이벤트를 발생시키지 않는다
    */
   setCustomVariable<
     T extends
@@ -1594,20 +1534,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns the value of the specified Custom Variable from the Target Entity; If the variable does not exist, returns the type's default value
+   * 대상 엔티티에서 지정한 커스텀 변수의 값을 반환한다. 변수가 존재하지 않으면 해당 타입의 기본값을 반환한다
    *
-   * 获取自定义变量: 获取目标实体的指定自定义变量的值; 如果变量不存在，则返回类型的默认值
-   *
-   * @param targetEntity
-   *
-   * 目标实体
-   * @param variableName
-   *
-   * 变量名
-   *
-   * @returns
-   *
-   * 变量值
+   * @param targetEntity 대상 엔티티
+   * @param variableName 변수명
+   * @returns 변수값
    */
   getCustomVariable(targetEntity: EntityValue, variableName: StrValue): generic {
     const targetEntityObj = parseValue(targetEntity, 'entity')
@@ -1624,19 +1555,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Set the value of the specified Node Graph Variable in the current Node Graph
+   * 현재 노드 그래프 내 지정한 노드 그래프 변수의 값을 설정한다
    *
-   * 设置节点图变量: 为当前节点图内的指定节点图变量设置值
-   *
-   * @param variableName Name of the Node Graph Variable. Must be unique within the same Node Graph
-   *
-   * 变量名: 节点图变量的命名，同节点图内不可重复
-   * @param variableValue Value assigned to this variable
-   *
-   * 变量值: 赋予该变量的值
-   * @param triggerEvent Default: False. If set to False, this Node Graph Variable editing will not trigger the Variable Change Event
-   *
-   * 是否触发事件: 默认为否。选为否时，这次节点图变量修改不会触发节点图变量变化时事件
+   * @param variableName 변수명: 노드 그래프 변수의 이름, 같은 노드 그래프 내 중복 불가
+   * @param variableValue 변수값: 이 변수에 할당할 값
+   * @param triggerEvent 이벤트 트리거 여부: 기본값 False. False로 설정하면 이번 노드 그래프 변수 수정이 변수 변경 이벤트를 발생시키지 않는다
    */
   setNodeGraphVariable<
     T extends
@@ -1705,21 +1628,10 @@ export class ServerExecutionFlowFunctions {
   /**
    * @gsts
    *
-   * Alias for getNodeGraphVariable with variable type inference.
+   * 타입 추론이 포함된 getNodeGraphVariable의 별칭이다. 현재 노드 그래프에서 지정한 노드 그래프 변수의 값을 반환하며, 변수가 존재하지 않으면 해당 타입의 기본값을 반환한다
    *
-   * 获取节点图变量（自动类型推断）: 作为 getNodeGraphVariable 的别名，自动推断已注册变量的类型
-   *
-   * Returns the value of the specified Node Graph Variable from the current Node Graph; If the variable does not exist, returns the type's default value
-   *
-   * 获取节点图变量: 获取当前节点图的指定节点图变量的值; 如果变量不存在，则返回类型的默认值
-   *
-   * @param variableName
-   *
-   * 变量名
-   *
-   * @returns
-   *
-   * 变量值
+   * @param variableName 변수명
+   * @returns 변수값
    */
   get(variableName: StrValue): generic {
     const name = this.resolveLiteralVarName(variableName)
@@ -1736,23 +1648,11 @@ export class ServerExecutionFlowFunctions {
   /**
    * @gsts
    *
-   * Alias for setNodeGraphVariable with variable type inference.
+   * 타입 추론이 포함된 setNodeGraphVariable의 별칭이다. 현재 노드 그래프 내 지정한 노드 그래프 변수의 값을 설정한다
    *
-   * 设置节点图变量（自动类型推断）: 作为 setNodeGraphVariable 的别名，自动推断已注册变量的类型
-   *
-   * Set the value of the specified Node Graph Variable in the current Node Graph
-   *
-   * 设置节点图变量: 为当前节点图内的指定节点图变量设置值
-   *
-   * @param variableName Name of the Node Graph Variable. Must be unique within the same Node Graph
-   *
-   * 变量名: 节点图变量的命名，同节点图内不可重复
-   * @param variableValue Value assigned to this variable
-   *
-   * 变量值: 赋予该变量的值
-   * @param triggerEvent Default: False. If set to False, this Node Graph Variable editing will not trigger the Variable Change Event
-   *
-   * 是否触发事件: 默认为否。选为否时，这次节点图变量修改不会触发节点图变量变化时事件
+   * @param variableName 변수명: 노드 그래프 변수의 이름. 같은 노드 그래프 내에서 중복 불가
+   * @param variableValue 변수값: 해당 변수에 대입할 값
+   * @param triggerEvent 이벤트 발생 여부: 기본값 False. False로 설정하면 이번 노드 그래프 변수 수정이 변수 변경 이벤트를 발생시키지 않는다
    */
   set<
     T extends
@@ -1817,7 +1717,7 @@ export class ServerExecutionFlowFunctions {
   /**
    * @gsts internal
    *
-   * Ensure a node graph variable exists (used by internal runtime helpers).
+   * 노드 그래프 변수가 존재하는지 확인한다 (내부 런타임 헬퍼에서 사용).
    */
   __gstsEnsureVariable(
     name: string,
@@ -1854,7 +1754,7 @@ export class ServerExecutionFlowFunctions {
   /**
    * @gsts internal
    *
-   * Register a capture dictionary for timers.
+   * 타이머용 캡처 딕셔너리를 등록한다.
    */
   __gstsRegisterTimerCaptureDict(name: string, valueType: DictValueType) {
     this.registry.registerTimerCaptureDict(name, valueType)
@@ -1863,7 +1763,7 @@ export class ServerExecutionFlowFunctions {
   /**
    * @gsts internal
    *
-   * Attach timer capture metadata to a handle.
+   * 타이머 캡처 메타데이터를 핸들에 연결한다.
    */
   __gstsAttachTimerHandle(
     timerName: StrValue,
@@ -1877,7 +1777,7 @@ export class ServerExecutionFlowFunctions {
   /**
    * @gsts internal
    *
-   * Clear timer capture entries by timer name across all registered capture dicts.
+   * 타이머 이름을 기준으로 등록된 모든 캡처 딕셔너리에서 타이머 캡처 항목을 삭제한다.
    */
   __gstsClearTimerCaptures(
     timerName: StrValue,
@@ -1894,7 +1794,7 @@ export class ServerExecutionFlowFunctions {
   /**
    * @gsts internal
    *
-   * Register a handler for timer trigger events.
+   * 타이머 트리거 이벤트 핸들러를 등록한다.
    */
   __gstsRegisterTimerHandler(
     handler: (
@@ -1906,17 +1806,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns the value of the specified Node Graph Variable from the current Node Graph; If the variable does not exist, returns the type's default value
+   * 현재 노드 그래프에서 지정한 노드 그래프 변수의 값을 반환한다. 변수가 존재하지 않으면 해당 타입의 기본값을 반환한다
    *
-   * 获取节点图变量: 获取当前节点图的指定节点图变量的值; 如果变量不存在，则返回类型的默认值
-   *
-   * @param variableName
-   *
-   * 变量名
-   *
-   * @returns
-   *
-   * 变量值
+   * @param variableName 변수명
+   * @returns 변수값
    */
   getNodeGraphVariable(variableName: StrValue): generic {
     const variableNameObj = parseValue(variableName, 'str')
@@ -1932,16 +1825,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * When connected to the Query Node [Get Local Variable], this overwrites the value of that Local Variable
+   * 쿼리 노드 [로컬 변수 가져오기]에 연결되면 해당 로컬 변수의 값을 덮어쓴다
    *
-   * 设置局部变量: 与查询节点【获取局部变量】连接后可以覆写该局部变量的值
-   *
-   * @param localVariable Container for data storage
-   *
-   * 局部变量: 存储数据的载体
-   * @param value Value used to overwrite this local variable
-   *
-   * 值: 所要覆写该局部变量的值
+   * @param localVariable 로컬 변수: 데이터를 저장하는 컨테이너
+   * @param value 값: 이 로컬 변수를 덮어쓸 값
    */
   setLocalVariable<
     T extends
@@ -2000,14 +1887,9 @@ export class ServerExecutionFlowFunctions {
   /**
    * @gsts
    *
-   * Declares a local variable with an "empty" default value, and optionally assigns an initial value via Set Local Variable.
+   * 로컬 변수를 "빈" 기본값으로 선언하고, 선택적으로 Set Local Variable을 통해 초기값을 설정한다.
    *
-   * Target: Avoid repeating the initial value evaluation in the node graph (node graph will repeat evaluation)
-   *
-   * 用空值声明局部变量，并可选地通过 Set Local Variable 设置初始值。
-   *
-   * 目的：避免把 init 直接作为 Get Local Variable 的 initialValue（节点图会重复求值），
-   * 统一采用 get(empty) + set(init) 的高性能等价 JS 语义。
+   * 목적: init을 Get Local Variable의 initialValue로 직접 사용하면 노드 그래프가 반복 평가하는 문제를 방지하기 위해, get(empty) + set(init) 패턴을 사용한다
    */
   initLocalVariable(
     type: 'bool',
@@ -2208,13 +2090,9 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Retrieves a Local Variable and optionally sets its [Initial Value]; After setting the [Initial Value], the [Value] output parameter will be equal to the input [Initial Value]; When the output [Local Variable] is connected to the [Set Local Variable] Execution Node's input [Local Variable], the input [Value] of [Set Local Variable] overwrites this Search Node's output [Value]. The next time you use [Get Local Variable], the output [Value] is the overwritten value
+   * 로컬 변수를 가져오고 선택적으로 [초기값]을 설정한다. [초기값]을 설정하면 출력 파라미터 [값]은 입력한 [초기값]과 같아진다. 출력 [로컬 변수]가 실행 노드 [로컬 변수 설정]의 입력 [로컬 변수]에 연결되면, [로컬 변수 설정]의 입력 [값]이 이 쿼리 노드의 출력 [값]을 덮어쓴다. 이후 [로컬 변수 가져오기]를 사용하면 출력 [값]은 덮어쓴 값이 된다
    *
-   * 获取局部变量: 可以获取局部变量，也可以设置该局部变量的【初始值】; 设置【初始值】以后，出参的【值】输出即为输入的【初始值】; 当出参【局部变量】与执行节点【设置局部变量】的入参【局部变量】连接后，执行节点【设置局部变量】的入参【值】会覆写该查询节点的出参【值】，再次使用【获取局部变量】节点时，出参【值】为覆写后的值
-   *
-   * @param initialValue Allows you to set the default initial value for local variables
-   *
-   * 初始值: 可以设置局部变量的初始默认值
+   * @param initialValue 초기값: 로컬 변수의 초기 기본값을 설정할 수 있다
    */
   getLocalVariable(initialValue: FloatValue): { localVariable: localVariable; value: number }
   getLocalVariable(initialValue: IntValue): { localVariable: localVariable; value: bigint }
@@ -2330,20 +2208,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Searches the value of the specified Variable Name from the Custom Variable Component snapshot; Only available for the [On Entity Destroyed] event
+   * 커스텀 변수 컴포넌트 스냅샷에서 지정한 변수명의 값을 조회한다. [엔티티 파괴 시] 이벤트에서만 사용 가능하다
    *
-   * 查询自定义变量快照: 从自定义变量组件快照中，查询指定变量名的值; 仅可用于【实体销毁时】事件
-   *
-   * @param customVariableComponentSnapshot
-   *
-   * 自定义变量组件快照
-   * @param variableName
-   *
-   * 变量名
-   *
-   * @returns
-   *
-   * 变量值
+   * @param customVariableComponentSnapshot 커스텀 변수 컴포넌트 스냅샷
+   * @param variableName 변수명
+   * @returns 변수값
    */
   queryCustomVariableSnapshot(
     customVariableComponentSnapshot: CustomVariableSnapshotValue,
@@ -2366,20 +2235,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Searches the corresponding Value in the Dictionary by Key. If the Key does not exist, returns the type's default value
+   * 키를 기준으로 딕셔너리에서 대응하는 값을 조회한다. 키가 존재하지 않으면 해당 타입의 기본값을 반환한다
    *
-   * 以键查询字典值: 根据键查询字典中对应的值，如果键不存在，则返回类型默认值
-   *
-   * @param dictionary
-   *
-   * 字典
-   * @param key
-   *
-   * 键
-   *
-   * @returns
-   *
-   * 值
+   * @param dictionary 딕셔너리
+   * @param key 키
+   * @returns 값
    */
   queryDictionaryValueByKey<K extends DictKeyType, V extends DictValueType>(
     dictionary: dict<K, V>,
@@ -2406,24 +2266,13 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Creates Key-Value Pairs sequentially from the input key and value lists; This node builds the Dictionary using the shorter of the key and value lists; extra items are truncated; If duplicate keys are found in the key list, creation fails and returns an empty Dictionary
+   * 입력한 키 리스트와 값 리스트의 순서대로 키-값 쌍을 만들어 딕셔너리를 생성한다. 키 리스트와 값 리스트 중 짧은 쪽을 기준으로 생성하며, 초과분은 잘린다. 키 리스트에 중복 키가 있으면 생성에 실패하고 빈 딕셔너리를 반환한다
    *
-   * 建立字典: 根据输入的键和值列表的顺序依次建立键值对。; 此节点会按照键和值列表中较短的一个进行字典创建，多余的部分会被截断; 如果键列表中存在重复值，则会创建失败，返回空字典
+   * GSTS 참고: 이 메서드로 선언한 딕셔너리는 수정할 수 없다. 수정이 필요한 경우 노드 그래프 변수 딕셔너리를 선언해야 한다
    *
-   * GSTS Note: The dictionary declared by this method cannot be modified, and a node graph variable dictionary must be declared if modification is required.
-   *
-   * GSTS 注: 该方法声明的字典无法进行修改, 需要修改时必须声明节点图变量字典
-   *
-   * @param keyList
-   *
-   * 键列表
-   * @param valueList
-   *
-   * 值列表
-   *
-   * @returns
-   *
-   * 字典
+   * @param keyList 키 리스트
+   * @param valueList 값 리스트
+   * @returns 딕셔너리
    */
   createDictionary(keyList: IntValue[], valueList: FloatValue[]): ReadonlyDict<'int', 'float'>
   createDictionary(keyList: IntValue[], valueList: IntValue[]): ReadonlyDict<'int', 'int'>
@@ -2632,20 +2481,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Searches whether the specified Dictionary contains the specified Value
+   * 지정된 딕셔너리에 특정 값이 포함되어 있는지 조회한다
    *
-   * 查询字典是否包含特定值: 查询指定字典是否包含特定的值
-   *
-   * @param dictionary
-   *
-   * 字典
-   * @param value
-   *
-   * 值
-   *
-   * @returns
-   *
-   * 是否包含
+   * @param dictionary 딕셔너리
+   * @param value 값
+   * @returns 포함 여부
    */
   queryIfDictionaryContainsSpecificValue<
     K extends DictKeyType,
@@ -2665,17 +2505,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns a list of all Values in the Dictionary. Because Key-Value Pairs are unordered, the Values may not be returned in insertion order
+   * 딕셔너리의 모든 값으로 구성된 리스트를 반환한다. 딕셔너리의 키-값 쌍은 순서가 없으므로, 반환되는 값 리스트의 순서는 삽입 순서와 다를 수 있다
    *
-   * 获取字典中值组成的列表: 获取字典中所有值组成的列表。由于字典中键值对是无序排列的，所以取出的值列表也不一定按照其插入顺序排列
-   *
-   * @param dictionary
-   *
-   * 字典
-   *
-   * @returns
-   *
-   * 值列表
+   * @param dictionary 딕셔너리
+   * @returns 값 리스트
    */
   getListOfValuesFromDictionary<K extends DictKeyType, V extends keyof CommonLiteralValueTypeMap>(
     dictionary: dict<K, V>
@@ -2694,29 +2527,21 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Sort and output the specified Dictionary by keys in ascending or descending order
+   * 지정된 딕셔너리를 키 기준으로 오름차순 또는 내림차순 정렬하여 출력한다
    *
-   * 对字典按键排序: 将指定字典按键进行顺序或逆序排序后输出
-   *
-   * @param dictionary
-   *
-   * 字典
-   * @param sortBy
-   *
-   * 排序方式
+   * @param dictionary 딕셔너리
+   * @param sortBy 정렬 방식
    */
   sortDictionaryByKey<V extends keyof CommonLiteralValueTypeMap>(
     dictionary: dict<'int', V>,
     sortBy: SortBy
   ): {
     /**
-     *
-     * 键列表
+     * 키 리스트
      */
     keyList: RuntimeReturnValueTypeMap['int_list']
     /**
-     *
-     * 值列表
+     * 값 리스트
      */
     valueList: RuntimeReturnValueTypeMap[`${V}_list`]
   } {
@@ -2743,29 +2568,21 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Sort and output the specified Dictionary by values in ascending or descending order
+   * 지정된 딕셔너리를 값 기준으로 오름차순 또는 내림차순 정렬하여 출력한다
    *
-   * 对字典按值排序: 将指定字典按值进行顺序或逆序排序后输出
-   *
-   * @param dictionary
-   *
-   * 字典
-   * @param sortBy
-   *
-   * 排序方式
+   * @param dictionary 딕셔너리
+   * @param sortBy 정렬 방식
    */
   sortDictionaryByValue<K extends DictKeyType, V extends 'int' | 'float'>(
     dictionary: dict<K, V>,
     sortBy: SortBy
   ): {
     /**
-     *
-     * 键列表
+     * 키 리스트
      */
     keyList: RuntimeReturnValueTypeMap[`${K}_list`]
     /**
-     *
-     * 值列表
+     * 값 리스트
      */
     valueList: RuntimeReturnValueTypeMap[`${V}_list`]
   } {
@@ -2792,9 +2609,7 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Break out of a Finite Loop. The output pin must connect to the [Break Loop] input parameter of the [Finite Loop] Node
-   *
-   * 跳出循环: 从有限循环中跳出。出引脚需要与节点【有限循环】的【跳出循环】入参相连
+   * 유한 루프에서 탈출한다. 출력 핀은 [유한 루프] 노드의 [루프 중단] 입력 파라미터에 연결해야 한다
    */
   breakLoop(...loopNodeIds: IntValue[]): void {
     const loopNodeIdObjs = loopNodeIds.map((id) => parseValue(id, 'int'))
@@ -2809,20 +2624,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * From the [Loop Start Value] to the [Loop End Value], the loop iterates, incrementing the Integer by 1 each time. On each iteration, it executes the Nodes connected to [Loop Body]. After a full iteration, it executes the Nodes connected to [Loop Complete].; Use [Break Loop] to end the iteration early. After exiting the loop, the logic connected to the [Loop Complete] node will also be executed.
+   * [루프 시작값]부터 [루프 종료값]까지 정수를 1씩 증가시키며 반복한다. 매 반복마다 [루프 바디]에 연결된 노드 로직을 실행하고, 전체 반복이 완료되면 [루프 완료]에 연결된 노드 로직을 실행한다. [루프 중단]을 사용해 반복을 조기에 종료할 수 있으며, 루프 탈출 후에도 [루프 완료]의 로직은 실행된다
    *
-   * 有限循环: 从【循环起始值】开始到【循环终止值】结束，会遍历其中的循环值，每次整数加一。每次循环会执行一次【循环体】后连接的节点逻辑。完成一次完整遍历后，会执行【循环完成】后连接的节点逻辑; 可以使用【跳出循环】来提前结束该循环值遍历，跳出循环后也会执行【循环完成】后连接的节点逻辑
-   *
-   * @param loopStartValue Starting integer value for iteration
-   *
-   * 循环起始值: 遍历开始的整数值
-   * @param loopEndValue Integer value at which the iteration ends
-   *
-   * 循环终止值: 遍历结束的整数值
-   *
-   * @returns Integer value of the current execution logic
-   *
-   * 当前循环值: 当次执行逻辑的整数值
+   * @param loopStartValue 루프 시작값: 반복을 시작하는 정수값
+   * @param loopEndValue 루프 종료값: 반복이 끝나는 정수값
+   * @returns 현재 루프값: 현재 실행 중인 반복의 정수값
    */
   finiteLoop(
     loopStartValue: IntValue,
@@ -2875,17 +2681,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Iterate through the specified List in sequential order
+   * 지정된 리스트를 순서대로 순회한다
    *
-   * 列表迭代循环: 按照列表顺序遍历循环指定列表
-   *
-   * @param iterationList List to iterate through
-   *
-   * 迭代列表: 被遍历循环的列表
-   *
-   * @returns Each value in the list
-   *
-   * 迭代值: 列表中的每个值
+   * @param iterationList 반복 리스트: 순회할 리스트
+   * @returns 반복값: 리스트의 각 값
    */
   listIterationLoop(
     iterationList: FloatValue[],
@@ -3003,13 +2802,9 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Accepts one input parameter as the control expression (supports Integer or String). Branches into multiple paths based on its value; When the value on an Output Pin equals the control expression, execution continues along that Output Pin. If no pin matches, the [Default] pin is taken
+   * 하나의 입력 파라미터를 제어 표현식(정수 또는 문자열 지원)으로 받아 값에 따라 여러 브랜치로 분기한다. 출력 핀의 값이 제어 표현식과 일치하면 해당 핀을 따라 실행이 계속되며, 일치하는 핀이 없으면 [기본] 핀이 실행된다
    *
-   * 多分支: 接受一个输入参数作为控制表达式(支持整数或字符串)，根据控制表达式的值可以分出多个不同的分支; 当出引脚上的值与控制表达式的值相等时，会沿该出引脚向后执行逻辑。如果没有找到匹配的引脚，则会走【默认】引脚
-   *
-   * @param controlExpression Only supports Integers or Strings
-   *
-   * 控制表达式: 仅支持整数或字符串
+   * @param controlExpression 제어 표현식: 정수 또는 문자열만 지원
    */
   multipleBranches(
     controlExpression: IntValue,
@@ -3193,13 +2988,9 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Branches into True or False based on the evaluated condition; When the Boolean is True, the [True] execution flow runs; when it is False, the [False] execution flow runs
+   * 조건의 평가 결과에 따라 True 또는 False 브랜치로 분기한다. 불리언이 True이면 [True] 실행 흐름이, False이면 [False] 실행 흐름이 실행된다
    *
-   * 双分支: 根据输入条件的判断结果可以分出“是”与“否”两个不同的分支; 当布尔值为“是”时，后续会执行【是】对应的执行流；布尔值为“否”时，会执行【否】对应的执行流
-   *
-   * @param condition
-   *
-   * 条件
+   * @param condition 조건
    */
   doubleBranch(condition: BoolValue, trueBranch: () => void, falseBranch: () => void): void {
     const TRUE_SOURCE_INDEX = 0
@@ -3236,13 +3027,9 @@ export class ServerExecutionFlowFunctions {
   // === AUTO-GENERATED START ===
 
   /**
-   * Outputs a string to the log, generally used for logic checks and debugging; In the log, this string prints whenever the logic runs successfully, regardless of whether this Node Graph is toggled
+   * 로그에 문자열을 출력한다. 주로 로직 확인 및 디버깅에 사용한다. 노드 그래프의 활성화 여부와 관계없이 로직이 성공적으로 실행될 때마다 출력된다
    *
-   * 打印字符串: 可以在日志中输出一条字符串，一般用于逻辑检测和调试; 在日志中，无论是否勾选了该节点图，逻辑成功运行时该字符串都会打印
-   *
-   * @param string The string to be printed
-   *
-   * 字符串: 所要打印的字符串
+   * @param string 문자열: 출력할 문자열
    */
   printString(string: StrValue): void {
     const stringObj = parseValue(string, 'str')
@@ -3255,13 +3042,9 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Forwards the source event of this Node's Execution Flow to the specified Target Entity. The event with the same name on the Target Entity's Node Graph will be triggered
+   * 이 노드의 실행 흐름 원본 이벤트를 지정된 대상 엔티티로 전달한다. 대상 엔티티의 노드 그래프에서 동일한 이름의 이벤트가 트리거된다
    *
-   * 转发事件: 向指定目标实体转发此节点所在的执行流的源头事件。被转发的目标实体上的节点图上的同名事件会被触发
-   *
-   * @param targetEntity Target entity being forwarded
-   *
-   * 目标实体: 被转发的目标实体
+   * @param targetEntity 대상 엔티티: 이벤트를 전달받을 엔티티
    */
   forwardingEvent(targetEntity: EntityValue): void {
     const targetEntityObj = parseValue(targetEntity, 'entity')
@@ -3274,19 +3057,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Insert a value at the specified ID Location in the specified List. The inserted value appears at that ID after insertion; For example: Inserting 5 at ID 2 in the List [1, 2, 3, 4] results in [1, 2, 5, 3, 4] (5 appears at ID 2)
+   * 지정된 리스트의 지정된 인덱스 위치에 값을 삽입한다. 삽입된 값은 삽입 후 해당 인덱스에 위치한다. 예: 리스트 [1, 2, 3, 4]의 인덱스 2에 5를 삽입하면 [1, 2, 5, 3, 4]가 된다
    *
-   * 对列表插入值: 向指定列表的指定序号位置插入值。被插入的值在插入后会出现在列表的插入序号位置; 例如：向列表[1，2，3，4]的序号2插入值5，插入后的列表为[1，2，5，3，4]（5出现在序号2的位置）
-   *
-   * @param list Reference to the list being inserted
-   *
-   * 列表: 被插入的列表引用
-   * @param insertId ID of the inserted value (after insertion)
-   *
-   * 插入序号: 插入值在插入后所在的序号
-   * @param insertValue Value to be inserted
-   *
-   * 插入值: 被插入的值
+   * @param list 리스트: 삽입 대상 리스트의 참조
+   * @param insertId 삽입 인덱스: 삽입 후 값이 위치할 인덱스
+   * @param insertValue 삽입값: 삽입할 값
    */
   insertValueIntoList(list: FloatValue[], insertId: IntValue, insertValue: FloatValue): void
   insertValueIntoList(list: IntValue[], insertId: IntValue, insertValue: IntValue): void
@@ -3343,19 +3118,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Edit the value at the specified ID Location in the specified List
+   * 지정된 리스트의 지정된 인덱스 위치의 값을 수정한다
    *
-   * 对列表修改值: 修改指定列表的指定序号位置的值
-   *
-   * @param list Edited list reference
-   *
-   * 列表: 被修改的列表引用
-   * @param id ID of edited value
-   *
-   * 序号: 修改的值的序号
-   * @param value Edited Value
-   *
-   * 值: 修改的值
+   * @param list 리스트: 수정 대상 리스트의 참조
+   * @param id 인덱스: 수정할 값의 인덱스
+   * @param value 값: 수정할 값
    */
   modifyValueInList(list: FloatValue[], id: IntValue, value: FloatValue): void
   modifyValueInList(list: IntValue[], id: IntValue, value: IntValue): void
@@ -3412,16 +3179,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Remove the value at the specified ID Location from the specified List. All subsequent values shift forward by one position
+   * 지정된 리스트의 지정된 인덱스 위치의 값을 제거한다. 제거 후 해당 인덱스 이후의 모든 값이 한 칸씩 앞으로 이동한다
    *
-   * 对列表移除值: 移除指定列表的指定序号位置的值。这会导致该序号后的所有值向前移动一位
-   *
-   * @param list Reference to the list of values to remove
-   *
-   * 列表: 被移除值的列表引用
-   * @param removeId ID to remove
-   *
-   * 移除序号: 需要移除的序号
+   * @param list 리스트: 값을 제거할 리스트의 참조
+   * @param removeId 제거 인덱스: 제거할 값의 인덱스
    */
   removeValueFromList(list: FloatValue[], removeId: IntValue): void
   removeValueFromList(list: IntValue[], removeId: IntValue): void
@@ -3472,16 +3233,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Sort the specified List according to the chosen sort method
+   * 지정된 리스트를 선택한 정렬 방식으로 정렬한다
    *
-   * 列表排序: 将指定列表按照排序方式进行排序
-   *
-   * @param list Integer List or Floating Point Number List
-   *
-   * 列表: 整数列表或浮点数列表
-   * @param sortBy Ascending or Descending
-   *
-   * 排序方式: 顺序（从小到大）或逆序（从大到小）排序
+   * @param list 리스트: 정수 리스트 또는 부동소수점 리스트
+   * @param sortBy 정렬 방식: 오름차순(작은 값 → 큰 값) 또는 내림차순(큰 값 → 작은 값)
    */
   listSorting(list: FloatValue[], sortBy: SortBy): void
   listSorting(list: IntValue[], sortBy: SortBy): void
@@ -3501,16 +3256,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Append the input List to the end of the Target List. For example, Target List [1, 2, 3] with input [4, 5] becomes [1, 2, 3, 4, 5] after execution
+   * 입력 리스트를 대상 리스트의 끝에 이어붙인다. 예: 대상 리스트 [1, 2, 3]에 [4, 5]를 이어붙이면 [1, 2, 3, 4, 5]가 된다
    *
-   * 拼接列表: 将接入列表拼接在目标列表后。例如：目标列表为[1,2,3]，接入的列表为[4,5]，在执行该节点后，目标列表会变为[1，2，3，4，5]
-   *
-   * @param targetList List being input
-   *
-   * 目标列表: 被接入的列表
-   * @param inputList The input list will be added to the end of the Target list
-   *
-   * 接入的列表: 接入的列表会接在目标列表的尾部
+   * @param targetList 대상 리스트: 이어붙임의 대상이 되는 리스트
+   * @param inputList 입력 리스트: 대상 리스트의 끝에 추가될 리스트
    */
   concatenateList(targetList: FloatValue[], inputList: FloatValue[]): void
   concatenateList(targetList: IntValue[], inputList: IntValue[]): void
@@ -3565,13 +3314,9 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Clear the specified List
+   * 지정된 리스트를 비운다
    *
-   * 清除列表: 清空指定列表
-   *
-   * @param list List to be cleared
-   *
-   * 列表: 所要清除的列表
+   * @param list 리스트: 비울 리스트
    */
   clearList(list: FloatValue[]): void
   clearList(list: IntValue[]): void
@@ -3621,19 +3366,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Set the Preset Status of the specified Target Entity
+   * 지정된 대상 엔티티의 프리셋 상태를 설정한다
    *
-   * 设置预设状态: 设置指定目标实体的预设状态
-   *
-   * @param targetEntity Preset Status set for the entity
-   *
-   * 目标实体: 所要设置预设状态的实体
-   * @param presetStatusIndex The unique identifier for the Preset Status
-   *
-   * 预设状态索引: 预设状态的唯一标识
-   * @param presetStatusValue Generally "0" for off, "1" for on
-   *
-   * 预设状态值: 一般“0”为关闭，“1”为开启
+   * @param targetEntity 대상 엔티티: 프리셋 상태를 설정할 엔티티
+   * @param presetStatusIndex 프리셋 상태 인덱스: 프리셋 상태의 고유 식별자
+   * @param presetStatusValue 프리셋 상태값: 일반적으로 “0”은 비활성, “1”은 활성
    */
   setPresetStatus(
     targetEntity: EntityValue,
@@ -3652,19 +3389,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * You can set the preset state value for a specified preset state index of a complex creation
+   * 복합 피조물의 지정된 프리셋 상태 인덱스에 해당하는 값을 설정한다
    *
-   * 设置复杂造物预设状态值: 设置复杂造物指定预设状态索引的值
-   *
-   * @param targetEntity Only applies to complex creations
-   *
-   * 目标实体: 仅对复杂造物生效
-   * @param presetStatusIndex
-   *
-   * 预设状态索引
-   * @param presetStatusValue
-   *
-   * 预设状态值
+   * @param targetEntity 대상 엔티티: 복합 피조물에만 적용된다
+   * @param presetStatusIndex 프리셋 상태 인덱스
+   * @param presetStatusValue 프리셋 상태값
    */
   setThePresetStatusValueOfTheComplexCreation(
     targetEntity: CreationEntity,
@@ -3683,16 +3412,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Create an Entity by GUID. The Entity must be pre-placed in the Scene
+   * GUID로 엔티티를 생성한다. 엔티티는 사전에 씬에 배치되어 있어야 한다
    *
-   * 创建实体: 根据GUID创建实体。要求预先将其布设在场景内
-   *
-   * @param targetGuid Identifier for this entity
-   *
-   * 目标GUID: 该实体的标识
-   * @param unitTagIndexList Determines the Unit Tags carried when this entity is created
-   *
-   * 单位标签索引列表: 可决定该实体创建时携带的单位标签
+   * @param targetGuid 대상 GUID: 해당 엔티티의 식별자
+   * @param unitTagIndexList 유닛 태그 인덱스 리스트: 엔티티 생성 시 부여할 유닛 태그를 결정한다
    */
   createEntity(targetGuid: GuidValue, unitTagIndexList: IntValue[]): void {
     const targetGuidObj = parseValue(targetGuid, 'guid')
@@ -3706,35 +3429,16 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Create an Entity by Prefab ID
+   * 프리팹 ID로 엔티티를 생성한다
    *
-   * 创建元件: 根据元件ID创建一个实体
-   *
-   * @param prefabId Identifier for this Prefab
-   *
-   * 元件ID: 该元件的标识
-   * @param location Absolute Location
-   *
-   * 位置: 绝对位置
-   * @param rotate Absolute Rotation
-   *
-   * 旋转: 绝对旋转
-   * @param ownerEntity Determines whether the created entity belongs to another entity
-   *
-   * 拥有者实体: 可决定该创建后实体是否归属于某个实体
-   * @param overwriteLevel When set to False, the [Level] parameter has no effect
-   *
-   * 是否覆写等级: 为否时，【等级】参数不生效
-   * @param level Determines the Level when the entity is created
-   *
-   * 等级: 决定该实体创建时的等级
-   * @param unitTagIndexList Determines the Unit Tags carried when this entity is created
-   *
-   * 单位标签索引列表: 可决定该实体创建时携带的单位标签
-   *
-   * @returns Entities created in this way do not have a GUID
-   *
-   * 创建后实体: 以该方式创建的实体没有GUID
+   * @param prefabId 프리팹 ID: 해당 프리팹의 식별자
+   * @param location 위치: 절대 위치
+   * @param rotate 회전: 절대 회전
+   * @param ownerEntity 소유자 엔티티: 생성된 엔티티가 다른 엔티티에 귀속될지 결정한다
+   * @param overwriteLevel 레벨 덮어쓰기 여부: False이면 [레벨] 파라미터가 적용되지 않는다
+   * @param level 레벨: 엔티티 생성 시의 레벨을 결정한다
+   * @param unitTagIndexList 유닛 태그 인덱스 리스트: 엔티티 생성 시 부여할 유닛 태그를 결정한다
+   * @returns 생성된 엔티티: 이 방식으로 생성된 엔티티는 GUID를 갖지 않는다
    */
   createPrefab(
     prefabId: PrefabIdValue,
@@ -3772,35 +3476,16 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Create the Entities contained in the Prefab Group by Prefab Group ID
+   * 프리팹 그룹 ID로 해당 프리팹 그룹에 포함된 엔티티들을 생성한다
    *
-   * 创建元件组: 根据元件组索引创建该元件组内包含的实体
-   *
-   * @param prefabGroupId Identifier for this Prefab Group
-   *
-   * 元件组索引: 该元件组的标识
-   * @param location Absolute Location of the Prefab Group center
-   *
-   * 位置: 元件组中心的绝对位置
-   * @param rotate Absolute Rotation of the Prefab Group center
-   *
-   * 旋转: 元件组中心的绝对旋转
-   * @param ownerEntity Determines whether the entity belongs to another entity after creation
-   *
-   * 归属者实体: 可决定创建后实体是否归属于某个实体
-   * @param level Determines the Level when the entity is created
-   *
-   * 等级: 决定实体创建时的等级
-   * @param unitTagIndexList Determines the Unit Tags carried when the entity is created
-   *
-   * 单位标签索引列表: 可决定实体创建时携带的单位标签
-   * @param overwriteLevel When set to False, the [Level] parameter has no effect
-   *
-   * 是否覆写等级: 为否时，【等级】参数不生效
-   *
-   * @returns Entities created in this way do not have a GUID
-   *
-   * 创建后实体列表: 以该方式创建的实体没有GUID
+   * @param prefabGroupId 프리팹 그룹 인덱스: 해당 프리팹 그룹의 식별자
+   * @param location 위치: 프리팹 그룹 중심의 절대 위치
+   * @param rotate 회전: 프리팹 그룹 중심의 절대 회전
+   * @param ownerEntity 귀속 엔티티: 생성된 엔티티가 다른 엔티티에 귀속될지 결정한다
+   * @param level 레벨: 엔티티 생성 시의 레벨을 결정한다
+   * @param unitTagIndexList 유닛 태그 인덱스 리스트: 엔티티 생성 시 부여할 유닛 태그를 결정한다
+   * @param overwriteLevel 레벨 덮어쓰기 여부: False이면 [레벨] 파라미터가 적용되지 않는다
+   * @returns 생성된 엔티티 리스트: 이 방식으로 생성된 엔티티는 GUID를 갖지 않는다
    */
   createPrefabGroup(
     prefabGroupId: IntValue,
@@ -3838,16 +3523,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Edit the Entity's Model Visibility attribute to make its Model visible or hidden
+   * 엔티티의 모델 가시성 속성을 수정하여 모델을 표시하거나 숨긴다
    *
-   * 激活/关闭模型显示: 更改实体的模型可见性属性设置，从而使实体的模型可见/不可见
-   *
-   * @param targetEntity The entity to be edited
-   *
-   * 目标实体: 所要修改的实体
-   * @param activate Set to True to make the model visible
-   *
-   * 是否激活: “是”为使模型可见
+   * @param targetEntity 대상 엔티티: 수정할 엔티티
+   * @param activate 활성화 여부: True이면 모델을 표시한다
    */
   activateDisableModelDisplay(targetEntity: EntityValue, activate: BoolValue): void {
     const targetEntityObj = parseValue(targetEntity, 'entity')
@@ -3861,13 +3540,9 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Destroy the specified Entity with a destruction effect. This can trigger logic that runs only after destruction, such as end-of-lifecycle behaviors for Local Projectiles; The [When Entity Is Destroyed] and [When Entity Is Removed/Destroyed] events can be monitored on Stage Entities
+   * 지정한 엔티티를 파괴 연출과 함께 소멸시킨다. 로컬 투사체의 수명 종료 시 동작 등 파괴 후에만 실행되는 로직을 트리거할 수 있다. 스테이지 엔티티에서는 [엔티티 파괴 시] 및 [엔티티 제거/파괴 시] 이벤트를 감지할 수 있다
    *
-   * 销毁实体: 销毁指定实体，会有销毁表现，也可以触发一些销毁后才会触发的逻辑，比如本地投射物中的生命周期结束时行为; 在关卡实体上可以监听到【实体销毁时】以及【实体移除/销毁时】事件
-   *
-   * @param targetEntity The entity to be destroyed
-   *
-   * 目标实体: 所要销毁的实体
+   * @param targetEntity 대상 엔티티: 파괴할 엔티티
    */
   destroyEntity(targetEntity: EntityValue): void {
     const targetEntityObj = parseValue(targetEntity, 'entity')
@@ -3880,13 +3555,9 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Remove the specified Entity. Unlike destroying an Entity, this has no destruction effect and does not trigger logic that runs only after destruction; Removing an Entity does not trigger the [On Entity Destroyed] event, but it can trigger the [On Entity Removed/Destroyed] event
+   * 지정한 엔티티를 제거한다. 파괴와 달리 파괴 연출이 없으며, 파괴 후에만 실행되는 로직도 트리거되지 않는다. [엔티티 파괴 시] 이벤트는 발생하지 않지만 [엔티티 제거/파괴 시] 이벤트는 발생할 수 있다
    *
-   * 移除实体: 移除指定实体，与销毁实体不同的是，不会有销毁表现，也不会触发销毁后才会触发的逻辑; 移除实体不会触发【实体销毁时】事件，但可以触发【实体移除/销毁时】事件
-   *
-   * @param targetEntity The entity to be removed
-   *
-   * 目标实体: 所要移除的实体
+   * @param targetEntity 대상 엔티티: 제거할 엔티티
    */
   removeEntity(targetEntity: EntityValue): void {
     const targetEntityObj = parseValue(targetEntity, 'entity')
@@ -3899,9 +3570,7 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Triggers the Stage Settlement process, which executes out-of-stage logic as defined in Stage Settlement
-   *
-   * 结算关卡: 触发关卡结算流程，会按照关卡结算内的逻辑进行局外的逻辑结算
+   * 스테이지 정산 프로세스를 트리거한다. 스테이지 정산에 정의된 로직에 따라 외부 로직 정산을 실행한다
    */
   settleStage(): void {
     this.registry.registerNode({
@@ -3913,13 +3582,9 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Instantly switch Environment Time to the specified hour. The parameter must be a Floating Point Number between 0 and 24; If the target hour is earlier than the current hour, it is treated as the next day (+1 day)
+   * 환경 시간을 즉시 지정한 시간으로 전환한다. 파라미터는 0~24 사이의 부동소수점 값이어야 한다. 목표 시각이 현재 시각보다 이른 경우 다음 날(+1일)로 처리된다
    *
-   * 设置当前环境时间: 立即切换环境时间到指定小时，参数需要是0~24之间的浮点数值; 若目标小时数小于当前时间，视为天数+1
-   *
-   * @param environmentTime Must be a floating point value between 0–24; this Node will not take effect if the value is outside this range
-   *
-   * 环境时间: 需要是0~24浮点数值，超出范围外时节点不生效
+   * @param environmentTime 환경 시간: 0~24 사이의 부동소수점 값이어야 하며, 범위를 벗어나면 노드가 적용되지 않는다
    */
   setCurrentEnvironmentTime(environmentTime: FloatValue): void {
     const environmentTimeObj = parseValue(environmentTime, 'float')
@@ -3932,13 +3597,9 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Minutes elapsed per second, limited to 0 - 60 (Teyvat speed is 1)
+   * 초당 경과 분(환경 시간 흐름 속도)을 설정한다. 0~60 범위로 제한된다 (티바트 기본값은 1)
    *
-   * 设置环境时间流逝速度: 每秒流逝分钟数，会被限制在0~60之间（提瓦特速度为1）
-   *
-   * @param environmentTimePassageSpeed Clamped to the range 0–60. Values outside this range are automatically set to 0 or 60
-   *
-   * 环境时间流逝速度: 会被限制在0~60之间，超出范围外时会按0或60生效
+   * @param environmentTimePassageSpeed 환경 시간 흐름 속도: 0~60 범위로 제한되며, 범위를 벗어나면 0 또는 60으로 적용된다
    */
   setEnvironmentTimePassageSpeed(environmentTimePassageSpeed: FloatValue): void {
     const environmentTimePassageSpeedObj = parseValue(environmentTimePassageSpeed, 'float')
@@ -3951,16 +3612,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Edit the Faction of the specified Target Entity
+   * 지정한 대상 엔티티의 진영을 수정한다
    *
-   * 修改实体阵营: 修改指定目标实体的阵营
-   *
-   * @param targetEntity Entity whose faction is to be edited
-   *
-   * 目标实体: 所要修改阵营的实体
-   * @param faction Edited Faction
-   *
-   * 阵营: 修改后的阵营
+   * @param targetEntity 대상 엔티티: 진영을 수정할 엔티티
+   * @param faction 진영: 수정 후 적용할 진영
    */
   modifyEntityFaction(targetEntity: EntityValue, faction: FactionValue): void {
     const targetEntityObj = parseValue(targetEntity, 'entity')
@@ -3974,23 +3629,13 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Teleport the specified Player Entity. A loading interface may appear depending on teleport distance
+   * 지정한 플레이어 엔티티를 텔레포트한다. 이동 거리에 따라 로딩 화면이 표시될 수 있다
    *
-   * 传送玩家: 传送指定玩家实体。会根据传送距离的远近决定是否有加载界面
+   * GSTS 참고: 내부 쿨다운이 있으므로 좌표를 빈번하게 변경하는 용도로는 사용할 수 없다
    *
-   * GSTS Note: There is an internal cd, and it cannot be used for frequent coordinate movement
-   *
-   * GSTS 注: 有内置cd, 不可用于高频设置坐标移动
-   *
-   * @param playerEntity Active Player
-   *
-   * 玩家实体: 生效的玩家
-   * @param targetLocation Absolute Location
-   *
-   * 目标位置: 绝对位置
-   * @param targetRotation Absolute Rotation
-   *
-   * 目标旋转: 绝对旋转
+   * @param playerEntity 플레이어 엔티티: 효과가 적용될 플레이어
+   * @param targetLocation 목표 위치: 절대 위치
+   * @param targetRotation 목표 회전: 절대 회전
    */
   teleportPlayer(
     playerEntity: PlayerEntity,
@@ -4009,13 +3654,9 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Revive the specified Character Entity
+   * 지정한 캐릭터 엔티티를 부활시킨다
    *
-   * 复苏角色: 复苏指定的角色实体
-   *
-   * @param characterEntity The Character Entity to be revived
-   *
-   * 角色实体: 会被复苏的角色实体
+   * @param characterEntity 캐릭터 엔티티: 부활시킬 캐릭터 엔티티
    */
   reviveCharacter(characterEntity: CharacterEntity): void {
     const characterEntityObj = parseValue(characterEntity, 'entity')
@@ -4028,16 +3669,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Revive all Character Entities of the specified player. In Beyond Mode, since each player has only one character, this is equivalent to [Revive Character]
+   * 지정한 플레이어의 모든 캐릭터 엔티티를 부활시킨다. 비욘드 모드에서는 플레이어당 캐릭터가 하나뿐이므로 [캐릭터 부활]과 동일한 효과를 갖는다
    *
-   * 复苏玩家所有角色: 复苏指定玩家的所有角色实体。在超限模式中，由于每个玩家只有一个角色，与【复苏角色】的效果相同
-   *
-   * @param playerEntity The Player Entity that owns the Character
-   *
-   * 玩家实体: 角色归属的玩家实体
-   * @param deductRevives If set to False, the Revive Count will not be deducted
-   *
-   * 是否扣除复苏次数: 为否时，不会扣除复苏次数
+   * @param playerEntity 플레이어 엔티티: 캐릭터가 귀속된 플레이어 엔티티
+   * @param deductRevives 부활 횟수 차감 여부: False이면 부활 횟수를 차감하지 않는다
    */
   reviveAllPlayerSCharacters(playerEntity: PlayerEntity, deductRevives: BoolValue): void {
     const playerEntityObj = parseValue(playerEntity, 'entity')
@@ -4051,17 +3686,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Revive the active character of the specified player
+   * 지정한 플레이어의 현재 출전 캐릭터를 부활시킨다
    *
-   * Available only in Classic Mode.
+   * 클래식 모드 전용.
    *
-   * 复苏当前场上角色: 复苏指定玩家当前场上角色
-   *
-   * 仅经典模式可用
-   *
-   * @param playerEntity The Player Entity that owns the active character
-   *
-   * 玩家实体: 当前场上角色归属的玩家实体
+   * @param playerEntity 플레이어 엔티티: 현재 출전 캐릭터가 귀속된 플레이어 엔티티
    */
   reviveActiveCharacter(playerEntity: PlayerEntity): void {
     const playerEntityObj = parseValue(playerEntity, 'entity')
@@ -4074,13 +3703,9 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Knock down all characters of the specified player, causing the player to enter When All Player's Characters Are Down state.
+   * 지정한 플레이어의 모든 캐릭터를 쓰러뜨려 전원 다운 상태로 만든다
    *
-   * 击倒玩家所有角色: 击倒指定玩家的所有角色，会导致该玩家进入玩家所有角色倒下状态
-   *
-   * @param playerEntity The Player Entity that owns the Character
-   *
-   * 玩家实体: 角色归属的玩家实体
+   * @param playerEntity 플레이어 엔티티: 캐릭터가 귀속된 플레이어 엔티티
    */
   defeatAllPlayerSCharacters(playerEntity: PlayerEntity): void {
     const playerEntityObj = parseValue(playerEntity, 'entity')
@@ -4093,16 +3718,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Activate the specified Revive Point ID for the player. When the player later triggers Revive logic, they can revive at this Revive Point
+   * 플레이어에게 지정한 번호의 부활 지점을 활성화한다. 이후 플레이어가 부활 로직을 발동하면 해당 지점에서 부활할 수 있다
    *
-   * 激活复苏点: 为该玩家激活指定序号的复苏点，此玩家后续触发复苏逻辑时，可以从该复苏点复苏
-   *
-   * @param playerEntity Active Player
-   *
-   * 玩家实体: 生效的玩家
-   * @param revivePointId Identifier for this Revive Point
-   *
-   * 复苏点序号: 该复苏点的标识
+   * @param playerEntity 플레이어 엔티티: 효과가 적용될 플레이어
+   * @param revivePointId 부활 지점 번호: 해당 부활 지점의 식별자
    */
   activateRevivePoint(playerEntity: PlayerEntity, revivePointId: IntValue): void {
     const playerEntityObj = parseValue(playerEntity, 'entity')
@@ -4116,16 +3735,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Set the duration for the Player's next revive. If the Player is currently reviving, this does not affect the ongoing revive process
+   * 지정한 플레이어의 다음 부활 소요 시간을 설정한다. 현재 부활 중인 경우 진행 중인 부활에는 영향을 주지 않는다
    *
-   * 设置玩家复苏耗时: 设置指定玩家的下一次复苏的时长。如果玩家当前正处于复苏中，不会影响该次复苏的耗时
-   *
-   * @param playerEntity Active Player
-   *
-   * 玩家实体: 生效的玩家
-   * @param duration Unit in seconds
-   *
-   * 时长: 单位为秒
+   * @param playerEntity 플레이어 엔티티: 효과가 적용될 플레이어
+   * @param duration 시간: 단위는 초
    */
   setPlayerReviveTime(playerEntity: PlayerEntity, duration: IntValue): void {
     const playerEntityObj = parseValue(playerEntity, 'entity')
@@ -4139,16 +3752,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Set the remaining number of revives for the specified Player. When set to 0, the Player cannot revive
+   * 지정한 플레이어의 남은 부활 횟수를 설정한다. 0으로 설정하면 해당 플레이어는 부활할 수 없다
    *
-   * 设置玩家剩余复苏次数: 设置指定玩家剩余复苏次数。设置为0时，该玩家无法复苏
-   *
-   * @param playerEntity Active Player
-   *
-   * 玩家实体: 生效的玩家
-   * @param remainingTimes When set to 0, the player will not be revived
-   *
-   * 剩余次数: 设置为0时，该玩家无法复苏
+   * @param playerEntity 플레이어 엔티티: 효과가 적용될 플레이어
+   * @param remainingTimes 남은 횟수: 0으로 설정하면 해당 플레이어는 부활할 수 없다
    */
   setPlayerRemainingRevives(playerEntity: PlayerEntity, remainingTimes: IntValue): void {
     const playerEntityObj = parseValue(playerEntity, 'entity')
@@ -4162,22 +3769,12 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Apply the specified Environment Configuration to the designated player. Takes effect immediately upon execution
+   * 지정한 플레이어에게 환경 설정을 적용한다. 실행 즉시 효과가 발생한다
    *
-   * 修改环境配置: 使指定玩家应用指定的环境配置，运行后会立即生效
-   *
-   * @param environmentConfigIndex Identifier for this Environment Configuration
-   *
-   * 环境配置索引: 环境配置的标识
-   * @param targetPlayerList Applies only to Players in the specified list
-   *
-   * 目标玩家列表: 只对指定玩家列表中的玩家生效
-   * @param enableWeatherConfig Set to True to enable
-   *
-   * 是否启用天气配置: “是”为启用
-   * @param weatherConfigIndex The Weather Configuration matching this ID will take effect. If the ID does not exist, nothing happens
-   *
-   * 天气配置序号: 会生效该序号对应的天气配置，不存在该序号则不生效
+   * @param environmentConfigIndex 환경 설정 인덱스: 환경 설정의 식별자
+   * @param targetPlayerList 대상 플레이어 리스트: 지정된 리스트에 포함된 플레이어에게만 적용된다
+   * @param enableWeatherConfig 날씨 설정 활성화 여부: True이면 활성화한다
+   * @param weatherConfigIndex 날씨 설정 번호: 해당 번호의 날씨 설정을 적용하며, 번호가 존재하지 않으면 적용되지 않는다
    */
   modifyEnvironmentSettings(
     environmentConfigIndex: IntValue,
@@ -4203,16 +3800,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Set whether the specified player is allowed to revive
+   * 지정한 플레이어의 부활 허용 여부를 설정한다
    *
-   * 允许/禁止玩家复苏: 设置指定玩家是否允许复苏
-   *
-   * @param playerEntity Active Player
-   *
-   * 玩家实体: 生效的玩家
-   * @param allow If set to True, reviving is allowed
-   *
-   * 是否允许: “是”则允许复苏
+   * @param playerEntity 플레이어 엔티티: 효과가 적용될 플레이어
+   * @param allow 허용 여부: True이면 부활을 허용한다
    */
   allowForbidPlayerToRevive(playerEntity: PlayerEntity, allow: BoolValue): void {
     const playerEntityObj = parseValue(playerEntity, 'entity')
@@ -4226,16 +3817,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Unregister the specified Revive Point ID for the player. The layer will not revive at this Revive Point next time
+   * 플레이어에게 지정한 번호의 부활 지점을 비활성화한다. 이후 해당 플레이어가 부활할 때 해당 지점은 사용되지 않는다
    *
-   * 注销复苏点: 为该玩家注销指定序号的复苏点。该玩家下次复苏时不会从该复苏点复苏
-   *
-   * @param playerEntity Active Player
-   *
-   * 玩家实体: 生效的玩家
-   * @param revivePointId Identifier for this Revive Point
-   *
-   * 复苏点序号: 该复苏点的标识
+   * @param playerEntity 플레이어 엔티티: 효과가 적용될 플레이어
+   * @param revivePointId 부활 지점 번호: 해당 부활 지점의 식별자
    */
   deactivateRevivePoint(playerEntity: PlayerEntity, revivePointId: IntValue): void {
     const playerEntityObj = parseValue(playerEntity, 'entity')
@@ -4249,19 +3834,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Edit data in the Entity's Extra Collision Component to enable/disable Extra Collision
+   * 엔티티의 추가 콜리전 컴포넌트 데이터를 수정하여 추가 콜리전을 활성화하거나 비활성화한다
    *
-   * 激活/关闭额外碰撞: 修改实体额外碰撞组件内的数据，使额外碰撞开启/关闭
-   *
-   * @param targetEntity Active Entity
-   *
-   * 目标实体: 生效的实体
-   * @param extraCollisionId Identifier for this Extra Collision
-   *
-   * 额外碰撞序号: 该额外碰撞的标识
-   * @param activate Set to True to activate
-   *
-   * 是否激活: “是”为激活
+   * @param targetEntity 대상 엔티티: 효과가 적용될 엔티티
+   * @param extraCollisionId 추가 콜리전 번호: 해당 추가 콜리전의 식별자
+   * @param activate 활성화 여부: True이면 활성화한다
    */
   activateDisableExtraCollision(
     targetEntity: EntityValue,
@@ -4280,19 +3857,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Edit the Climbability of the Entity's Extra Collision Component
+   * 엔티티의 추가 콜리전 컴포넌트에서 해당 콜리전의 등반 가능 여부를 수정한다
    *
-   * 激活/关闭额外碰撞可攀爬性: 修改实体额外碰撞组件的碰撞的可攀爬性
-   *
-   * @param targetEntity Active Entity
-   *
-   * 目标实体: 生效的实体
-   * @param extraCollisionId Identifier for this Extra Collision
-   *
-   * 额外碰撞序号: 该额外碰撞的标识
-   * @param activate Set to True to activate
-   *
-   * 是否激活: “是”为激活
+   * @param targetEntity 대상 엔티티: 효과가 적용될 엔티티
+   * @param extraCollisionId 추가 콜리전 번호: 해당 추가 콜리전의 식별자
+   * @param activate 활성화 여부: True이면 활성화한다
    */
   activateDisableExtraCollisionClimbability(
     targetEntity: EntityValue,
@@ -4311,16 +3880,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Edit the Entity's Native Collision
+   * 엔티티의 기본 콜리전을 활성화하거나 비활성화한다
    *
-   * 激活/关闭原生碰撞: 修改实体自带的碰撞
-   *
-   * @param targetEntity Active Entity
-   *
-   * 目标实体: 生效的实体
-   * @param activate Set to True to activate
-   *
-   * 是否激活: “是”为激活
+   * @param targetEntity 대상 엔티티: 효과가 적용될 엔티티
+   * @param activate 활성화 여부: True이면 활성화한다
    */
   activateDisableNativeCollision(targetEntity: EntityValue, activate: BoolValue): void {
     const targetEntityObj = parseValue(targetEntity, 'entity')
@@ -4334,16 +3897,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Edit the Climbability of the Entity's Native Collision
+   * 엔티티의 기본 콜리전에 대한 등반 가능 여부를 수정한다
    *
-   * 激活/关闭原生碰撞可攀爬性: 修改实体自带的碰撞的可攀爬性
-   *
-   * @param targetEntity Active Entity
-   *
-   * 目标实体: 生效的实体
-   * @param activate Set to True to activate
-   *
-   * 是否激活: “是”为激活
+   * @param targetEntity 대상 엔티티: 효과가 적용될 엔티티
+   * @param activate 활성화 여부: True이면 활성화한다
    */
   activateDisableNativeCollisionClimbability(targetEntity: EntityValue, activate: BoolValue): void {
     const targetEntityObj = parseValue(targetEntity, 'entity')
@@ -4357,19 +3914,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Edit the Collision Trigger Component data to Activate/Disable the Trigger at the specified ID
+   * 콜리전 트리거 컴포넌트 데이터를 수정하여 지정한 번호의 트리거를 활성화하거나 비활성화한다
    *
-   * 激活/关闭碰撞触发器: 修改碰撞触发器组件的数据，使某一个序号的触发器激活/关闭
-   *
-   * @param targetEntity Active Entity
-   *
-   * 目标实体: 生效的实体
-   * @param triggerId Identifier for this Collision Trigger
-   *
-   * 触发器序号: 该碰撞触发器的标识
-   * @param activate Set to True to activate
-   *
-   * 是否激活: “是”为激活
+   * @param targetEntity 대상 엔티티: 효과가 적용될 엔티티
+   * @param triggerId 트리거 번호: 해당 콜리전 트리거의 식별자
+   * @param activate 활성화 여부: True이면 활성화한다
    */
   activateDisableCollisionTrigger(
     targetEntity: EntityValue,
@@ -4388,20 +3937,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * You can modify whether the pathfinding obstacle component of the target entity, corresponding to the specified
-   * index, is active
+   * 대상 엔티티의 길찾기 장애물 컴포넌트에서 지정한 번호의 활성화 상태를 수정한다
    *
-   * 激活/关闭寻路阻挡: 修改目标实体的寻路阻挡组件中指定序号的激活状态
-   *
-   * @param targetEntity Only applies to objects
-   *
-   * 目标实体: 仅对物件生效
-   * @param pathfindingObstacleId Identifier for this Pathfinding Obstacle
-   *
-   * 寻路阻挡序号: 该寻路阻挡的标识
-   * @param activate
-   *
-   * 是否激活
+   * @param targetEntity 대상 엔티티: 오브젝트에만 적용된다
+   * @param pathfindingObstacleId 길찾기 장애물 번호: 해당 장애물의 식별자
+   * @param activate 활성화 여부
    */
   activateDisablePathfindingObstacle(
     targetEntity: EntityValue,
@@ -4420,16 +3960,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * You can modify whether the pathfinding obstacle feature of the target entity is activated
+   * 대상 엔티티의 길찾기 장애물 기능 활성화 여부를 수정한다
    *
-   * 激活/关闭寻路阻挡功能: 修改目标实体的寻路阻挡功能是否启用
-   *
-   * @param targetEntity Only applies to objects
-   *
-   * 目标实体: 仅对物件生效
-   * @param activate
-   *
-   * 是否激活
+   * @param targetEntity 대상 엔티티: 오브젝트에만 적용된다
+   * @param activate 활성화 여부
    */
   activateDisablePathfindingObstacleFeature(targetEntity: EntityValue, activate: BoolValue): void {
     const targetEntityObj = parseValue(targetEntity, 'entity')
@@ -4443,34 +3977,16 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Make the specified Entity initiate an attack. The Entity that uses this node must have the corresponding Ability Unit configured.; There are two usage modes:; When the Ability Unit is [Hitbox Attack], it executes a hitbox attack centered on the Target Entity's Location; When the Ability Unit is [Direct Attack], it directly attacks the Target Entity
+   * 지정한 엔티티가 공격을 발동하게 한다. 이 노드를 사용하는 엔티티에는 대응하는 어빌리티 유닛이 구성되어 있어야 한다. 어빌리티 유닛이 [히트박스 공격]이면 대상 엔티티 위치를 기준으로 히트박스 공격을 수행하고, [직접 공격]이면 대상 엔티티를 직접 공격한다
    *
-   * 发起攻击: 使指定实体发起攻击。使用该节点的实体上需要有对应的能力单元配置。; 分为两种使用方式：; 当能力单元为【攻击盒攻击】时，会以目标实体的位置为基准，打出一次攻击盒攻击; 当能力单元为【直接攻击】时，会直接攻击目标实体
-   *
-   * @param targetEntity Depending on the Ability Unit, this can be treated either as the reference target for the Hitbox Location or as the attack target
-   *
-   * 目标实体: 根据能力单元不同，可以视为攻击盒位置的基准目标或攻击对象
-   * @param damageCoefficient The coefficient applied to the damage dealt by this attack
-   *
-   * 伤害系数: 该次攻击造成伤害的系数
-   * @param damageIncrement The incremental damage applied by this attack
-   *
-   * 伤害增量: 该次攻击造成伤害的增量
-   * @param locationOffset When using Hitbox Attack, determines the Hitbox offset When using Direct Attack, determines the hit-detection location for the attack and thus where on-hit special effects are created
-   *
-   * 位置偏移: 使用【攻击盒攻击】时，决定了攻击盒的偏移 使用【直接攻击】时，决定了该次攻击的判定位置，影响受击特效等的创建位置
-   * @param rotationOffset When using Hitbox Attack, determines the Hitbox rotation When using Direct Attack, determines the hit-detection location for the attack and thus the rotation used for on-hit effects
-   *
-   * 旋转偏移: 使用【攻击盒攻击】时，决定了攻击盒的旋转 使用【直接攻击】时，决定了该次攻击的判定位置，影响受击特效等的旋转
-   * @param abilityUnit Referenced Ability Unit. Must be configured on the entity associated with this Node Graph
-   *
-   * 能力单元: 引用的能力单元，需要配置在此节点图所关联的实体上
-   * @param overwriteAbilityUnitConfig When set to True, the four parameters — Damage Coefficient, Damage Increment, Location Offset, and Rotation Offset — overwrite parameters of the same name in the Ability Unit. When set to False, the Ability Unit's original configuration is used
-   *
-   * 是否覆写能力单元配置: 为“是”时，伤害系数、伤害增量、位置偏移、旋转偏移这四个系数会覆写能力单元中的同名配置。为“否”时，则使用能力单元中的配置
-   * @param initiatorEntity Determines the Initiator Entity for this attack. Defaults to the Entity associated with this Node Graph. Affects which attacker is identified in events such as On Hit and When Attacked
-   *
-   * 发起者实体: 决定了该次攻击的发起者实体，默认为该节点图所关联的实体。影响【攻击命中时】、【受到攻击时】等事件中判定的攻击者
+   * @param targetEntity 대상 엔티티: 어빌리티 유닛에 따라 히트박스 위치 기준 대상 또는 공격 대상으로 사용된다
+   * @param damageCoefficient 데미지 계수: 이번 공격에 적용되는 데미지 계수
+   * @param damageIncrement 데미지 증가량: 이번 공격에 적용되는 데미지 증가량
+   * @param locationOffset 위치 오프셋: [히트박스 공격] 시 히트박스 오프셋을 결정하며, [직접 공격] 시 판정 위치(피격 이펙트 생성 위치 등)를 결정한다
+   * @param rotationOffset 회전 오프셋: [히트박스 공격] 시 히트박스 회전을 결정하며, [직접 공격] 시 판정 위치의 회전(피격 이펙트 등)을 결정한다
+   * @param abilityUnit 어빌리티 유닛: 참조할 어빌리티 유닛. 이 노드 그래프와 연결된 엔티티에 구성되어 있어야 한다
+   * @param overwriteAbilityUnitConfig 어빌리티 유닛 설정 덮어쓰기 여부: True이면 데미지 계수·데미지 증가량·위치 오프셋·회전 오프셋이 어빌리티 유닛의 동명 설정을 덮어쓴다. False이면 어빌리티 유닛의 설정이 사용된다
+   * @param initiatorEntity 발동자 엔티티: 이번 공격의 발동자 엔티티를 결정한다. 기본값은 이 노드 그래프와 연결된 엔티티이다. [공격 히트 시], [공격받을 때] 등 이벤트에서 공격자 판정에 영향을 준다
    */
   initiateAttack(
     targetEntity: EntityValue,
@@ -4508,25 +4024,13 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Restore HP to the specified Target Entity via an Ability Unit
+   * 어빌리티 유닛을 통해 지정한 대상 엔티티의 HP를 회복시킨다
    *
-   * 恢复生命: 通过能力单元为指定目标实体恢复生命
-   *
-   * @param targetEntity Target of HP restoration
-   *
-   * 目标实体: 恢复生命的目标
-   * @param recoveryAmount The amount of HP restored in this healing instance
-   *
-   * 恢复量: 该次恢复生命的恢复量
-   * @param abilityUnit Referenced Ability Unit. Must be configured on the entity associated with this Node Graph
-   *
-   * 能力单元: 引用的能力单元。需要配置在此节点图所关联的实体上
-   * @param overwriteAbilityUnitConfig When set to True, the Recovery Amount overwrites the parameter of the same name in the Ability Unit. When set to False, the Ability Unit's original configuration is used
-   *
-   * 是否覆写能力单元配置: 为“是”时，恢复量会覆盖能力单元中的同名配置。为“否”时，使用能力单元中的配置
-   * @param recoverInitiatorEntity Determines the Initiator Entity of this healing action. Defaults to the Entity associated with this Node Graph. Affects healer identification in events such as When HP Is Recovered and When Initiating HP Recovery
-   *
-   * 恢复发起者实体: 决定了该次恢复行为的发起者实体，默认为该节点图所关联的实体。影响【被恢复生命值时】、【发起恢复生命值时】等事件中判定的恢复者
+   * @param targetEntity 대상 엔티티: HP 회복 대상
+   * @param recoveryAmount 회복량: 이번 HP 회복의 회복량
+   * @param abilityUnit 어빌리티 유닛: 참조할 어빌리티 유닛. 이 노드 그래프와 연결된 엔티티에 구성되어 있어야 한다
+   * @param overwriteAbilityUnitConfig 어빌리티 유닛 설정 덮어쓰기 여부: True이면 회복량이 어빌리티 유닛의 동명 설정을 덮어쓴다. False이면 어빌리티 유닛의 설정이 사용된다
+   * @param recoverInitiatorEntity 회복 발동자 엔티티: 이번 회복 행동의 발동자 엔티티를 결정한다. 기본값은 이 노드 그래프와 연결된 엔티티이다. [HP 회복받을 때], [HP 회복 발동 시] 등 이벤트에서 회복자 판정에 영향을 준다
    */
   recoverHp(
     targetEntity: EntityValue,
@@ -4555,28 +4059,14 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Directly cause the specified target to lose HP. Losing HP is not an attack, so it does not trigger attack-related events
+   * 지정한 대상이 직접 HP를 잃게 한다. HP 손실은 공격이 아니므로 공격 관련 이벤트를 트리거하지 않는다
    *
-   * 损失生命: 使指定目标直接损失生命。损失生命不是攻击，因此不会触发攻击相关的事件
-   *
-   * @param targetEntity Target that loses HP
-   *
-   * 目标实体: 损失生命的目标
-   * @param hpLoss The amount of HP lost in this instance
-   *
-   * 生命损失量: 该次损失生命值的损失量
-   * @param lethal If set to False, this HP loss will leave the Target with at least 1 HP remaining
-   *
-   * 是否致命: 为“否”时，该次损失生命最多使目标生命扣为1点
-   * @param canBeBlockedByInvincibility If set to True, and the Target is set to Invincible via Unit Status, HP loss has no effect
-   *
-   * 是否可被无敌抵挡: 为“是”时，如果目标已经通过单位状态设置为了无敌，则损失生命不生效
-   * @param canBeBlockedByLockedHp If set to True, and the Target's HP is locked via Unit Status, HP loss has no effect
-   *
-   * 是否可被锁定生命值抵挡: 为“是”时，如果目标已经通过单位状态设置为了锁定生命值，则损失生命不生效
-   * @param damagePopUpType No Pop-UpNormal Pop-UpCRIT Hit Pop-Up
-   *
-   * 伤害跳字类型: 无跳字普通跳字暴击跳字
+   * @param targetEntity 대상 엔티티: HP를 잃을 대상
+   * @param hpLoss HP 손실량: 이번 HP 손실의 손실량
+   * @param lethal 치명 여부: False이면 이번 HP 손실로 대상의 HP가 최소 1 이상 남는다
+   * @param canBeBlockedByInvincibility 무적으로 차단 가능 여부: True이면, 대상이 유닛 상태로 무적 상태일 경우 HP 손실이 적용되지 않는다
+   * @param canBeBlockedByLockedHp HP 고정으로 차단 가능 여부: True이면, 대상이 유닛 상태로 HP 고정 상태일 경우 HP 손실이 적용되지 않는다
+   * @param damagePopUpType 데미지 팝업 유형: 팝업 없음 / 일반 팝업 / 치명타 팝업
    */
   hpLoss(
     targetEntity: EntityValue,
@@ -4608,31 +4098,15 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Directly restore HP to the specified Target Entity. Unlike [Recover HP], this node does not require an Ability Unit
+   * 지정한 대상 엔티티의 HP를 직접 회복시킨다. [HP 회복]과 달리 어빌리티 유닛이 필요하지 않다
    *
-   * 直接恢复生命: 直接恢复指定实体目标的生命。与【恢复生命】不同的是，此节点不需要使用能力单元
-   *
-   * @param recoverInitiatorEntity The Entity that initiates healing
-   *
-   * 恢复发起实体: 发起恢复的实体
-   * @param recoverTargetEntity The Target Entity to be healed
-   *
-   * 恢复目标实体: 恢复的目标实体
-   * @param recoveryAmount The amount of HP restored in this healing instance
-   *
-   * 恢复量: 该次恢复生命的恢复量
-   * @param ignoreRecoveryAmountAdjustment If set to True, this healing amount is not affected by the Target's Unit Status effects that adjust healing
-   *
-   * 是否忽略恢复量调整: 为“是”时，该次恢复量不受目标的恢复量调整类的单位状态的影响
-   * @param aggroGenerationMultiplier The Aggro generated by this healing, expressed as a multiplier. Only applicable when using Custom Aggro Mode
-   *
-   * 产生仇恨的倍率: 此次恢复产生的仇恨倍率。仅使用自定义仇恨模式时有意义
-   * @param aggroGenerationIncrement The Aggro generated by this healing, expressed as an incremental value. Only applicable when using Custom Aggro Mode
-   *
-   * 产生仇恨的增量: 此次恢复产生的仇恨增量。仅使用自定义仇恨模式时有意义
-   * @param healingTagList The list of tags associated with this healing action. These can be accessed in the When HP Is Recovered and When Initiating HP Recovery events to identify a specific healing action
-   *
-   * 治疗标签列表: 此次恢复行为的标签列表。在【发起恢复生命值】时以及【被恢复生命值时】事件中可以取出，用于判定一次特定的恢复行为
+   * @param recoverInitiatorEntity 회복 발동 엔티티: 회복을 발동하는 엔티티
+   * @param recoverTargetEntity 회복 대상 엔티티: HP를 회복받을 대상 엔티티
+   * @param recoveryAmount 회복량: 이번 HP 회복의 회복량
+   * @param ignoreRecoveryAmountAdjustment 회복량 조정 무시 여부: True이면 대상의 회복량 조정 유닛 상태의 영향을 받지 않는다
+   * @param aggroGenerationMultiplier 어그로 발생 배율: 이번 회복으로 발생하는 어그로 배율. 커스텀 어그로 모드 사용 시에만 의미가 있다
+   * @param aggroGenerationIncrement 어그로 발생 증가량: 이번 회복으로 발생하는 어그로 증가량. 커스텀 어그로 모드 사용 시에만 의미가 있다
+   * @param healingTagList 힐링 태그 리스트: 이번 회복 행동의 태그 리스트. [HP 회복 발동 시] 및 [HP 회복받을 때] 이벤트에서 꺼내어 특정 회복 행동을 식별하는 데 사용할 수 있다
    */
   recoverHpDirectly(
     recoverInitiatorEntity: EntityValue,
@@ -4667,16 +4141,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Resume a paused Basic Motion Device on the Target Entity. The Target Entity must have the Basic Motion Device Component
+   * 대상 엔티티에서 일시정지된 기초 모션 장치를 재개한다. 대상 엔티티는 기초 모션 장치 컴포넌트를 보유해야 한다
    *
-   * 恢复基础运动器: 使目标实体上一个处于暂停状态的基础运动器恢复运动，需要目标实体持有基础运动器组件
-   *
-   * @param targetEntity Active Entity
-   *
-   * 目标实体: 生效的实体
-   * @param motionDeviceName Identifier for this motion device
-   *
-   * 运动器名称: 该运动器的标识
+   * @param targetEntity 대상 엔티티: 효과가 적용될 엔티티
+   * @param motionDeviceName 모션 장치 이름: 해당 모션 장치의 식별자
    */
   recoverBasicMotionDevice(targetEntity: EntityValue, motionDeviceName: StrValue): void {
     const targetEntityObj = parseValue(targetEntity, 'entity')
@@ -4690,37 +4158,17 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Dynamically add a Fixed-Point Basic Motion Device to the Target Entity during Stage runtime
+   * 스테이지 런타임 중 대상 엔티티에 정점 이동형 기초 모션 장치를 동적으로 추가한다
    *
-   * 开启定点运动器: 在关卡运行时为目标实体动态添加一个定点运动型基础运动器
-   *
-   * @param targetEntity Active Entity
-   *
-   * 目标实体: 生效的实体
-   * @param motionDeviceName Identifier for this motion device
-   *
-   * 运动器名称: 该运动器的标识
-   * @param movementMode
-   *
-   * 移动方式
-   * @param movementSpd
-   *
-   * 移动速度
-   * @param targetLocation Absolute Location
-   *
-   * 目标位置: 绝对位置
-   * @param targetRotation Absolute Rotation
-   *
-   * 目标旋转: 绝对旋转
-   * @param lockRotation
-   *
-   * 是否锁定旋转
-   * @param parameterType Options: Fixed Speed or Fixed Time
-   *
-   * 参数类型: 分为固定速度、固定时间
-   * @param movementTime
-   *
-   * 移动时间
+   * @param targetEntity 대상 엔티티: 효과가 적용될 엔티티
+   * @param motionDeviceName 모션 장치 이름: 해당 모션 장치의 식별자
+   * @param movementMode 이동 방식
+   * @param movementSpd 이동 속도
+   * @param targetLocation 목표 위치: 절대 위치
+   * @param targetRotation 목표 회전: 절대 회전
+   * @param lockRotation 회전 잠금 여부
+   * @param parameterType 파라미터 유형: 고정 속도 또는 고정 시간
+   * @param movementTime 이동 시간
    */
   activateFixedPointMotionDevice(
     targetEntity: EntityValue,
@@ -4761,16 +4209,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Activate a Basic Motion Device configured within the Target Entity's Basic Motion Device Component
+   * 대상 엔티티의 기초 모션 장치 컴포넌트에 설정된 모션 장치를 활성화한다
    *
-   * 激活基础运动器: 激活一个配置在目标实体基础运动器组件上的运动器
-   *
-   * @param targetEntity Active Entity
-   *
-   * 目标实体: 生效的实体
-   * @param motionDeviceName Identifier for this motion device
-   *
-   * 运动器名称: 该运动器的标识
+   * @param targetEntity 대상 엔티티: 효과가 적용될 엔티티
+   * @param motionDeviceName 모션 장치 이름: 해당 모션 장치의 식별자
    */
   activateBasicMotionDevice(targetEntity: EntityValue, motionDeviceName: StrValue): void {
     const targetEntityObj = parseValue(targetEntity, 'entity')
@@ -4784,22 +4226,12 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Dynamically add a Basic Motion Device with Target-Oriented Rotation to the Target Entity during Stage runtime
+   * 스테이지 런타임 중 대상 엔티티에 목표 방향 회전형 기초 모션 장치를 동적으로 추가한다
    *
-   * 添加朝向目标旋转型基础运动器: 在关卡运行时为目标实体动态添加一个朝向目标旋转型基础运动器
-   *
-   * @param targetEntity Active Entity
-   *
-   * 目标实体: 生效的实体
-   * @param motionDeviceName Identifier for this motion device
-   *
-   * 运动器名称: 该运动器的标识
-   * @param motionDeviceDuration The duration for which this motion device remains active
-   *
-   * 运动器时长: 该运动器生效的时长
-   * @param targetAngle Absolute Angle
-   *
-   * 目标角度: 绝对角度
+   * @param targetEntity 대상 엔티티: 효과가 적용될 엔티티
+   * @param motionDeviceName 모션 장치 이름: 해당 모션 장치의 식별자
+   * @param motionDeviceDuration 모션 장치 지속 시간: 해당 모션 장치가 유효한 시간
+   * @param targetAngle 목표 각도: 절대 각도
    */
   addTargetOrientedRotationBasedMotionDevice(
     targetEntity: EntityValue,
@@ -4820,22 +4252,12 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Dynamically add a Basic Motion Device with Uniform Linear Motion at runtime
+   * 런타임 중 등속 직선형 기초 모션 장치를 동적으로 추가한다
    *
-   * 添加匀速直线型基础运动器: 在运行时动态添加一个匀速直线型基础运动器
-   *
-   * @param targetEntity Active Entity
-   *
-   * 目标实体: 生效的实体
-   * @param motionDeviceName Identifier for this motion device
-   *
-   * 运动器名称: 该运动器的标识
-   * @param motionDeviceDuration The duration for which this motion device remains active
-   *
-   * 运动器时长: 该运动器生效的时长
-   * @param velocityVector Determines the magnitude and direction of the velocity
-   *
-   * 速度向量: 决定了速度大小和方向
+   * @param targetEntity 대상 엔티티: 효과가 적용될 엔티티
+   * @param motionDeviceName 모션 장치 이름: 해당 모션 장치의 식별자
+   * @param motionDeviceDuration 모션 장치 지속 시간: 해당 모션 장치가 유효한 시간
+   * @param velocityVector 속도 벡터: 속도의 크기와 방향을 결정한다
    */
   addUniformBasicLinearMotionDevice(
     targetEntity: EntityValue,
@@ -4856,25 +4278,13 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Dynamically add a Basic Motion Device with Uniform Rotation at runtime
+   * 런타임 중 등속 회전형 기초 모션 장치를 동적으로 추가한다
    *
-   * 添加匀速旋转型基础运动器: 在运行时动态添加一个匀速旋转型基础运动器
-   *
-   * @param targetEntity Active Entity
-   *
-   * 目标实体: 生效的实体
-   * @param motionDeviceName Identifier for this motion device
-   *
-   * 运动器名称: 该运动器的标识
-   * @param motionDeviceDuration The duration for which this motion device remains active
-   *
-   * 运动器时长: 该运动器生效的时长
-   * @param angularVelocityS Angular Velocity Magnitude
-   *
-   * 角速度(角度/秒): 角速度大小
-   * @param rotationAxisOrientation Relative Orientation
-   *
-   * 旋转轴朝向: 相对朝向
+   * @param targetEntity 대상 엔티티: 효과가 적용될 엔티티
+   * @param motionDeviceName 모션 장치 이름: 해당 모션 장치의 식별자
+   * @param motionDeviceDuration 모션 장치 지속 시간: 해당 모션 장치가 유효한 시간
+   * @param angularVelocityS 각속도(도/초): 각속도의 크기
+   * @param rotationAxisOrientation 회전축 방향: 상대 방향
    */
   addUniformBasicRotationBasedMotionDevice(
     targetEntity: EntityValue,
@@ -4903,19 +4313,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Stop and delete a running Motion Device
+   * 실행 중인 모션 장치를 중지하고 삭제한다
    *
-   * 停止并删除基础运动器: 停止并删除一个运行中的运动器
-   *
-   * @param targetEntity Active Entity
-   *
-   * 目标实体: 生效的实体
-   * @param motionDeviceName Identifier for this motion device
-   *
-   * 运动器名称: 该运动器的标识
-   * @param stopAllBasicMotionDevices If set to True, stops all Basic Motion Devices on this Entity. If set to False, stops only the Motion Device whose name matches the specified Motion Device
-   *
-   * 是否停止所有基础运动器: “是”则停止该实体上的所有基础运动器，“否”则只停止与运动器名称对应的运动器
+   * @param targetEntity 대상 엔티티: 효과가 적용될 엔티티
+   * @param motionDeviceName 모션 장치 이름: 해당 모션 장치의 식별자
+   * @param stopAllBasicMotionDevices 모든 기초 모션 장치 중지 여부: True이면 해당 엔티티의 모든 기초 모션 장치를 중지하고, False이면 지정한 이름의 모션 장치만 중지한다
    */
   stopAndDeleteBasicMotionDevice(
     targetEntity: EntityValue,
@@ -4934,16 +4336,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Pause a running Motion Device. The Resume Motion Device node can then be used to resume it
+   * 실행 중인 모션 장치를 일시 정지한다. 이후 모션 장치 재개 노드로 재개할 수 있다
    *
-   * 暂停基础运动器: 暂停一个运行中的运动器，之后可使用恢复运动器节点使其恢复运动
-   *
-   * @param targetEntity Active Entity
-   *
-   * 目标实体: 生效的实体
-   * @param motionDeviceName Identifier for this motion device
-   *
-   * 运动器名称: 该运动器的标识
+   * @param targetEntity 대상 엔티티: 효과가 적용될 엔티티
+   * @param motionDeviceName 모션 장치 이름: 해당 모션 장치의 식별자
    */
   pauseBasicMotionDevice(targetEntity: EntityValue, motionDeviceName: StrValue): void {
     const targetEntityObj = parseValue(targetEntity, 'entity')
@@ -4957,16 +4353,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Enable/Disable the Follow Motion Device logic on the Target Entity
+   * 대상 엔티티의 추적 모션 장치 컴포넌트 로직을 활성화/비활성화한다
    *
-   * 激活/关闭跟随运动器: 使目标实体上的跟随运动器组件逻辑激活/关闭
-   *
-   * @param targetEntity Active Entity
-   *
-   * 目标实体: 生效的实体
-   * @param activate Set to True to activate
-   *
-   * 是否激活: “是”为激活
+   * @param targetEntity 대상 엔티티: 효과가 적용될 엔티티
+   * @param activate 활성화 여부: True이면 활성화
    */
   activateDisableFollowMotionDevice(targetEntity: EntityValue, activate: BoolValue): void {
     const targetEntityObj = parseValue(targetEntity, 'entity')
@@ -4980,31 +4370,15 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Switch the Follow Target of the Follow Motion Device by GUID
+   * GUID를 사용해 추적 모션 장치의 추적 대상을 전환한다
    *
-   * 以GUID切换跟随运动器的目标: 以GUID切换跟随运动器的跟随目标
-   *
-   * @param targetEntity Active Entity
-   *
-   * 目标实体: 生效的实体
-   * @param followTargetGuid Identifier for the Follow Target
-   *
-   * 跟随目标GUID: 跟随目标的标识
-   * @param followTargetAttachmentPointName Name of the Attachment Point to follow
-   *
-   * 跟随目标挂接点名称: 跟随的挂接点名称
-   * @param locationOffset Location Offset based on the Follow Coordinate System
-   *
-   * 位置偏移: 以【跟随坐标系】为基准产生的位置偏移
-   * @param rotationOffset Rotation Offset based on the Follow Coordinate System
-   *
-   * 旋转偏移: 以【跟随坐标系】为基准产生的旋转偏移
-   * @param followCoordinateSystem Options: Relative Coordinate System or World Coordinate System
-   *
-   * 跟随坐标系: 可选”相对坐标系“、”世界坐标系“
-   * @param followType Options: Completely Follow, Follow Location, Follow Rotation
-   *
-   * 跟随类型: 可选”完全跟随“、”跟随位置“、”跟随旋转”
+   * @param targetEntity 대상 엔티티: 효과가 적용될 엔티티
+   * @param followTargetGuid 추적 대상 GUID: 추적 대상의 식별자
+   * @param followTargetAttachmentPointName 추적 대상 어태치먼트 포인트 이름: 추적할 어태치먼트 포인트 이름
+   * @param locationOffset 위치 오프셋: 추적 좌표계를 기준으로 한 위치 오프셋
+   * @param rotationOffset 회전 오프셋: 추적 좌표계를 기준으로 한 회전 오프셋
+   * @param followCoordinateSystem 추적 좌표계: 상대 좌표계 또는 월드 좌표계 선택
+   * @param followType 추적 유형: 완전 추적, 위치 추적, 회전 추적 중 선택
    */
   switchFollowMotionDeviceTargetByGuid(
     targetEntity: EntityValue,
@@ -5039,31 +4413,15 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Switch the Follow Target of the Follow Motion Device by Entity
+   * 엔티티를 사용해 추적 모션 장치의 추적 대상을 전환한다
    *
-   * 以实体切换跟随运动器的目标: 以实体切换跟随运动器的跟随目标
-   *
-   * @param targetEntity Active Entity
-   *
-   * 目标实体: 生效的实体
-   * @param followTargetEntity The Entity that follows the Target
-   *
-   * 跟随目标实体: 跟随目标的实体
-   * @param followTargetAttachmentPointName Name of the Attachment Point to follow
-   *
-   * 跟随目标挂接点名称: 跟随的挂接点名称
-   * @param locationOffset Location Offset based on the Follow Coordinate System
-   *
-   * 位置偏移: 以【跟随坐标系】为基准产生的位置偏移
-   * @param rotationOffset Rotation Offset based on the Follow Coordinate System
-   *
-   * 旋转偏移: 以【跟随坐标系】为基准产生的旋转偏移
-   * @param followCoordinateSystem Options: Relative Coordinate System or World Coordinate System
-   *
-   * 跟随坐标系: 可选”相对坐标系“、”世界坐标系“
-   * @param followType Options: Completely Follow, Follow Location, Follow Rotation
-   *
-   * 跟随类型: 可选”完全跟随“、”跟随位置“、”跟随旋转”
+   * @param targetEntity 대상 엔티티: 효과가 적용될 엔티티
+   * @param followTargetEntity 추적 대상 엔티티: 추적 대상의 엔티티
+   * @param followTargetAttachmentPointName 추적 대상 어태치먼트 포인트 이름: 추적할 어태치먼트 포인트 이름
+   * @param locationOffset 위치 오프셋: 추적 좌표계를 기준으로 한 위치 오프셋
+   * @param rotationOffset 회전 오프셋: 추적 좌표계를 기준으로 한 회전 오프셋
+   * @param followCoordinateSystem 추적 좌표계: 상대 좌표계 또는 월드 좌표계 선택
+   * @param followType 추적 유형: 완전 추적, 위치 추적, 회전 추적 중 선택
    */
   switchFollowMotionDeviceTargetByEntity(
     targetEntity: EntityValue,
@@ -5098,38 +4456,17 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Create a Projectile Entity using the Prefab ID. This function is similar to [Create Prefab], but includes an additional [Track Target] parameter, which sets the tracking target for projectiles of the Tracking type in the Projectile Motion Device Component of the created Entity
+   * 프리팹 ID를 사용해 투사체 엔티티를 생성한다. [프리팹 생성]과 유사하지만, 생성된 엔티티의 투사 모션 장치 컴포넌트에서 추적 투사 유형에 추적 대상을 설정하는 [추적 대상] 파라미터가 추가된다
    *
-   * 创建投射物: 根据元件ID创建一个投射物实体。与【创建元件】功能类似，但多一个【追踪目标】参数，可以为创建的投射物实体的投射运动器组件中追踪投射类型设置追踪目标
-   *
-   * @param prefabId Identifier for this Projectile Prefab
-   *
-   * 元件ID: 该投射物元件的标识
-   * @param location Absolute Location
-   *
-   * 位置: 绝对位置
-   * @param rotate Absolute Rotation
-   *
-   * 旋转: 绝对旋转
-   * @param ownerEntity Determines whether the created entity belongs to another entity
-   *
-   * 拥有者实体: 可决定该创建后实体是否归属于某个实体
-   * @param trackTarget The Tracking Target set by the Tracking Projectile type in the Projectile Motion Device component
-   *
-   * 追踪目标: 投射运动器组件中追踪投射类型设置的追踪目标
-   * @param overwriteLevel When set to False, the [Level] parameter has no effect
-   *
-   * 是否覆写等级: 为否时，【等级】参数不生效
-   * @param level Determines the Level when the entity is created
-   *
-   * 等级: 决定该实体创建时的等级
-   * @param unitTagIndexList Determines the Unit Tags carried when this entity is created
-   *
-   * 单位标签索引列表: 可决定该实体创建时携带的单位标签
-   *
-   * @returns This Entity inherits the attributes of the Projectile Prefab
-   *
-   * 创建出的实体: 该实体继承该投射物元件的属性
+   * @param prefabId 프리팹 ID: 해당 투사체 프리팹의 식별자
+   * @param location 위치: 절대 위치
+   * @param rotate 회전: 절대 회전
+   * @param ownerEntity 소유자 엔티티: 생성된 엔티티가 특정 엔티티에 귀속될지 결정한다
+   * @param trackTarget 추적 대상: 투사 모션 장치 컴포넌트의 추적 투사 유형에 설정하는 추적 대상
+   * @param overwriteLevel 레벨 덮어쓰기 여부: False이면 [레벨] 파라미터가 적용되지 않는다
+   * @param level 레벨: 엔티티 생성 시의 레벨을 결정한다
+   * @param unitTagIndexList 유닛 태그 인덱스 리스트: 엔티티 생성 시 부여할 유닛 태그를 결정한다
+   * @returns 생성된 엔티티: 해당 투사체 프리팹의 속성을 상속한다
    */
   createProjectile(
     prefabId: PrefabIdValue,
@@ -5170,37 +4507,17 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Play a Timed Effect relative to the Target Entity. A valid Target Entity and Attachment Point are required
+   * 대상 엔티티를 기준으로 시간 제한 이펙트를 재생한다. 유효한 대상 엔티티와 어태치먼트 포인트가 필요하다
    *
-   * 播放限时特效: 以目标实体为基准，播放一个限时特效。需要有合法的目标实体以及挂接点
-   *
-   * @param specialEffectsAsset Identifier for this Effect
-   *
-   * 特效资产: 该特效的标识
-   * @param targetEntity If the Entity does not exist, the Effect will not play
-   *
-   * 目标实体: 实体不存在会导致特效无法播放
-   * @param attachmentPointName If the Attachment Point Name does not exist, the Special Effect will not play
-   *
-   * 挂接点名称: 挂接点名称不存在会导致特效无法播放
-   * @param moveWithTheTarget If set to True, follows the Target Entity's Motion
-   *
-   * 是否跟随目标运动: “是”会跟随目标实体运动
-   * @param rotateWithTheTarget If set to True, follows the Target Entity's Rotation
-   *
-   * 是否跟随目标旋转: “是”会跟随目标实体旋转
-   * @param locationOffset Location Offset relative to the Target Entity's specified Attachment Point
-   *
-   * 位置偏移: 相对于目标实体指定挂接点的位置偏移
-   * @param rotationOffset Rotation offset relative to the Target Entity's specified Attachment Point
-   *
-   * 旋转偏移: 相对于目标实体指定挂接点的旋转偏移
-   * @param zoomMultiplier The Zoom Multiplier of this Effect
-   *
-   * 缩放倍率: 该特效的缩放倍率
-   * @param playBuiltInSoundEffect If set to True, plays the built-in Sound Effect as well
-   *
-   * 是否播放自带的音效: “是”则会同时播放自带的音效
+   * @param specialEffectsAsset 이펙트 에셋: 해당 이펙트의 식별자
+   * @param targetEntity 대상 엔티티: 엔티티가 없으면 이펙트가 재생되지 않는다
+   * @param attachmentPointName 어태치먼트 포인트 이름: 어태치먼트 포인트 이름이 없으면 이펙트가 재생되지 않는다
+   * @param moveWithTheTarget 대상 이동 추적 여부: True이면 대상 엔티티의 이동을 따른다
+   * @param rotateWithTheTarget 대상 회전 추적 여부: True이면 대상 엔티티의 회전을 따른다
+   * @param locationOffset 위치 오프셋: 대상 엔티티의 지정 어태치먼트 포인트를 기준으로 한 위치 오프셋
+   * @param rotationOffset 회전 오프셋: 대상 엔티티의 지정 어태치먼트 포인트를 기준으로 한 회전 오프셋
+   * @param zoomMultiplier 배율: 해당 이펙트의 배율
+   * @param playBuiltInSoundEffect 내장 음향 효과 재생 여부: True이면 내장 음향 효과도 함께 재생된다
    */
   playTimedEffects(
     specialEffectsAsset: ConfigIdValue,
@@ -5241,16 +4558,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Clear all Effects on the specified Target Entity that use the given Effect Asset. Applies to Looping Effects only
+   * 지정한 이펙트 에셋을 사용하는 모든 이펙트를 대상 엔티티에서 제거한다. 루프 이펙트에만 적용된다
    *
-   * 根据特效资产清除特效: 清除指定目标实体上所有使用该特效资产的特效。仅限循环特效
-   *
-   * @param targetEntity Active Entity
-   *
-   * 目标实体: 生效的实体
-   * @param specialEffectsAsset Identifier for this Effect
-   *
-   * 特效资产: 该特效的标识
+   * @param targetEntity 대상 엔티티: 효과가 적용될 엔티티
+   * @param specialEffectsAsset 이펙트 에셋: 해당 이펙트의 식별자
    */
   clearSpecialEffectsBasedOnSpecialEffectAssets(
     targetEntity: EntityValue,
@@ -5267,41 +4578,18 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Mount a Looping Effect relative to the Target Entity. A valid Target Entity and Attachment Point are required; This node returns an Effect Instance ID that can be stored. When using the [Clear Looping Effects] node later, use this Effect Instance ID to clear the specified Looping Effect
+   * 대상 엔티티를 기준으로 루프 이펙트를 마운트한다. 유효한 대상 엔티티와 어태치먼트 포인트가 필요하다. 이 노드는 저장 가능한 이펙트 인스턴스 ID를 반환하며, 이후 [루프 이펙트 제거] 노드 사용 시 이 ID로 지정 이펙트를 제거할 수 있다
    *
-   * 挂载循环特效: 以目标实体为基准，挂载一个循环特效。需要有合法的目标实体以及挂接点; 该节点会返回一个特效实例ID，可以将其存下。后续使用【清除循环特效】节点时，用这个特效实例ID来清除指定的循环特效
-   *
-   * @param specialEffectsAsset Identifier for this Effect
-   *
-   * 特效资产: 该特效的标识
-   * @param targetEntity If the Entity does not exist, the Effect will not play
-   *
-   * 目标实体: 实体不存在会导致特效无法播放
-   * @param attachmentPointName If the Attachment Point Name does not exist, the Special Effect will not play
-   *
-   * 挂接点名称: 挂接点名称不存在会导致特效无法播放
-   * @param moveWithTheTarget If set to True, follows the Target Entity's Motion
-   *
-   * 是否跟随目标运动: “是”会跟随目标实体运动
-   * @param rotateWithTheTarget If set to True, follows the Target Entity's Rotation
-   *
-   * 是否跟随目标旋转: “是”会跟随目标实体旋转
-   * @param locationOffset Location Offset relative to the Target Entity's specified Attachment Point
-   *
-   * 位置偏移: 相对于目标实体指定挂接点的位置偏移
-   * @param rotationOffset Rotation offset relative to the Target Entity's specified Attachment Point
-   *
-   * 旋转偏移: 相对于目标实体指定挂接点的旋转偏移
-   * @param zoomMultiplier The Zoom Multiplier of this Effect
-   *
-   * 缩放倍率: 该特效的缩放倍率
-   *
-   * @param playBuiltInSoundEffect If set to True, plays the built-in Sound Effect as well
-   *
-   * 是否播放自带的音效: “是”则会同时播放自带的音效
-   * @returns The Instance ID automatically generated when mounting this Effect
-   *
-   * 特效实例ID: 挂载该特效时自动生成的实例ID
+   * @param specialEffectsAsset 이펙트 에셋: 해당 이펙트의 식별자
+   * @param targetEntity 대상 엔티티: 엔티티가 없으면 이펙트가 재생되지 않는다
+   * @param attachmentPointName 어태치먼트 포인트 이름: 어태치먼트 포인트 이름이 없으면 이펙트가 재생되지 않는다
+   * @param moveWithTheTarget 대상 이동 추적 여부: True이면 대상 엔티티의 이동을 따른다
+   * @param rotateWithTheTarget 대상 회전 추적 여부: True이면 대상 엔티티의 회전을 따른다
+   * @param locationOffset 위치 오프셋: 대상 엔티티의 지정 어태치먼트 포인트를 기준으로 한 위치 오프셋
+   * @param rotationOffset 회전 오프셋: 대상 엔티티의 지정 어태치먼트 포인트를 기준으로 한 회전 오프셋
+   * @param zoomMultiplier 배율: 해당 이펙트의 배율
+   * @param playBuiltInSoundEffect 내장 음향 효과 재생 여부: True이면 내장 음향 효과도 함께 재생된다
+   * @returns 이펙트 인스턴스 ID: 이펙트 마운트 시 자동 생성되는 인스턴스 ID
    */
   mountLoopingSpecialEffect(
     specialEffectsAsset: ConfigIdValue,
@@ -5345,16 +4633,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Clear the specified Looping Effect on the Target Entity by Effect Instance ID. After a successful mount, the [Mount Looping Effect] node generates an Effect Instance ID
+   * 이펙트 인스턴스 ID를 사용해 대상 엔티티의 지정 루프 이펙트를 제거한다. 마운트 성공 후 [루프 이펙트 마운트] 노드가 이펙트 인스턴스 ID를 생성한다
    *
-   * 清除循环特效: 根据特效实例ID清除目标实体上的指定循环特效。【挂载循环特效】节点在成功挂载后，会生成一个特效实例ID
-   *
-   * @param specialEffectInstanceId Instance ID automatically generated by the Mount Looping Special Effect node
-   *
-   * 特效实例ID: 【挂载循环特效】节点中自动生成的实例ID
-   * @param targetEntity Active Entity
-   *
-   * 目标实体: 生效的实体
+   * @param specialEffectInstanceId 이펙트 인스턴스 ID: [루프 이펙트 마운트] 노드에서 자동 생성된 인스턴스 ID
+   * @param targetEntity 대상 엔티티: 효과가 적용될 엔티티
    */
   clearLoopingSpecialEffect(specialEffectInstanceId: IntValue, targetEntity: EntityValue): void {
     const specialEffectInstanceIdObj = parseValue(specialEffectInstanceId, 'int')
@@ -5368,16 +4650,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Resume a paused Timer on the Target Entity
+   * 대상 엔티티에서 일시 정지된 타이머를 재개한다
    *
-   * 恢复定时器: 使目标实体上一个处于暂停状态的定时器恢复运行
-   *
-   * @param targetEntity Active Entity
-   *
-   * 目标实体: 生效的实体
-   * @param timerName Timer Identifier
-   *
-   * 定时器名称: 该定时器的标识
+   * @param targetEntity 대상 엔티티: 효과가 적용될 엔티티
+   * @param timerName 타이머 이름: 해당 타이머의 식별자
    */
   resumeTimer(targetEntity: EntityValue, timerName: StrValue): void {
     const targetEntityObj = parseValue(targetEntity, 'entity')
@@ -5391,22 +4667,12 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Start a Timer on the Target Entity; The Timer is uniquely identified by its name; A Timer consists of a looping or non-looping Timer Sequence. The Timer Sequence is a set of time points in seconds arranged in ascending order; when the Timer reaches these points, it triggers the [On Timer Triggered] event. The maximum length of a Timer Sequence is 100; For example, if you input the Timer Sequence [1, 3, 5, 7], the [On Timer Triggered] event fires at 1s, 3s, 5s, and 7s; When Loop is set to "Yes," the Timer restarts from 0s after reaching the last time point. For [1, 3, 5, 7], it restarts from 0s after reaching 7s
+   * 대상 엔티티에서 타이머를 시작한다. 타이머는 이름으로 고유 식별된다. 타이머는 루프 또는 비루프 타이머 시퀀스로 구성되며, 시퀀스는 오름차순으로 정렬된 초 단위 시간 지점 목록이다. 타이머가 해당 지점에 도달하면 [타이머 트리거 시] 이벤트가 발생한다. 최대 시퀀스 길이는 100이다. 예를 들어 [1, 3, 5, 7]을 입력하면 1초, 3초, 5초, 7초에 이벤트가 발생한다. 루프가 True이면 마지막 시간 지점 도달 후 0초부터 다시 시작한다
    *
-   * 启动定时器: 在目标实体上启动一个定时器; 定时器通过定时器名称进行唯一标识; 定时器由一个循环或不循环的定时器序列组成。定时器序列应是一组从小到大排列的，以秒为单位的时间点，在定时器运行到这些时间点时，会触发【定时器触发时】事件。该定时器序列最大限制为100; 例如：[1,3,5,7]，如果传入这样的定时器序列，那么分别在第1、3、5、7秒，会触发【定时器触发时】事件; 当是否循环为“是”时，在定时器到达最后一个时间点后，会从0秒开始进行循环计时。以[1,3,5,7]这样的定时器为例，则在运行到7秒后，再从0秒开始计时
-   *
-   * @param targetEntity Active Entity
-   *
-   * 目标实体: 生效的实体
-   * @param timerName Timer Identifier
-   *
-   * 定时器名称: 该定时器的标识
-   * @param loop If set to True, the Timer Sequence executes in a loop
-   *
-   * 是否循环: “是”则会循环执行定时器序列
-   * @param timerSequence Provide a list sorted in ascending order. If the list is invalid (not strictly ascending, contains negatives, etc.), the Timer will not run
-   *
-   * 定时器序列: 需要传入一个从小到大排列的列表。如果传入的列表不合法（不是严格按照从小到大排列、存在负数等），定时器不会运行
+   * @param targetEntity 대상 엔티티: 효과가 적용될 엔티티
+   * @param timerName 타이머 이름: 해당 타이머의 식별자
+   * @param loop 루프 여부: True이면 타이머 시퀀스를 반복 실행한다
+   * @param timerSequence 타이머 시퀀스: 오름차순으로 정렬된 목록을 전달해야 한다. 목록이 유효하지 않으면(엄격한 오름차순이 아니거나 음수가 포함된 경우 등) 타이머가 실행되지 않는다
    */
   startTimer(
     targetEntity: EntityValue,
@@ -5427,16 +4693,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Pauses the specified Timer on the Target Entity. The [Resume Timer] node can then be used to resume its countdown
+   * 대상 엔티티에서 지정한 타이머를 일시 정지한다. 이후 [타이머 재개] 노드로 재개할 수 있다
    *
-   * 暂停定时器: 暂停指定目标实体上的指定定时器。之后可以使用【恢复定时器】节点恢复该定时器的计时
-   *
-   * @param targetEntity Active Entity
-   *
-   * 目标实体: 生效的实体
-   * @param timerName Timer Identifier
-   *
-   * 定时器名称: 该定时器的标识
+   * @param targetEntity 대상 엔티티: 효과가 적용될 엔티티
+   * @param timerName 타이머 이름: 해당 타이머의 식별자
    */
   pauseTimer(targetEntity: EntityValue, timerName: StrValue): void {
     const targetEntityObj = parseValue(targetEntity, 'entity')
@@ -5450,16 +4710,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Completely terminate the specified Timer on the Target Entity; it cannot be resumed
+   * 대상 엔티티에서 지정한 타이머를 완전히 종료한다. 재개할 수 없다
    *
-   * 终止定时器: 完全终止目标实体上的指定定时器，不可恢复
-   *
-   * @param targetEntity Active Entity
-   *
-   * 目标实体: 生效的实体
-   * @param timerName Timer Identifier
-   *
-   * 定时器名称: 该定时器的标识
+   * @param targetEntity 대상 엔티티: 효과가 적용될 엔티티
+   * @param timerName 타이머 이름: 해당 타이머의 식별자
    */
   stopTimer(targetEntity: EntityValue, timerName: StrValue): void {
     const targetEntityObj = parseValue(targetEntity, 'entity')
@@ -5473,16 +4727,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Resume a paused Global Timer on the Target Entity
+   * 대상 엔티티에서 일시 정지된 글로벌 타이머를 재개한다
    *
-   * 恢复全局计时器: 使目标实体上一个处于暂停状态的计时器恢复运行
-   *
-   * @param targetEntity Active Entity
-   *
-   * 目标实体: 生效的实体
-   * @param timerName Identifier for the Timer. Only Timer Names configured in Timer Management can be referenced
-   *
-   * 计时器名称: 该计时器的标识，只能引用在计时器管理中已经配置好的计时器名称
+   * @param targetEntity 대상 엔티티: 효과가 적용될 엔티티
+   * @param timerName 타이머 이름: 해당 타이머의 식별자. 타이머 관리에 설정된 타이머 이름만 참조할 수 있다
    */
   recoverGlobalTimer(targetEntity: EntityValue, timerName: StrValue): void {
     const targetEntityObj = parseValue(targetEntity, 'entity')
@@ -5496,16 +4744,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Start a Global Timer on the Target Entity; The Timer on the Target Entity is uniquely identified by its name; Based on Timer Management settings, Countdown and Stopwatch Timers are created accordingly
+   * 대상 엔티티에서 글로벌 타이머를 시작한다. 타이머는 이름으로 고유 식별된다. 타이머 관리 설정에 따라 카운트다운 또는 스톱워치 타이머가 생성된다
    *
-   * 启动全局计时器: 在目标实体上启动一个全局计时器; 目标实体上的计时器，通过计时器名称进行唯一标识; 计时器根据计时器管理中的配置，会对应创生倒计时、正计时的计时器
-   *
-   * @param targetEntity Active Entity
-   *
-   * 目标实体: 生效的实体
-   * @param timerName Identifier for the Timer. Only Timer Names configured in Timer Management can be referenced
-   *
-   * 计时器名称: 该计时器的标识，只能引用在计时器管理中已经配置好的计时器名称
+   * @param targetEntity 대상 엔티티: 효과가 적용될 엔티티
+   * @param timerName 타이머 이름: 해당 타이머의 식별자. 타이머 관리에 설정된 타이머 이름만 참조할 수 있다
    */
   startGlobalTimer(targetEntity: EntityValue, timerName: StrValue): void {
     const targetEntityObj = parseValue(targetEntity, 'entity')
@@ -5519,19 +4761,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Adjust the time of a running Global Timer via the Node Graph; If the timer is paused first and then modified to reduce the time, the modified time will be at least 0 seconds.; For countdown timers, pausing followed by modifying the time to 0s will trigger the [When the Global Timer Is Triggered] event upon resuming the timer.; If the timer is paused first, then modified to 0s, followed by modifying the time to increase it, and finally resumed, the [When the Global Timer Is Triggered] event will not be triggered.
+   * 노드 그래프를 통해 실행 중인 글로벌 타이머의 시간을 조정한다. 타이머를 먼저 일시 정지한 후 시간을 줄이면 최솟값은 0초다. 카운트다운 타이머를 일시 정지 후 0초로 수정하고 재개하면 [글로벌 타이머 트리거 시] 이벤트가 발생한다. 일시 정지 후 0초로 수정한 다음 다시 늘리고 재개하면 해당 이벤트가 발생하지 않는다
    *
-   * 修改全局计时器: 通过节点图，可以将运行中的全局计时器时间进行调整; 若计时器先暂停，后修改减少时间，则修改后时间最少为0s; 若为倒计时，则暂停后修改时间为0s且恢复计时器后，会触发【全局计时器触发时】事件; 若计时器先暂停，后修改时间到0s，再修改增加时间，再恢复计时器，则不会触发【全局计时器触发时】事件; 若有界面控件引用对应计时器，则界面控件的计时表现会同步修改
-   *
-   * @param targetEntity Active Entity
-   *
-   * 目标实体: 生效的实体
-   * @param timerName Identifier for the Timer. Only Timer Names configured in Timer Management can be referenced
-   *
-   * 计时器名称: 该计时器的标识，只能引用在计时器管理中已经配置好的计时器名称
-   * @param changeValue For a Countdown Timer, a positive value increases the remaining time; a negative value decreases the remaining timeIf the timer is set to Stopwatch, a positive value increases the accumulated time, while a negative value decreases it
-   *
-   * 变化值: 若计时器为倒计时，则正数为增加倒计时剩余时间，负数为减少剩余时间若计时器为正计时，则正数为增加正计时累计时间，负数为减少累计时间
+   * @param targetEntity 대상 엔티티: 효과가 적용될 엔티티
+   * @param timerName 타이머 이름: 해당 타이머의 식별자. 타이머 관리에 설정된 타이머 이름만 참조할 수 있다
+   * @param changeValue 변화값: 카운트다운 타이머의 경우 양수는 남은 시간 증가, 음수는 감소. 스톱워치 타이머의 경우 양수는 누적 시간 증가, 음수는 감소
    */
   modifyGlobalTimer(targetEntity: EntityValue, timerName: StrValue, changeValue: FloatValue): void {
     const targetEntityObj = parseValue(targetEntity, 'entity')
@@ -5546,16 +4780,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Pause a running Global Timer via the Node Graph; When paused, the UI controls linked to the timer will also pause their display
+   * 노드 그래프를 통해 실행 중인 글로벌 타이머를 일시 정지한다. 일시 정지 시 해당 타이머를 참조하는 UI 컨트롤의 표시도 함께 정지된다
    *
-   * 暂停全局计时器: 通过节点图，可以暂停运行中的全局计时器; 暂停时，若有界面控件引用对应计时器，则其显示时间也会暂停
-   *
-   * @param targetEntity Active Entity
-   *
-   * 目标实体: 生效的实体
-   * @param timerName Identifier for the Timer. Only Timer Names configured in Timer Management can be referenced
-   *
-   * 计时器名称: 该计时器的标识，只能引用在计时器管理中已经配置好的计时器名称
+   * @param targetEntity 대상 엔티티: 효과가 적용될 엔티티
+   * @param timerName 타이머 이름: 해당 타이머의 식별자. 타이머 관리에 설정된 타이머 이름만 참조할 수 있다
    */
   pauseGlobalTimer(targetEntity: EntityValue, timerName: StrValue): void {
     const targetEntityObj = parseValue(targetEntity, 'entity')
@@ -5569,16 +4797,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Use the node graph to stop running a global timer early
+   * 노드 그래프를 통해 실행 중인 글로벌 타이머를 조기 종료한다
    *
-   * 终止全局计时器: 通过节点图，提前结束运行中的全局计时器
-   *
-   * @param targetEntity Active Entity
-   *
-   * 目标实体: 生效的实体
-   * @param timerName Identifier for the Timer. Only Timer Names configured in Timer Management can be referenced
-   *
-   * 计时器名称: 该计时器的标识，只能引用在计时器管理中已经配置好的计时器名称
+   * @param targetEntity 대상 엔티티: 효과가 적용될 엔티티
+   * @param timerName 타이머 이름: 해당 타이머의 식별자. 타이머 관리에 설정된 타이머 이름만 참조할 수 있다
    */
   stopGlobalTimer(targetEntity: EntityValue, timerName: StrValue): void {
     const targetEntityObj = parseValue(targetEntity, 'entity')
@@ -5592,16 +4814,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Switch the Main Camera Template for the target Player List to the specified Template
+   * 대상 플레이어 리스트의 메인 카메라 템플릿을 지정한 템플릿으로 전환한다
    *
-   * 切换主镜头模板: 使目标玩家列表的镜头模板切换至指定模板
-   *
-   * @param targetPlayerList Active Player List
-   *
-   * 目标玩家列表: 生效的玩家列表
-   * @param cameraTemplateName Camera Template Identifier
-   *
-   * 镜头模板名称: 镜头模板的标识
+   * @param targetPlayerList 대상 플레이어 리스트: 효과가 적용될 플레이어 리스트
+   * @param cameraTemplateName 카메라 템플릿 이름: 카메라 템플릿의 식별자
    */
   switchMainCameraTemplate(targetPlayerList: PlayerEntity[], cameraTemplateName: StrValue): void {
     const targetPlayerListObj = parseValue(targetPlayerList, 'entity_list')
@@ -5615,16 +4831,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Edit the Character Disruptor Device active on the Target Entity by ID; if the ID does not exist, the change has no effect
+   * ID를 사용해 대상 엔티티에서 활성화된 캐릭터 방해 장치를 수정한다. ID가 없으면 변경이 적용되지 않는다
    *
-   * 修改角色扰动装置: 通过序号修改目标实体上生效的角色扰动装置，若序号不存在则此次修改不生效
-   *
-   * @param targetEntity Active Entity
-   *
-   * 目标实体: 生效的实体
-   * @param deviceId Identifier for the Character Disruptor Device
-   *
-   * 装置序号: 角色扰动装置的标识
+   * @param targetEntity 대상 엔티티: 효과가 적용될 엔티티
+   * @param deviceId 장치 ID: 캐릭터 방해 장치의 식별자
    */
   modifyingCharacterDisruptorDevice(targetEntity: EntityValue, deviceId: IntValue): void {
     const targetEntityObj = parseValue(targetEntity, 'entity')
@@ -5638,25 +4848,13 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Add a specified Stack Count of Unit Status to the Target Entity
+   * 대상 엔티티에 지정한 스택 수의 유닛 상태를 추가한다
    *
-   * 添加单位状态: 向指定目标实体添加一定层数的单位状态
-   *
-   * @param applierEntity Determines the Applier Entity for this action. Defaults to the Entity associated with this Node Graph
-   *
-   * 施加者实体: 决定了该次行为的施加者实体，默认为该节点图所关联的实体
-   * @param applicationTargetEntity The Entity that actually receives this Unit Status
-   *
-   * 施加目标实体: 实际被添加该单位状态的实体
-   * @param unitStatusConfigId Identifier for this Unit Status
-   *
-   * 单位状态配置ID: 该单位状态的标识
-   * @param appliedStacks The Stack Count for this Unit Status
-   *
-   * 施加层数: 该单位状态的层数
-   * @param unitStatusParameterDictionary Can carry a set of parameters to overwrite parameters defined in the Unit Status. Currently, only parameters within shield templates can be overwritten.
-   *
-   * 单位状态参数字典: 可以携带一组参数，用于覆写单位状态中的参数，目前仅支持对护盾中护盾模板的参数覆写
+   * @param applierEntity 적용자 엔티티: 이 행동의 적용자 엔티티를 결정한다. 기본값은 이 노드 그래프에 연결된 엔티티
+   * @param applicationTargetEntity 적용 대상 엔티티: 실제로 해당 유닛 상태가 추가될 엔티티
+   * @param unitStatusConfigId 유닛 상태 설정 ID: 해당 유닛 상태의 식별자
+   * @param appliedStacks 적용 스택 수: 해당 유닛 상태의 스택 수
+   * @param unitStatusParameterDictionary 유닛 상태 파라미터 딕셔너리: 유닛 상태에 정의된 파라미터를 덮어쓸 파라미터 세트를 전달할 수 있다. 현재는 보호막 템플릿 내 파라미터 덮어쓰기만 지원된다
    */
   addUnitStatus(
     applierEntity: EntityValue,
@@ -5666,15 +4864,11 @@ export class ServerExecutionFlowFunctions {
     unitStatusParameterDictionary: dict<'str', 'float'>
   ): {
     /**
-     * Failed, other exceptionsFailed: Yielded to another status. A yielding relationship exists between the Target's current Unit Status and the one being appliedFailed: Maximum coexistence limit reached. The specified Unit Status on the Target Entity has reached its Coexistence LimitFailed: Unable to add additional stack. Stack addition failedSuccess: New status applied. Successfully applied new Unit StatusSuccess: Slot stacking. Target already has this Unit Status, stacking applied
-     *
-     * 施加结果: 失败，其他异常失败，让位于其他状态：目标上已有的单位状态与尝试施加的状态之间有让位关系失败，超出并存上限：超出目标实体上的指定单位状态的并存上限失败，附加叠层未成功：叠层失败成功，施加新状态：成功附加新状态成功，槽位叠层：目标上已有该单位状态，叠层
+     * 적용 결과: 실패(기타 예외) / 실패(다른 상태에 양보): 대상의 현재 유닛 상태와 적용 중인 상태 사이에 양보 관계 존재 / 실패(병존 상한 초과): 대상 엔티티의 해당 유닛 상태가 병존 상한에 도달 / 실패(스택 추가 불가): 스택 추가 실패 / 성공(신규 상태 적용): 새 유닛 상태 적용 성공 / 성공(슬롯 스택): 대상에 이미 해당 유닛 상태가 있어 스택 적용
      */
     applicationResult: UnitStatusAdditionResult
     /**
-     * If application succeeds, returns the Unit Status Slot ID containing the instance
-     *
-     * 槽位序号: 如果施加成功，则返回一个该单位状态实例所在的单位状态槽位序号
+     * 슬롯 ID: 적용 성공 시 해당 유닛 상태 인스턴스가 위치한 유닛 상태 슬롯 ID를 반환한다
      */
     slotId: bigint
   } {
@@ -5710,22 +4904,12 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Remove a specified Unit Status from the Target Entity. Either all stacks or a single stack can be removed
+   * 대상 엔티티에서 지정된 유닛 상태를 제거한다. 모든 스택을 제거하거나 단일 스택만 제거하는 것을 선택할 수 있다
    *
-   * 移除单位状态: 从目标实体上移除指定单位状态。可以选择全部移除，或移除其中一层
-   *
-   * @param removeTargetEntity The Entity from which the Unit Status will be removed
-   *
-   * 移除目标实体: 被移除该单位状态的实体
-   * @param unitStatusConfigId Identifier for this Unit Status
-   *
-   * 单位状态配置ID: 该单位状态的标识
-   * @param removalMethod All Coexisting Statuses with the Same Name: Removes all statuses applied with this Config ID that share the same nameStatus With Fastest Stack Loss: Removes one stack from the status that loses stacks the fastest
-   *
-   * 移除方式: 所有同名并存状态：移除以该配置ID施加的所有同名状态最快丢失叠加层数的状态：移除最快丢失叠加层数的一层状态
-   * @param removerEntity Determines the Remover Entity for this action. Defaults to the Entity associated with this Node Graph
-   *
-   * 移除者实体: 决定了该次行为的移除者实体，默认为该节点图所关联的实体
+   * @param removeTargetEntity 제거 대상 엔티티: 해당 유닛 상태가 제거될 엔티티
+   * @param unitStatusConfigId 유닛 상태 설정 ID: 해당 유닛 상태의 식별자
+   * @param removalMethod 제거 방식: 동일 이름의 모든 병존 상태 — 해당 설정 ID로 적용된 동명 상태를 모두 제거 / 스택 소실 속도가 가장 빠른 상태 — 가장 빠르게 스택을 잃는 상태에서 스택 하나를 제거
+   * @param removerEntity 제거자 엔티티: 이 행동의 제거자 엔티티를 결정한다. 기본값은 이 노드 그래프에 연결된 엔티티
    */
   removeUnitStatus(
     removeTargetEntity: EntityValue,
@@ -5746,19 +4930,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Edit the Tab state by ID in the Target Entity's Tab Component
+   * 대상 엔티티의 탭 컴포넌트에서 지정 ID에 해당하는 탭 상태를 수정한다
    *
-   * 激活/关闭选项卡: 可以修改目标实体的选项卡组件中对应序号的选项卡状态
-   *
-   * @param targetEntity Active Entity
-   *
-   * 目标实体: 生效的实体
-   * @param tabId Identifier for the Tab
-   *
-   * 选项卡序号: 选项卡的标识
-   * @param activate If set to True, it is active and can be selected
-   *
-   * 是否激活: 为“是”则激活，可以被选取
+   * @param targetEntity 대상 엔티티: 효과가 적용될 엔티티
+   * @param tabId 탭 ID: 탭의 식별자
+   * @param activate 활성화 여부: True이면 활성화되어 선택 가능
    */
   activateDisableTab(targetEntity: EntityValue, tabId: IntValue, activate: BoolValue): void {
     const targetEntityObj = parseValue(targetEntity, 'entity')
@@ -5773,16 +4949,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Edit the state of the Collision Trigger Source Component on the Target Entity
+   * 대상 엔티티의 충돌 트리거 소스 컴포넌트 상태를 수정한다
    *
-   * 激活/关闭碰撞触发源: 可以修改目标实体的碰撞触发源组件状态
-   *
-   * @param targetEntity Active Entity
-   *
-   * 目标实体: 生效的实体
-   * @param activate If set to True, activates collision with Entities that carry Collision Trigger Components
-   *
-   * 是否激活: 为“是”则激活，可以与携带碰撞触发器组件的实体产生碰撞
+   * @param targetEntity 대상 엔티티: 효과가 적용될 엔티티
+   * @param activate 활성화 여부: True이면 충돌 트리거 컴포넌트를 가진 엔티티와 충돌이 활성화됨
    */
   activateDisableCollisionTriggerSource(targetEntity: EntityValue, activate: BoolValue): void {
     const targetEntityObj = parseValue(targetEntity, 'entity')
@@ -5796,16 +4966,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Set the Player's current Class Level. If it exceeds the defined range, the change will not take effect
+   * 플레이어의 현재 클래스 레벨을 설정한다. 정의된 범위를 초과하면 변경이 적용되지 않는다
    *
-   * 更改玩家当前职业等级: 修改玩家当前职业等级，若超出定义的等级范围则会失效
-   *
-   * @param targetPlayer Active Player Entity
-   *
-   * 目标玩家: 生效的玩家实体
-   * @param level Edited Level
-   *
-   * 等级: 修改后的等级
+   * @param targetPlayer 대상 플레이어: 효과가 적용될 플레이어 엔티티
+   * @param level 레벨: 변경 후의 레벨
    */
   changePlayerSCurrentClassLevel(targetPlayer: PlayerEntity, level: IntValue): void {
     const targetPlayerObj = parseValue(targetPlayer, 'entity')
@@ -5819,16 +4983,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Set the Player's current Class to the Class referenced by the Config ID
+   * 플레이어의 현재 클래스를 설정 ID가 참조하는 클래스로 변경한다
    *
-   * 更改玩家职业: 修改玩家的当前职业为配置ID对应的职业
-   *
-   * @param targetPlayer Active Player Entity
-   *
-   * 目标玩家: 生效的玩家实体
-   * @param classConfigId Class Identifier
-   *
-   * 职业配置ID: 该职业的标识
+   * @param targetPlayer 대상 플레이어: 효과가 적용될 플레이어 엔티티
+   * @param classConfigId 클래스 설정 ID: 해당 클래스의 식별자
    */
   changePlayerClass(targetPlayer: PlayerEntity, classConfigId: ConfigIdValue): void {
     const targetPlayerObj = parseValue(targetPlayer, 'entity')
@@ -5842,16 +5000,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Increase the Player's current Class EXP. Any excess beyond the maximum Level will not take effect
+   * 플레이어의 현재 클래스 EXP를 증가시킨다. 최대 레벨을 초과하는 부분은 적용되지 않는다
    *
-   * 提升玩家当前职业经验: 提升玩家当前职业经验，超出最大等级的部分会无效
-   *
-   * @param targetPlayer Active Player Entity
-   *
-   * 目标玩家: 生效的玩家实体
-   * @param exp Amount of EXP to be increased
-   *
-   * 经验值: 所要提升的经验值
+   * @param targetPlayer 대상 플레이어: 효과가 적용될 플레이어 엔티티
+   * @param exp 경험치: 증가시킬 경험치 수치
    */
   increasePlayerSCurrentClassExp(targetPlayer: PlayerEntity, exp: IntValue): void {
     const targetPlayerObj = parseValue(targetPlayer, 'entity')
@@ -5865,16 +5017,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Activate the UI Control Groups stored as Custom Templates in the UI Control Group Library within the Target Player's Interface Layout
+   * 대상 플레이어의 인터페이스 레이아웃에서 UI 컨트롤 그룹 라이브러리에 저장된 커스텀 템플릿 형태의 UI 컨트롤 그룹을 활성화한다
    *
-   * 激活控件组库内界面控件组: 可以在目标玩家的界面布局上激活处于界面控件组库内的以自定义模板形式存在的界面控件组
-   *
-   * @param targetPlayer Active Player Entity
-   *
-   * 目标玩家: 生效的玩家实体
-   * @param uiControlGroupIndex Identifier for the UI Control Group
-   *
-   * 界面控件组索引: 界面控件组的标识
+   * @param targetPlayer 대상 플레이어: 효과가 적용될 플레이어 엔티티
+   * @param uiControlGroupIndex UI 컨트롤 그룹 인덱스: UI 컨트롤 그룹의 식별자
    */
   activateUiControlGroupInControlGroupLibrary(
     targetPlayer: PlayerEntity,
@@ -5891,16 +5037,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Switch the Target Player's current Interface Layout via Layout ID
+   * 레이아웃 ID를 통해 대상 플레이어의 현재 인터페이스 레이아웃을 전환한다
    *
-   * 切换当前界面布局: 可以通过布局索引来切换目标玩家当前的界面布局
-   *
-   * @param targetPlayer Active Player Entity
-   *
-   * 目标玩家: 生效的玩家实体
-   * @param layoutIndex Identifier for the UI Layout
-   *
-   * 布局索引: 界面布局的标识
+   * @param targetPlayer 대상 플레이어: 효과가 적용될 플레이어 엔티티
+   * @param layoutIndex 레이아웃 인덱스: UI 레이아웃의 식별자
    */
   switchCurrentInterfaceLayout(targetPlayer: PlayerEntity, layoutIndex: IntValue): void {
     const targetPlayerObj = parseValue(targetPlayer, 'entity')
@@ -5914,19 +5054,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Edit the state of the UI Control in the Target Player's Interface Layout by its UI Control ID
+   * UI 컨트롤 ID를 통해 대상 플레이어의 인터페이스 레이아웃 내 UI 컨트롤 상태를 수정한다
    *
-   * 修改界面布局内界面控件状态: 通过界面控件索引来修改目标玩家界面布局内对应界面控件的状态
-   *
-   * @param targetPlayer Active Player Entity
-   *
-   * 目标玩家: 生效的玩家实体
-   * @param uiControlIndex Identifier for the UI Control
-   *
-   * 界面控件索引: 界面控件的标识
-   * @param displayStatus Off: Invisible and logic not runningOn: Visible and logic running normallyHidden: Invisible and logic running normally
-   *
-   * 显示状态: 关闭：不可见且逻辑不运行开启：可见+逻辑正常运行隐藏：不可见+逻辑正常运行
+   * @param targetPlayer 대상 플레이어: 효과가 적용될 플레이어 엔티티
+   * @param uiControlIndex UI 컨트롤 인덱스: UI 컨트롤의 식별자
+   * @param displayStatus 표시 상태: 꺼짐 — 보이지 않으며 로직 미실행 / 켜짐 — 보이며 로직 정상 실행 / 숨김 — 보이지 않으나 로직 정상 실행
    */
   modifyUiControlStatusWithinTheInterfaceLayout(
     targetPlayer: PlayerEntity,
@@ -5945,16 +5077,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Remove the UI Control Groups activated via [Activate UI Control Group in Control Group Library] from the Target Player's Interface Layout
+   * 대상 플레이어의 인터페이스 레이아웃에서 [UI 컨트롤 그룹 라이브러리 내 UI 컨트롤 그룹 활성화] 노드로 활성화된 UI 컨트롤 그룹을 제거한다
    *
-   * 移除控件组库内界面控件组: 可以在目标玩家的界面布局上移除已通过节点【激活控件组库内界面控件组】激活的界面控件组
-   *
-   * @param targetPlayer Active Player Entity
-   *
-   * 目标玩家: 生效的玩家实体
-   * @param uiControlGroupIndex Identifier for the UI Control Group
-   *
-   * 界面控件组索引: 界面控件组的标识
+   * @param targetPlayer 대상 플레이어: 효과가 적용될 플레이어 엔티티
+   * @param uiControlGroupIndex UI 컨트롤 그룹 인덱스: UI 컨트롤 그룹의 식별자
    */
   removeInterfaceControlGroupFromControlGroupLibrary(
     targetPlayer: PlayerEntity,
@@ -5971,22 +5097,12 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Edit the cooldown percentage of a skill in a Character's Skill Slot based on its maximum cooldown
+   * 최대 쿨다운 대비 비율로 캐릭터 스킬 슬롯의 스킬 쿨다운 퍼센트를 수정한다
    *
-   * 按最大冷却时间修改技能冷却百分比: 通过技能最大冷却时间的百分比来修改角色某个技能槽位内的技能
-   *
-   * @param targetEntity Active Character Entity
-   *
-   * 目标实体: 生效的角色实体
-   * @param characterSkillSlot The Skill Slot to edited: Normal Attack, Skill 1-E, Skill 2-Q, Skill 3-R, Skill 4-T, or Custom Skill
-   *
-   * 角色技能槽位: 要修改的技能所在的槽位，分为普通攻击、技能1-E、技能2-Q、技能3-R、技能4-T和自定义技能
-   * @param cooldownRatioModifier Actual Cooldown after Editing = Original Cooldown × Cooldown Ratio Edit Value
-   *
-   * 冷却比例修改值: 修改后的实际冷却时间为：原冷却时间*冷却比例修改值
-   * @param limitMaximumCdTime If set to True, the edited Cooldown cannot be less than the specified minimum value
-   *
-   * 是否限制最大冷却时间: 为“是”可以限制修改后的冷却时间不小于所限制的值
+   * @param targetEntity 대상 엔티티: 효과가 적용될 캐릭터 엔티티
+   * @param characterSkillSlot 스킬 슬롯: 수정할 스킬이 위치한 슬롯 (일반 공격, 스킬1-E, 스킬2-Q, 스킬3-R, 스킬4-T, 커스텀 스킬)
+   * @param cooldownRatioModifier 쿨다운 비율 수정값: 수정 후 실제 쿨다운 = 원래 쿨다운 × 쿨다운 비율 수정값
+   * @param limitMaximumCdTime 최대 쿨다운 제한 여부: True이면 수정 후 쿨다운이 지정된 최솟값 미만이 되지 않도록 제한
    */
   modifySkillCdPercentageBasedOnMaxCd(
     targetEntity: CharacterEntity,
@@ -6012,16 +5128,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Reset the Target Character's skills to those defined in the Class Template
+   * 대상 캐릭터의 스킬을 클래스 템플릿에 정의된 스킬로 초기화한다
    *
-   * 初始化角色技能: 使目标角色的技能重置为职业模板上配置的技能
-   *
-   * @param targetEntity Active Character Entity
-   *
-   * 目标实体: 生效的角色实体
-   * @param characterSkillSlot The Skill Slot to initialize: Normal Attack, Skill 1-E, Skill 2-Q, Skill 3-R, Skill 4-T, or Custom Skill
-   *
-   * 角色技能槽位: 要初始化的技能所在的槽位，分为普通攻击、技能1-E、技能2-Q、技能3-R、技能4-T和自定义技能
+   * @param targetEntity 대상 엔티티: 효과가 적용될 캐릭터 엔티티
+   * @param characterSkillSlot 스킬 슬롯: 초기화할 스킬이 위치한 슬롯 (일반 공격, 스킬1-E, 스킬2-Q, 스킬3-R, 스킬4-T, 커스텀 스킬)
    */
   initializeCharacterSkill(
     targetEntity: CharacterEntity,
@@ -6038,19 +5148,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Edit the Character's skill resource amount
+   * 캐릭터의 스킬 자원량을 설정한다
    *
-   * 设置技能资源量: 修改角色的技能资源量
-   *
-   * @param targetEntity Active Character Entity
-   *
-   * 目标实体: 生效的角色实体
-   * @param skillResourceConfigId Skill Resource Identifier
-   *
-   * 技能资源配置ID: 技能资源的标识
-   * @param targetValue Edited value will be set to this input value
-   *
-   * 目标值: 修改后的值为该输入值
+   * @param targetEntity 대상 엔티티: 효과가 적용될 캐릭터 엔티티
+   * @param skillResourceConfigId 스킬 자원 설정 ID: 스킬 자원의 식별자
+   * @param targetValue 목표값: 수정 후의 값이 이 입력값으로 설정됨
    */
   setSkillResourceAmount(
     targetEntity: CharacterEntity,
@@ -6069,22 +5171,12 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Directly set the cooldown of a specific Skill Slot on the Target Character to a specified value
+   * 대상 캐릭터의 특정 스킬 슬롯 쿨다운을 지정값으로 직접 설정한다
    *
-   * 设置角色技能冷却: 直接设置目标角色某个技能槽位的冷却为指定值
-   *
-   * @param targetEntity Active Character Entity
-   *
-   * 目标实体: 生效的角色实体
-   * @param characterSkillSlot The Skill Slot to edited: Normal Attack, Skill 1-E, Skill 2-Q, Skill 3-R, Skill 4-T, or Custom Skill
-   *
-   * 角色技能槽位: 要修改的技能所在的槽位，分为普通攻击、技能1-E、技能2-Q、技能3-R、技能4-T和自定义技能
-   * @param remainingCdTime Edited Cooldown will be set to this input value
-   *
-   * 冷却剩余时间: 修改后的冷却时间为该输入值
-   * @param limitMaximumCdTime If set to True, the edited Cooldown cannot be less than the specified minimum value
-   *
-   * 是否限制最大冷却时间: 为“是”可以限制修改后的冷却时间不小于所限制的值
+   * @param targetEntity 대상 엔티티: 효과가 적용될 캐릭터 엔티티
+   * @param characterSkillSlot 스킬 슬롯: 수정할 스킬이 위치한 슬롯 (일반 공격, 스킬1-E, 스킬2-Q, 스킬3-R, 스킬4-T, 커스텀 스킬)
+   * @param remainingCdTime 쿨다운 잔여 시간: 수정 후 쿨다운이 이 입력값으로 설정됨
+   * @param limitMaximumCdTime 최대 쿨다운 제한 여부: True이면 수정 후 쿨다운이 지정된 최솟값 미만이 되지 않도록 제한
    */
   setCharacterSkillCd(
     targetEntity: CharacterEntity,
@@ -6105,19 +5197,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Add a skill to the specified Target Character's Skill Slot
+   * 지정된 대상 캐릭터의 스킬 슬롯에 스킬을 추가한다
    *
-   * 添加角色技能: 为指定目标角色的某个技能槽位添加技能
-   *
-   * @param targetEntity Active Character Entity
-   *
-   * 目标实体: 生效的角色实体
-   * @param skillConfigId Skill Identifier
-   *
-   * 技能配置ID: 技能的标识
-   * @param skillSlot The Skill Slot to be added: Normal Attack, Skill 1-E, Skill 2-Q, Skill 3-R, Skill 4-T, or Custom Skill
-   *
-   * 技能槽位: 要添加的技能所在的槽位，分为普通攻击、技能1-E、技能2-Q、技能3-R、技能4-T和自定义技能
+   * @param targetEntity 대상 엔티티: 효과가 적용될 캐릭터 엔티티
+   * @param skillConfigId 스킬 설정 ID: 스킬의 식별자
+   * @param skillSlot 스킬 슬롯: 추가할 스킬이 위치할 슬롯 (일반 공격, 스킬1-E, 스킬2-Q, 스킬3-R, 스킬4-T, 커스텀 스킬)
    */
   addCharacterSkill(
     targetEntity: CharacterEntity,
@@ -6136,19 +5220,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Edit the skill's resource amount by adding the change value to the current value. The change value can be negative
+   * 변경값을 현재값에 더해 스킬 자원량을 수정한다. 변경값은 음수일 수 있다
    *
-   * 修改技能资源量: 修改技能的资源量，会在当前值上加上变更值，变更值可以为负数
-   *
-   * @param targetEntity Active Character Entity
-   *
-   * 目标实体: 生效的角色实体
-   * @param skillResourceConfigId Skill Resource Identifier
-   *
-   * 技能资源配置ID: 技能资源的标识
-   * @param changeValue New Value = Original Value + Change Value
-   *
-   * 变更值: 修改后的值为：原值+变更值
+   * @param targetEntity 대상 엔티티: 효과가 적용될 캐릭터 엔티티
+   * @param skillResourceConfigId 스킬 자원 설정 ID: 스킬 자원의 식별자
+   * @param changeValue 변경값: 수정 후 값 = 원래 값 + 변경값
    */
   modifySkillResourceAmount(
     targetEntity: CharacterEntity,
@@ -6167,16 +5243,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Available only in Classic Mode, sets the elemental energy for a specific character
+   * 클래식 모드에서만 사용 가능; 지정된 캐릭터의 원소 에너지를 설정한다
    *
-   * 设置角色元素能量: 仅经典模式可用，设置指定角色的元素能量
-   *
-   * @param targetEntity Active Character Entity
-   *
-   * 目标实体: 生效的角色实体
-   * @param elementalEnergy
-   *
-   * 元素能量
+   * @param targetEntity 대상 엔티티: 효과가 적용될 캐릭터 엔티티
+   * @param elementalEnergy 원소 에너지
    */
   setCharacterSElementalEnergy(targetEntity: CharacterEntity, elementalEnergy: FloatValue): void {
     const targetEntityObj = parseValue(targetEntity, 'entity')
@@ -6190,16 +5260,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Available only in Classic Mode, increases the elemental energy for a specific character
+   * 클래식 모드에서만 사용 가능; 지정된 캐릭터의 원소 에너지를 증가시킨다
    *
-   * 增加角色元素能量: 仅经典模式可用，增加指定角色的元素能量
-   *
-   * @param targetEntity Active Character Entity
-   *
-   * 目标实体: 生效的角色实体
-   * @param increaseValue
-   *
-   * 增加值
+   * @param targetEntity 대상 엔티티: 효과가 적용될 캐릭터 엔티티
+   * @param increaseValue 증가값
    */
   increasesCharacterSElementalEnergy(
     targetEntity: CharacterEntity,
@@ -6216,22 +5280,12 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Edit the cooldown of the specified Skill Slot on the Target Character. The edit value is added to the current cooldown and can be negative
+   * 대상 캐릭터의 특정 스킬 슬롯 쿨다운을 수정한다. 수정값을 현재 쿨다운에 더하며, 수정값은 음수일 수 있다
    *
-   * 修改角色技能冷却: 修改目标角色某个技能槽位的冷却，会在当前冷却时间上加修改值，修改值可以为负数
-   *
-   * @param targetEntity Active Character Entity
-   *
-   * 目标实体: 生效的角色实体
-   * @param characterSkillSlot The Skill Slot to edited: Normal Attack, Skill 1-E, Skill 2-Q, Skill 3-R, Skill 4-T, or Custom Skill
-   *
-   * 角色技能槽位: 要修改的技能所在的槽位，分为普通攻击、技能1-E、技能2-Q、技能3-R、技能4-T和自定义技能
-   * @param cdModifier New Value = Original Value + Edit Value
-   *
-   * 冷却时间修改值: 修改后的值为：原值+修改值
-   * @param limitMaximumCdTime If set to True, the edited Cooldown cannot be less than the specified minimum value
-   *
-   * 是否限制最大冷却时间: 为“是”可以限制修改后的冷却时间不小于所限制的值
+   * @param targetEntity 대상 엔티티: 효과가 적용될 캐릭터 엔티티
+   * @param characterSkillSlot 스킬 슬롯: 수정할 스킬이 위치한 슬롯 (일반 공격, 스킬1-E, 스킬2-Q, 스킬3-R, 스킬4-T, 커스텀 스킬)
+   * @param cdModifier 쿨다운 수정값: 수정 후 값 = 원래 값 + 수정값
+   * @param limitMaximumCdTime 최대 쿨다운 제한 여부: True이면 수정 후 쿨다운이 지정된 최솟값 미만이 되지 않도록 제한
    */
   modifyCharacterSkillCd(
     targetEntity: CharacterEntity,
@@ -6252,16 +5306,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Delete the skill in the specified slot of the Target Character
+   * 대상 캐릭터의 지정 슬롯에 있는 스킬을 삭제한다
    *
-   * 以槽位删除角色技能: 删除目标角色指定槽位的技能
-   *
-   * @param targetEntity Active Character Entity
-   *
-   * 目标实体: 生效的角色实体
-   * @param characterSkillSlot The Skill Slot to be deleted: Normal Attack, Skill 1-E, Skill 2-Q, Skill 3-R, Skill 4-T, or Custom Skill
-   *
-   * 角色技能槽位: 要删除的技能所在的槽位，分为普通攻击、技能1-E、技能2-Q、技能3-R、技能4-T和自定义技能
+   * @param targetEntity 대상 엔티티: 효과가 적용될 캐릭터 엔티티
+   * @param characterSkillSlot 스킬 슬롯: 삭제할 스킬이 위치한 슬롯 (일반 공격, 스킬1-E, 스킬2-Q, 스킬3-R, 스킬4-T, 커스텀 스킬)
    */
   deleteCharacterSkillBySlot(
     targetEntity: CharacterEntity,
@@ -6278,16 +5326,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Iterate through and delete all skills with the specified Config ID across all of the Character's slots
+   * 캐릭터의 모든 슬롯을 순회하여 지정된 설정 ID를 가진 모든 스킬을 삭제한다
    *
-   * 以ID删除角色技能: 遍历角色的所有槽位，删除所有指定配置ID的技能
-   *
-   * @param targetEntity Active Character Entity
-   *
-   * 目标实体: 生效的角色实体
-   * @param skillConfigId Skill Identifier
-   *
-   * 技能配置ID: 技能的标识
+   * @param targetEntity 대상 엔티티: 효과가 적용될 캐릭터 엔티티
+   * @param skillConfigId 스킬 설정 ID: 스킬의 식별자
    */
   deleteCharacterSkillById(targetEntity: CharacterEntity, skillConfigId: ConfigIdValue): void {
     const targetEntityObj = parseValue(targetEntity, 'entity')
@@ -6301,16 +5343,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Adjust Player Background Music Volume
+   * 플레이어의 배경음악 볼륨을 조정한다
    *
-   * 调整玩家背景音乐音量: 调整玩家背景音乐音量
-   *
-   * @param targetEntity Active Player Entity
-   *
-   * 目标实体: 生效的玩家实体
-   * @param volume
-   *
-   * 音量
+   * @param targetEntity 대상 엔티티: 효과가 적용될 플레이어 엔티티
+   * @param volume 볼륨
    */
   adjustPlayerBackgroundMusicVolume(targetEntity: PlayerEntity, volume: IntValue): void {
     const targetEntityObj = parseValue(targetEntity, 'entity')
@@ -6324,22 +5360,12 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Adjust the volume and playback speed of the Sound Effect Player with the specified ID in the Sound Effect Player Component on the Target Entity
+   * 대상 엔티티의 음향 효과 플레이어 컴포넌트에서 지정 ID의 음향 효과 플레이어 볼륨과 재생 속도를 조정한다
    *
-   * 调整指定音效播放器: 可以调整指定目标实体上的音效播放器组件对应序号的音效播放器的音量和播放速度
-   *
-   * @param targetEntity
-   *
-   * 目标实体
-   * @param sfxPlayerId
-   *
-   * 音效播放器序号
-   * @param volume
-   *
-   * 音量
-   * @param playbackSpeed
-   *
-   * 播放速度
+   * @param targetEntity 대상 엔티티
+   * @param sfxPlayerId 음향 효과 플레이어 ID
+   * @param volume 볼륨
+   * @param playbackSpeed 재생 속도
    */
   adjustSpecifiedSoundEffectPlayer(
     targetEntity: EntityValue,
@@ -6360,16 +5386,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Disable the Sound Effect Player with the specified ID in the Sound Effect Player Component on the specified Target Entity
+   * 지정된 대상 엔티티의 음향 효과 플레이어 컴포넌트에서 지정 ID의 음향 효과 플레이어를 비활성화한다
    *
-   * 关闭指定音效播放器: 关闭指定目标实体上的音效播放器组件对应序号的音效播放器
-   *
-   * @param targetEntity
-   *
-   * 目标实体
-   * @param sfxPlayerId
-   *
-   * 音效播放器序号
+   * @param targetEntity 대상 엔티티
+   * @param sfxPlayerId 음향 효과 플레이어 ID
    */
   closeSpecifiedSoundEffectPlayer(targetEntity: EntityValue, sfxPlayerId: IntValue): void {
     const targetEntityObj = parseValue(targetEntity, 'entity')
@@ -6383,16 +5403,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Edit the background music state for the specified Player
+   * 지정된 플레이어의 배경음악 상태를 수정한다
    *
-   * 启动/暂停玩家背景音乐: 修改对应玩家的背景音乐状态
-   *
-   * @param targetEntity Active Player Entity
-   *
-   * 目标实体: 生效的玩家实体
-   * @param recover
-   *
-   * 是否恢复
+   * @param targetEntity 대상 엔티티: 효과가 적용될 플레이어 엔티티
+   * @param recover 재개 여부
    */
   startPausePlayerBackgroundMusic(targetEntity: PlayerEntity, recover: BoolValue): void {
     const targetEntityObj = parseValue(targetEntity, 'entity')
@@ -6406,19 +5420,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Edit the state of the Sound Effect Player with the specified ID in the Sound Effect Player Component on the Target Entity. This node is only active when the sound effect is set to loop playback. It does not take effect for sound effects configured for single-playback.
+   * 대상 엔티티의 음향 효과 플레이어 컴포넌트에서 지정 ID의 음향 효과 플레이어 상태를 수정한다. 루프 재생으로 설정된 음향 효과에만 유효하며, 단회 재생 음향 효과에는 적용되지 않는다
    *
-   * 启动/暂停指定音效播放器: 可以修改指定目标实体上的音效播放器组件对应序号的音效播放器状态，仅当该音效被设置为循环播放时有效，单次播放的音效该节点不生效
-   *
-   * @param targetEntity
-   *
-   * 目标实体
-   * @param sfxPlayerId
-   *
-   * 音效播放器序号
-   * @param recover
-   *
-   * 是否恢复
+   * @param targetEntity 대상 엔티티
+   * @param sfxPlayerId 음향 효과 플레이어 ID
+   * @param recover 재개 여부
    */
   startPauseSpecifiedSoundEffectPlayer(
     targetEntity: EntityValue,
@@ -6437,47 +5443,20 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Dynamically add a Sound Effect Player. The Unit must have a Sound Effect Player Component
+   * 음향 효과 플레이어를 동적으로 추가한다. 유닛이 음향 효과 플레이어 컴포넌트를 보유해야 한다
    *
-   * 添加音效播放器: 动态添加一个音效播放器，需要单位持有音效播放器组件
-   *
-   * @param targetEntity
-   *
-   * 目标实体
-   * @param soundEffectAssetIndex
-   *
-   * 音效资产索引
-   * @param volume
-   *
-   * 音量
-   * @param playbackSpeed
-   *
-   * 播放速度
-   * @param loopPlayback
-   *
-   * 是否循环播放
-   * @param loopIntervalTime
-   *
-   * 循环间隔时间
-   * @param _3dSoundEffect
-   *
-   * 是否为3D音效
-   * @param rangeRadius
-   *
-   * 范围半径
-   * @param attenuationMode
-   *
-   * 衰减方式
-   * @param attachmentPointName
-   *
-   * 挂接点名称
-   * @param attachmentPointOffset
-   *
-   * 挂接点偏移
-   *
-   * @returns
-   *
-   * 音效播放器序号
+   * @param targetEntity 대상 엔티티
+   * @param soundEffectAssetIndex 음향 효과 에셋 인덱스
+   * @param volume 볼륨
+   * @param playbackSpeed 재생 속도
+   * @param loopPlayback 루프 재생 여부
+   * @param loopIntervalTime 루프 간격 시간
+   * @param _3dSoundEffect 3D 음향 효과 여부
+   * @param rangeRadius 범위 반경
+   * @param attenuationMode 감쇠 방식
+   * @param attachmentPointName 부착 지점 이름
+   * @param attachmentPointOffset 부착 지점 오프셋
+   * @returns 음향 효과 플레이어 ID
    */
   addSoundEffectPlayer(
     targetEntity: EntityValue,
@@ -6527,22 +5506,12 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Player plays a one-shot 2D Sound Effect
+   * 플레이어가 단회 2D 음향 효과를 재생한다
    *
-   * 玩家播放单次2D音效: 玩家播放单次2D音效
-   *
-   * @param targetEntity Active Player Entity
-   *
-   * 目标实体: 生效的玩家实体
-   * @param soundEffectAssetIndex
-   *
-   * 音效资产索引
-   * @param volume
-   *
-   * 音量
-   * @param playbackSpeed
-   *
-   * 播放速度
+   * @param targetEntity 대상 엔티티: 효과가 적용될 플레이어 엔티티
+   * @param soundEffectAssetIndex 음향 효과 에셋 인덱스
+   * @param volume 볼륨
+   * @param playbackSpeed 재생 속도
    */
   playerPlaysOneShot2dSoundEffect(
     targetEntity: PlayerEntity,
@@ -6563,37 +5532,17 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Edit background music parameters for the Player
+   * 플레이어의 배경음악 관련 파라미터를 수정한다
    *
-   * 修改玩家背景音乐: 修改玩家背景音乐相关参数
-   *
-   * @param targetEntity Active Player Entity
-   *
-   * 目标实体: 生效的玩家实体
-   * @param backgroundMusicIndex
-   *
-   * 背景音乐索引
-   * @param startTime
-   *
-   * 开始时间
-   * @param endTime
-   *
-   * 结束时间
-   * @param volume
-   *
-   * 音量
-   * @param loopPlayback
-   *
-   * 是否循环播放
-   * @param loopInterval
-   *
-   * 循环播放间隔
-   * @param playbackSpeed
-   *
-   * 播放速度
-   * @param enableFadeInOut
-   *
-   * 是否允许渐入渐出
+   * @param targetEntity 대상 엔티티: 효과가 적용될 플레이어 엔티티
+   * @param backgroundMusicIndex 배경음악 인덱스
+   * @param startTime 시작 시간
+   * @param endTime 종료 시간
+   * @param volume 볼륨
+   * @param loopPlayback 루프 재생 여부
+   * @param loopInterval 루프 재생 간격
+   * @param playbackSpeed 재생 속도
+   * @param enableFadeInOut 페이드 인/아웃 허용 여부
    */
   modifyPlayerBackgroundMusic(
     targetEntity: PlayerEntity,
@@ -6634,13 +5583,9 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Clear Unit Tags for the specified Entity
+   * 지정된 엔티티의 유닛 태그를 모두 지운다
    *
-   * 实体清空单位标签: 对指定实体清空单位标签
-   *
-   * @param targetEntity
-   *
-   * 目标实体
+   * @param targetEntity 대상 엔티티
    */
   clearUnitTagsFromEntity(targetEntity: EntityValue): void {
     const targetEntityObj = parseValue(targetEntity, 'entity')
@@ -6653,16 +5598,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Add Unit Tags to the specified Entity
+   * 지정된 엔티티에 유닛 태그를 추가한다
    *
-   * 实体添加单位标签: 对指定实体添加单位标签
-   *
-   * @param targetEntity
-   *
-   * 目标实体
-   * @param unitTagIndex
-   *
-   * 单位标签索引
+   * @param targetEntity 대상 엔티티
+   * @param unitTagIndex 유닛 태그 인덱스
    */
   addUnitTagToEntity(targetEntity: EntityValue, unitTagIndex: IntValue): void {
     const targetEntityObj = parseValue(targetEntity, 'entity')
@@ -6676,16 +5615,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Remove Unit Tags from the specified Entity
+   * 지정된 엔티티에서 유닛 태그를 제거한다
    *
-   * 实体移除单位标签: 对指定实体移除单位标签
-   *
-   * @param targetEntity
-   *
-   * 目标实体
-   * @param unitTagIndex
-   *
-   * 单位标签索引
+   * @param targetEntity 대상 엔티티
+   * @param unitTagIndex 유닛 태그 인덱스
    */
   removeUnitTagFromEntity(targetEntity: EntityValue, unitTagIndex: IntValue): void {
     const targetEntityObj = parseValue(targetEntity, 'entity')
@@ -6699,16 +5632,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Available only in Custom Aggro Mode; Make the Taunter Entity taunt the specified Target Entity
+   * 커스텀 어그로 모드에서만 사용 가능; 도발자 엔티티가 지정된 대상 엔티티를 도발하게 한다
    *
-   * 嘲讽目标: 仅自定义仇恨模式可用; 使嘲讽者实体嘲讽指定目标实体
-   *
-   * @param taunterEntity
-   *
-   * 嘲讽者实体
-   * @param targetEntity
-   *
-   * 目标实体
+   * @param taunterEntity 도발자 엔티티
+   * @param targetEntity 대상 엔티티
    */
   tauntTarget(taunterEntity: EntityValue, targetEntity: EntityValue): void {
     const taunterEntityObj = parseValue(taunterEntity, 'entity')
@@ -6722,16 +5649,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Available only in Custom Aggro Mode; Remove the Target Entity from the Aggro Owner's Aggro List; this may cause the target to leave battle
+   * 커스텀 어그로 모드에서만 사용 가능; 어그로 소유자의 어그로 리스트에서 대상 엔티티를 제거한다. 대상이 전투에서 이탈할 수 있다
    *
-   * 将目标实体移除出仇恨列表: 仅自定义仇恨模式可用; 将目标实体从仇恨拥有者的仇恨列表中移除，可能会导致目标实体脱战
-   *
-   * @param targetEntity
-   *
-   * 目标实体
-   * @param aggroOwnerEntity
-   *
-   * 仇恨拥有者实体
+   * @param targetEntity 대상 엔티티
+   * @param aggroOwnerEntity 어그로 소유자 엔티티
    */
   removeTargetEntityFromAggroList(targetEntity: EntityValue, aggroOwnerEntity: EntityValue): void {
     const targetEntityObj = parseValue(targetEntity, 'entity')
@@ -6745,13 +5666,9 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Available only in Custom Aggro Mode; Clear the Aggro Owner's Aggro List. This may cause them to leave battle
+   * 커스텀 어그로 모드에서만 사용 가능; 어그로 소유자의 어그로 리스트를 초기화한다. 전투 이탈로 이어질 수 있다
    *
-   * 清空指定目标的仇恨列表: 仅自定义仇恨模式可用; 清空仇恨拥有者的仇恨列表。可能会导致其脱战
-   *
-   * @param aggroOwner
-   *
-   * 仇恨拥有者
+   * @param aggroOwner 어그로 소유자
    */
   clearSpecifiedTargetSAggroList(aggroOwner: EntityValue): void {
     const aggroOwnerObj = parseValue(aggroOwner, 'entity')
@@ -6764,19 +5681,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Available only in Custom Aggro Mode; Set the Aggro Value of the specified Target Entity on the specified Aggro Owner
+   * 커스텀 어그로 모드에서만 사용 가능; 지정된 어그로 소유자에 대한 지정된 대상 엔티티의 어그로 수치를 설정한다
    *
-   * 设置指定实体的仇恨值: 仅自定义仇恨模式可用; 设置指定目标实体在指定仇恨拥有者上的仇恨值
-   *
-   * @param targetEntity
-   *
-   * 目标实体
-   * @param aggroOwnerEntity
-   *
-   * 仇恨拥有者实体
-   * @param aggroValue
-   *
-   * 仇恨值
+   * @param targetEntity 대상 엔티티
+   * @param aggroOwnerEntity 어그로 소유자 엔티티
+   * @param aggroValue 어그로 수치
    */
   setTheAggroValueOfSpecifiedEntity(
     targetEntity: EntityValue,
@@ -6795,21 +5704,12 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Send a custom Signal to the global Stage. Before use, select the corresponding Signal name to ensure correct parameter usage
+   * 스테이지 전역에 커스텀 시그널을 전송한다. 사용 전에 해당 시그널 이름을 먼저 선택해야 파라미터를 올바르게 사용할 수 있다
    *
-   * 发送信号: 向关卡全局发送一个自定义信号，使用前需要先选择对应的信号名，然后才能正确的使用该信号的参数
+   * GSTS 참고: 에디터의 시그널 관리자에 시그널을 등록해야 한다. 시그널 분배를 사용하면 대형 루프로 인한 부하 제한을 피할 수 있어 성능 최적화에 활용 가능하다
    *
-   * GSTS Note: You still need to register the signal in the signal manager in the editor; Using signal distribution can avoid some large loop triggering load limits, which can be used for performance optimization
-   *
-   * GSTS 注: 你仍然需要在编辑器内的信号管理器注册信号; 使用信号分发能够避免一些大循环触发负载限制, 可用于性能优化
-   *
-   * @param signalName Only literal string is supported
-   *
-   * 信号名（仅支持字面量字符串）
-   *
-   * @param signalArgs Optional array of custom signal arguments. Each entry has `name`, `type`, and `value`. The argument names, types, and order must match the signal definition registered in the editor's Signal Manager. Array values can be passed as raw JS arrays (auto-wrapped) or using the `list()` helper. Supported types: entity, guid, int, bool, float, str, vec3, config_id, prefab_id, and their `_list` variants (18 types total)
-   *
-   * 신호 커스텀 인자 배열 (선택). 각 항목은 `name`, `type`, `value`로 구성. 인자의 이름, 타입, 순서는 에디터의 신호 관리자에 등록된 신호 정의와 반드시 일치해야 함. 배열 값은 raw JS 배열(자동 래핑) 또는 `list()` 헬퍼로 전달 가능. 지원 타입: entity, guid, int, bool, float, str, vec3, config_id, prefab_id 및 `_list` 변형 (총 18종)
+   * @param signalName 시그널 이름 (리터럴 문자열만 지원)
+   * @param signalArgs 시그널 커스텀 인자 배열 (선택). 각 항목은 `name`, `type`, `value`로 구성. 인자의 이름, 타입, 순서는 에디터의 시그널 관리자에 등록된 시그널 정의와 반드시 일치해야 함. 배열 값은 raw JS 배열(자동 래핑) 또는 `list()` 헬퍼로 전달 가능. 지원 타입: entity, guid, int, bool, float, str, vec3, config_id, prefab_id 및 `_list` 변형 (총 18종)
    *
    * @example
    * ```ts
@@ -6850,16 +5750,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Set the active Nameplate list for the specified target. Nameplates included in the input list are enabled, while those not included are disabled
+   * 지정된 대상의 활성 명판 리스트를 직접 설정한다. 입력 리스트에 포함된 명판은 활성화되고, 포함되지 않은 명판은 비활성화된다
    *
-   * 设置实体生效铭牌: 直接设置指定目标的生效铭牌列表，在入参列表中的铭牌配置会生效，不在列表中的会失效
-   *
-   * @param targetEntity
-   *
-   * 目标实体
-   * @param nameplateConfigIdList
-   *
-   * 铭牌配置ID列表
+   * @param targetEntity 대상 엔티티
+   * @param nameplateConfigIdList 명판 설정 ID 리스트
    */
   setEntityActiveNameplate(
     targetEntity: EntityValue,
@@ -6876,16 +5770,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * In the Target Entity's Text Bubble Component, replace the current active Text Bubble with the one corresponding to the Config ID
+   * 대상 엔티티의 텍스트 버블 컴포넌트에서 현재 활성화된 텍스트 버블을 설정 ID에 해당하는 것으로 교체한다
    *
-   * 切换生效的文本气泡: 目标实体的文本气泡组件中，会以配置ID对应的文本气泡替换当前生效的文本气泡
-   *
-   * @param targetEntity
-   *
-   * 目标实体
-   * @param textBubbleConfigurationId
-   *
-   * 文本气泡配置ID
+   * @param targetEntity 대상 엔티티
+   * @param textBubbleConfigurationId 텍스트 버블 설정 ID
    */
   switchActiveTextBubble(
     targetEntity: EntityValue,
@@ -6902,16 +5790,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Close the currently active Deck Selector for the specified Player
+   * 지정된 플레이어의 현재 활성화된 덱 선택기를 닫는다
    *
-   * 关闭卡牌选择器: 关闭指定玩家当前生效的卡牌选择器
-   *
-   * @param targetPlayer Active Player Entity
-   *
-   * 目标玩家: 生效的玩家实体
-   * @param deckSelectorIndex
-   *
-   * 卡牌选择器索引
+   * @param targetPlayer 대상 플레이어: 효과가 적용될 플레이어 엔티티
+   * @param deckSelectorIndex 덱 선택기 인덱스
    */
   closeDeckSelector(targetPlayer: PlayerEntity, deckSelectorIndex: IntValue): void {
     const targetPlayerObj = parseValue(targetPlayer, 'entity')
@@ -6925,43 +5807,19 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Open the pre-made Deck Selector for the Target Player
+   * 대상 플레이어에게 미리 제작된 덱 선택기를 열어준다
    *
-   * 唤起卡牌选择器: 对目标玩家打开提前制作好的卡牌选择器
-   *
-   * @param targetPlayer Specify the runtime Player to invoke the Deck Selector
-   *
-   * 目标玩家: 指定运行时玩家，唤起卡牌选择器
-   * @param deckSelectorId Referenced UI Control Group ID
-   *
-   * 卡牌选择器索引: 引用的界面控件组索引
-   * @param selectDuration If empty, uses the Deck Selector's default configuration; otherwise, this time value is used as the effective durationUnit in seconds
-   *
-   * 选择时长: 若为空，则读取卡牌选择器默认配置；若不为空，以此处时间参数为实际生效时长单位为秒
-   * @param selectResultCorrespondingList One-to-one with display items: the Deck Selector returns the result value corresponding to each display itemRecommended configuration: 1 to X
-   *
-   * 选择结果对应列表: 和显示项一一对应，卡牌选择器返回的实际结果是显示项对应的结果值推荐配置1至X
-   * @param selectDisplayCorrespondingList Deck Library Configuration Reference
-   *
-   * 选择显示对应列表: 卡牌库中的配置引用
-   * @param selectMinimumQuantity The minimum number of cards that must be selected for a valid interaction
-   *
-   * 选择数量下限: 选择卡牌数量下限，满足数量才可进行合法的选择交互
-   * @param selectMaximumQuantity The maximum number of cards that can be selected for a valid interaction
-   *
-   * 选择数量上限: 选择卡牌数量上限，满足数量才可进行合法的选择交互
-   * @param refreshMode No Refresh
-   *
-   * 刷新方式: 不可刷新
-   * @param refreshMinimumQuantity The minimum number of cards that must be selected for a valid refresh interaction.
-   *
-   * 刷新数量下限: 选择卡牌数量下限，满足数量才可进行合法的刷新交互
-   * @param refreshMaximumQuantity The maximum number of cards that can be selected for a valid refresh interaction
-   *
-   * 刷新数量上限: 选择卡牌数量上限，满足数量才可进行合法的刷新交互
-   * @param defaultReturnSelection If the Deck Selector times out, has no interaction, or closes abnormally, force-assign this configured resultThe length of this Result List must match the valid card selection count
-   *
-   * 默认返回选择: 如果卡牌选择器超时/未交互/卡牌选择器异常关闭等情况，支持强制赋予配置的该结果该结果的列表长度，需要和合法选择卡牌数量一致
+   * @param targetPlayer 대상 플레이어: 덱 선택기를 호출할 런타임 플레이어를 지정
+   * @param deckSelectorId 덱 선택기 인덱스: 참조하는 UI 컨트롤 그룹 인덱스
+   * @param selectDuration 선택 시간: 비어 있으면 덱 선택기의 기본 설정을 사용하고, 값이 있으면 해당 시간(초)이 실제 유효 지속 시간으로 사용됨
+   * @param selectResultCorrespondingList 선택 결과 대응 리스트: 표시 항목과 일대일로 대응하며, 덱 선택기가 반환하는 실제 결과는 각 표시 항목에 대응하는 결과 값. 권장 설정: 1 ~ X
+   * @param selectDisplayCorrespondingList 선택 표시 대응 리스트: 덱 라이브러리의 설정 참조
+   * @param selectMinimumQuantity 선택 수량 하한: 유효한 선택 상호작용을 위해 선택해야 하는 카드의 최소 수량
+   * @param selectMaximumQuantity 선택 수량 상한: 유효한 선택 상호작용이 가능한 카드의 최대 수량
+   * @param refreshMode 새로고침 방식: 새로고침 불가
+   * @param refreshMinimumQuantity 새로고침 수량 하한: 유효한 새로고침 상호작용을 위해 선택해야 하는 카드의 최소 수량
+   * @param refreshMaximumQuantity 새로고침 수량 상한: 유효한 새로고침 상호작용이 가능한 카드의 최대 수량
+   * @param defaultReturnSelection 기본 반환 선택: 덱 선택기 타임아웃/미상호작용/비정상 종료 시 강제로 할당되는 결과. 결과 리스트 길이는 유효한 카드 선택 수량과 일치해야 함
    */
   invokeDeckSelector(
     targetPlayer: PlayerEntity,
@@ -7008,13 +5866,9 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Randomly sort the input List
+   * 입력된 리스트를 무작위로 정렬한다
    *
-   * 随机卡牌选择器选择列表: 将输入的列表进行随机排序
-   *
-   * @param list
-   *
-   * 列表
+   * @param list 리스트
    */
   randomDeckSelectorSelectionList(list: IntValue[]): void {
     const listObj = parseValue(list, 'int_list')
@@ -7027,16 +5881,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Set Player Settlement Success Status
+   * 플레이어의 정산 성공 상태를 설정한다
    *
-   * 设置玩家结算成功状态: 设置玩家结算成功状态
-   *
-   * @param playerEntity
-   *
-   * 玩家实体
-   * @param settlementStatus Three types: Undefined, Victory, Defeat
-   *
-   * 结算状态: 分为未定、胜利、失败三种
+   * @param playerEntity 플레이어 엔티티
+   * @param settlementStatus 정산 상태: 미정, 승리, 패배의 세 가지 유형
    */
   setPlayerSettlementSuccessStatus(
     playerEntity: PlayerEntity,
@@ -7053,22 +5901,12 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Set the Player's Scoreboard display data, which is shown on the Scoreboard after Stage Settlement. Since this node involves the display of external functions, [Data Value] and [Data Name] currently support multilingual translation only when manually entering text. If entered via connection input, multilingual translation is not supported.
+   * 플레이어의 정산 스코어보드 표시 데이터를 설정한다. 스테이지 정산 후 표시되는 스코어보드에 나타난다. 이 노드는 외부 기능 표시와 관련되므로 [데이터 값]과 [데이터 이름]은 현재 텍스트를 직접 입력할 때만 다국어 번역을 지원하며, 와이어 연결로 입력 시에는 지원되지 않는다
    *
-   * 设置玩家结算计分板展示数据: 设置玩家结算计分板展示数据，显示在关卡结算后弹出的计分板内。由于该节点涉及了局外功能的显示，故【数据值】和【数据名称】目前仅在手动输入文本的时候支持多语言翻译，若为连线输入，则不支持多语言翻译
-   *
-   * @param setEntity Active Player Entity
-   *
-   * 设置实体: 生效的玩家实体
-   * @param dataOrder The sort order of this data
-   *
-   * 数据顺序: 该数据的排序
-   * @param dataName The name of this data
-   *
-   * 数据名称: 该数据的名称
-   * @param dataValue The value of this data. Supports Integer, Floating Point Number, and String
-   *
-   * 数据值: 该数据的值，支持整数、浮点数、字符串
+   * @param setEntity 설정 엔티티: 효과가 적용될 플레이어 엔티티
+   * @param dataOrder 데이터 순서: 해당 데이터의 정렬 순서
+   * @param dataName 데이터 이름: 해당 데이터의 이름
+   * @param dataValue 데이터 값: 해당 데이터의 값. 정수, 부동소수점, 문자열을 지원
    */
   setPlayerSettlementScoreboardDataDisplay(
     setEntity: PlayerEntity,
@@ -7108,16 +5946,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Set the Player's ranking value after Settlement, then determine the final ranking order according to [Ranking Value Comparison Order] in [Stage Settings] – [Settlement]
+   * 플레이어의 정산 후 순위 수치를 설정한다. 최종 순위는 [스테이지 설정] - [정산]의 [순위 수치 비교 순서] 설정에 따라 결정된다
    *
-   * 设置玩家结算排名数值: 设置玩家结算后的排名数值，再按照【关卡设置】-【结算】中的【排名数值比较顺序】的设置来决定最终的排名顺序
-   *
-   * @param playerEntity
-   *
-   * 玩家实体
-   * @param rankingValue
-   *
-   * 排名数值
+   * @param playerEntity 플레이어 엔티티
+   * @param rankingValue 순위 수치
    */
   setPlayerSettlementRankingValue(playerEntity: PlayerEntity, rankingValue: IntValue): void {
     const playerEntityObj = parseValue(playerEntity, 'entity')
@@ -7131,16 +5963,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Set Faction Settlement Success Status
+   * 진영의 정산 성공 상태를 설정한다
    *
-   * 设置阵营结算成功状态: 设置阵营结算成功状态
-   *
-   * @param faction Active Faction Entity
-   *
-   * 阵营: 生效的阵营实体
-   * @param settlementStatus Three types: Undefined, Victory, Defeat
-   *
-   * 结算状态: 分为未定、胜利、失败三种
+   * @param faction 진영: 효과가 적용될 진영 엔티티
+   * @param settlementStatus 정산 상태: 미정, 승리, 패배의 세 가지 유형
    */
   setFactionSettlementSuccessStatus(
     faction: FactionValue,
@@ -7157,16 +5983,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Set the faction's ranking value after Settlement, then determine the final ranking order according to [Ranking Value Comparison Order] in [Stage Settings] – [Settlement]
+   * 진영의 정산 후 순위 수치를 설정한다. 최종 순위는 [스테이지 설정] - [정산]의 [순위 수치 비교 순서] 설정에 따라 결정된다
    *
-   * 设置阵营结算排名数值: 设置阵营结算后的排名数值，再按照【关卡设置】-【结算】中的【排名数值比较顺序】的设置来决定最终的排名顺序
-   *
-   * @param faction Active Faction Entity
-   *
-   * 阵营: 生效的阵营实体
-   * @param rankingValue
-   *
-   * 排名数值
+   * @param faction 진영: 효과가 적용될 진영 엔티티
+   * @param rankingValue 순위 수치
    */
   setFactionSettlementRankingValue(faction: FactionValue, rankingValue: IntValue): void {
     const factionObj = parseValue(faction, 'faction')
@@ -7180,19 +6000,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Adjust the Light Source state at the specified ID in the Light Source Component on the Target Entity
+   * 대상 엔티티의 광원 컴포넌트에서 지정된 번호의 광원 상태를 조정한다
    *
-   * 开关实体光源: 调整指定目标实体上的光源组件对应序号的光源状态
-   *
-   * @param targetEntity
-   *
-   * 目标实体
-   * @param lightSourceId
-   *
-   * 光源序号
-   * @param enableOrDisable If set to True, turns On
-   *
-   * 打开或关闭: “是”为打开
+   * @param targetEntity 대상 엔티티
+   * @param lightSourceId 광원 번호
+   * @param enableOrDisable 켜기/끄기: True이면 켜기
    */
   toggleEntityLightSource(
     targetEntity: EntityValue,
@@ -7211,19 +6023,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Add a Key-Value Pair to the specified Dictionary
+   * 지정된 딕셔너리에 키-값 쌍을 추가하거나 설정한다
    *
-   * 对字典设置或新增键值对: 为指定字典新增一个键值对
-   *
-   * @param dictionary
-   *
-   * 字典
-   * @param key
-   *
-   * 键
-   * @param value
-   *
-   * 值
+   * @param dictionary 딕셔너리
+   * @param key 키
+   * @param value 값
    */
   setOrAddKeyValuePairsToDictionary<K extends DictKeyType, V extends DictValueType>(
     dictionary: dict<K, V>,
@@ -7242,13 +6046,9 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Clear all Key-Value Pairs from the specified Dictionary
+   * 지정된 딕셔너리의 모든 키-값 쌍을 초기화한다
    *
-   * 清空字典: 清空指定字典的键值对
-   *
-   * @param dictionary
-   *
-   * 字典
+   * @param dictionary 딕셔너리
    */
   clearDictionary<K extends DictKeyType, V extends DictValueType>(dictionary: dict<K, V>) {
     const dictionaryObj = parseValue(dictionary, 'dict')
@@ -7261,16 +6061,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Remove Key-Value Pairs from the specified Dictionary by key
+   * 키를 기준으로 지정된 딕셔너리에서 키-값 쌍을 제거한다
    *
-   * 以键对字典移除键值对: 以键移除指定字典中的键值对
-   *
-   * @param dictionary
-   *
-   * 字典
-   * @param key
-   *
-   * 键
+   * @param dictionary 딕셔너리
+   * @param key 키
    */
   removeKeyValuePairsFromDictionaryByKey<K extends DictKeyType, V extends DictValueType>(
     dictionary: dict<K, V>,
@@ -7287,9 +6081,7 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * After selecting a Structure, you can edit each parameter of that Structure
-   *
-   * 修改结构体: 在选定结构体后，可以修改该结构体的每个参数
+   * 구조체를 선택한 후 해당 구조체의 각 파라미터를 수정할 수 있다
    */
   modifyStructure(): void {
     this.registry.registerNode({
@@ -7301,19 +6093,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Remove items from the inventory shop's sales list
+   * 인벤토리 상점의 판매 목록에서 아이템을 제거한다
    *
-   * 从背包商店出售表中移除商品: 从背包商店出售表中移除商品
-   *
-   * @param shopOwnerEntity
-   *
-   * 商店归属者实体
-   * @param shopId The Shop ID corresponding to the Shop component on the Shop Owner Entity
-   *
-   * 商店序号: 商店归属者实体的商店组件对应的商店序号
-   * @param itemConfigId
-   *
-   * 道具配置ID
+   * @param shopOwnerEntity 상점 소유자 엔티티
+   * @param shopId 상점 번호: 상점 소유자 엔티티의 상점 컴포넌트에 대응하는 상점 번호
+   * @param itemConfigId 아이템 설정 ID
    */
   removeItemFromInventoryShopSalesList(
     shopOwnerEntity: EntityValue,
@@ -7332,19 +6116,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Remove items from the purchase list
+   * 수거 목록에서 아이템을 제거한다
    *
-   * 从物品收购表中移除物品: 从物品收购表中移除物品
-   *
-   * @param shopOwnerEntity
-   *
-   * 商店归属者实体
-   * @param shopId The Shop ID corresponding to the Shop component on the Shop Owner Entity
-   *
-   * 商店序号: 商店归属者实体的商店组件对应的商店序号
-   * @param shopItemConfigId
-   *
-   * 商品道具配置ID
+   * @param shopOwnerEntity 상점 소유자 엔티티
+   * @param shopId 상점 번호: 상점 소유자 엔티티의 상점 컴포넌트에 대응하는 상점 번호
+   * @param shopItemConfigId 상품 아이템 설정 ID
    */
   removeItemFromPurchaseList(
     shopOwnerEntity: EntityValue,
@@ -7363,19 +6139,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Remove items from the custom shop's sales list
+   * 커스텀 상점의 판매 목록에서 아이템을 제거한다
    *
-   * 从自定义商店出售表中移除商品: 从自定义商店出售表中移除商品
-   *
-   * @param shopOwnerEntity
-   *
-   * 商店归属者实体
-   * @param shopId The Shop ID corresponding to the Shop component on the Shop Owner Entity
-   *
-   * 商店序号: 商店归属者实体的商店组件对应的商店序号
-   * @param shopItemId
-   *
-   * 商品序号
+   * @param shopOwnerEntity 상점 소유자 엔티티
+   * @param shopId 상점 번호: 상점 소유자 엔티티의 상점 컴포넌트에 대응하는 상점 번호
+   * @param shopItemId 상품 번호
    */
   removeItemFromCustomShopSalesList(
     shopOwnerEntity: EntityValue,
@@ -7394,19 +6162,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Open the Shop from the Player Entity's perspective during gameplay
+   * 게임 실행 중 플레이어 엔티티의 시점에서 상점을 연다
    *
-   * 打开商店: 在游戏运行过程中以玩家实体的视角打开商店
-   *
-   * @param playerEntity
-   *
-   * 玩家实体
-   * @param shopOwnerEntity The Shop ID corresponding to the Shop component on the Shop Owner Entity
-   *
-   * 商店归属者实体: 商店归属者实体的商店组件对应的商店序号
-   * @param shopId
-   *
-   * 商店序号
+   * @param playerEntity 플레이어 엔티티
+   * @param shopOwnerEntity 상점 소유자 엔티티
+   * @param shopId 상점 번호
    */
   openShop(playerEntity: PlayerEntity, shopOwnerEntity: EntityValue, shopId: IntValue): void {
     const playerEntityObj = parseValue(playerEntity, 'entity')
@@ -7421,13 +6181,9 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Close all open Shops from the Player Entity's perspective during gameplay
+   * 게임 실행 중 플레이어 엔티티의 시점에서 열려 있는 모든 상점을 닫는다
    *
-   * 关闭商店: 在游戏运行过程中以玩家实体的视角关闭所有已打开的商店
-   *
-   * @param playerEntity
-   *
-   * 玩家实体
+   * @param playerEntity 플레이어 엔티티
    */
   closeShop(playerEntity: PlayerEntity): void {
     const playerEntityObj = parseValue(playerEntity, 'entity')
@@ -7440,31 +6196,15 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Add new items to the inventory shop's sales list
+   * 인벤토리 상점의 판매 목록에 새 아이템을 추가한다
    *
-   * 向背包商店出售表中新增商品: 向背包商店出售表中新增商品
-   *
-   * @param shopOwnerEntity
-   *
-   * 商店归属者实体
-   * @param shopId The Shop ID corresponding to the Shop component on the Shop Owner Entity
-   *
-   * 商店序号: 商店归属者实体的商店组件对应的商店序号
-   * @param shopItemConfigId
-   *
-   * 商品道具配置ID
-   * @param sellCurrencyDictionary
-   *
-   * 出售货币字典
-   * @param affiliatedTabId 1 Equipment, 2 Consumables, 3 Materials, 4 Valuables
-   *
-   * 所属页签序号: 1装备、2消耗品、3材料、4贵重物品
-   * @param sortPriority
-   *
-   * 排序优先级
-   * @param canBeSold
-   *
-   * 是否可出售
+   * @param shopOwnerEntity 상점 소유자 엔티티
+   * @param shopId 상점 번호: 상점 소유자 엔티티의 상점 컴포넌트에 대응하는 상점 번호
+   * @param shopItemConfigId 상품 아이템 설정 ID
+   * @param sellCurrencyDictionary 판매 화폐 딕셔너리
+   * @param affiliatedTabId 소속 탭 번호: 1 장비, 2 소모품, 3 재료, 4 귀중품
+   * @param sortPriority 정렬 우선순위
+   * @param canBeSold 판매 가능 여부
    */
   addNewItemToInventoryShopSalesList(
     shopOwnerEntity: EntityValue,
@@ -7499,25 +6239,13 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Add New Items to the Item Purchase List
+   * 아이템 수거 목록에 새 아이템을 추가한다
    *
-   * 向物品收购表中新增物品: 向物品收购表中新增物品
-   *
-   * @param shopOwnerEntity
-   *
-   * 商店归属者实体
-   * @param shopId The Shop ID corresponding to the Shop component on the Shop Owner Entity
-   *
-   * 商店序号: 商店归属者实体的商店组件对应的商店序号
-   * @param shopItemConfigId
-   *
-   * 商品道具配置ID
-   * @param purchaseCurrencyDictionary
-   *
-   * 收购货币字典
-   * @param purchasable
-   *
-   * 是否可收购
+   * @param shopOwnerEntity 상점 소유자 엔티티
+   * @param shopId 상점 번호: 상점 소유자 엔티티의 상점 컴포넌트에 대응하는 상점 번호
+   * @param shopItemConfigId 상품 아이템 설정 ID
+   * @param purchaseCurrencyDictionary 수거 화폐 딕셔너리
+   * @param purchasable 수거 가능 여부
    */
   addItemsToThePurchaseList(
     shopOwnerEntity: EntityValue,
@@ -7546,41 +6274,18 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Add items to the Custom Shop Sales List. Upon success, an Integer ID is generated in the Output Parameter as the item identifier
+   * 커스텀 상점의 판매 목록에 아이템을 추가한다. 추가 성공 시 출력 파라미터에 정수형 인덱스가 해당 상품의 식별자로 생성된다
    *
-   * 向自定义商店出售表中新增商品: 向自定义商店出售表中新增商品，新增成功后出参会生成一个整数型索引作为该商品的标识
-   *
-   * @param shopOwnerEntity
-   *
-   * 商店归属者实体
-   * @param shopId The Shop ID corresponding to the Shop component on the Shop Owner Entity
-   *
-   * 商店序号: 商店归属者实体的商店组件对应的商店序号
-   * @param shopItemConfigId
-   *
-   * 商品道具配置ID
-   * @param sellCurrencyDictionary
-   *
-   * 出售货币字典
-   * @param affiliatedTabId 1 Equipment, 2 Consumables, 3 Materials, 4 Valuables
-   *
-   * 所属页签序号: 1装备、2消耗品、3材料、4贵重物品
-   * @param limitPurchase
-   *
-   * 是否限购
-   * @param purchaseLimit
-   *
-   * 限购数量
-   * @param sortPriority
-   *
-   * 排序优先级
-   * @param canBeSold
-   *
-   * 是否可出售
-   *
-   * @returns
-   *
-   * 商品索引
+   * @param shopOwnerEntity 상점 소유자 엔티티
+   * @param shopId 상점 번호: 상점 소유자 엔티티의 상점 컴포넌트에 대응하는 상점 번호
+   * @param shopItemConfigId 상품 아이템 설정 ID
+   * @param sellCurrencyDictionary 판매 화폐 딕셔너리
+   * @param affiliatedTabId 소속 탭 번호: 1 장비, 2 소모품, 3 재료, 4 귀중품
+   * @param limitPurchase 구매 수량 제한 여부
+   * @param purchaseLimit 구매 수량 상한
+   * @param sortPriority 정렬 우선순위
+   * @param canBeSold 판매 가능 여부
+   * @returns 상품 인덱스
    */
   addNewItemToCustomShopSalesList(
     shopOwnerEntity: EntityValue,
@@ -7624,31 +6329,15 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Edit sale info for inventory shop items
+   * 인벤토리 상점 아이템의 판매 정보를 수정한다
    *
-   * 修改背包商店商品出售信息: 修改背包商店商品出售信息
-   *
-   * @param shopOwnerEntity
-   *
-   * 商店归属者实体
-   * @param shopId The Shop ID corresponding to the Shop component on the Shop Owner Entity
-   *
-   * 商店序号: 商店归属者实体的商店组件对应的商店序号
-   * @param itemConfigId
-   *
-   * 道具配置ID
-   * @param sellCurrencyDictionary
-   *
-   * 出售货币字典
-   * @param affiliatedTabId
-   *
-   * 所属页签序号
-   * @param sortPriority
-   *
-   * 排序优先级
-   * @param canBeSold
-   *
-   * 是否可出售
+   * @param shopOwnerEntity 상점 소유자 엔티티
+   * @param shopId 상점 번호: 상점 소유자 엔티티의 상점 컴포넌트에 대응하는 상점 번호
+   * @param itemConfigId 아이템 설정 ID
+   * @param sellCurrencyDictionary 판매 화폐 딕셔너리
+   * @param affiliatedTabId 소속 탭 번호
+   * @param sortPriority 정렬 우선순위
+   * @param canBeSold 판매 가능 여부
    */
   modifyInventoryShopItemSalesInfo(
     shopOwnerEntity: EntityValue,
@@ -7683,25 +6372,13 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Edit Item Purchase Information in the Item Purchase List
+   * 물품 수거 목록에서 아이템 수거 정보를 수정한다
    *
-   * 修改物品收购表中道具收购信息: 修改物品收购表中道具收购信息
-   *
-   * @param shopOwnerEntity
-   *
-   * 商店归属者实体
-   * @param shopId The Shop ID corresponding to the Shop component on the Shop Owner Entity
-   *
-   * 商店序号: 商店归属者实体的商店组件对应的商店序号
-   * @param shopItemConfigId
-   *
-   * 商品道具配置ID
-   * @param purchaseCurrencyDictionary
-   *
-   * 收购货币字典
-   * @param purchasable
-   *
-   * 是否可收购
+   * @param shopOwnerEntity 상점 소유자 엔티티
+   * @param shopId 상점 번호: 상점 소유자 엔티티의 상점 컴포넌트에 대응하는 상점 번호
+   * @param shopItemConfigId 상품 아이템 설정 ID
+   * @param purchaseCurrencyDictionary 수거 화폐 딕셔너리
+   * @param purchasable 수거 가능 여부
    */
   modifyItemPurchaseInfoInThePurchaseList(
     shopOwnerEntity: EntityValue,
@@ -7730,40 +6407,18 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Edit sale info for custom shop items
+   * 커스텀 상점 상품의 판매 정보를 수정한다
    *
-   * 修改自定义商店商品出售信息: 修改自定义商店商品出售信息
-   *
-   * @param shopOwnerEntity
-   *
-   * 商店归属者实体
-   * @param shopId The Shop ID corresponding to the Shop component on the Shop Owner Entity
-   *
-   * 商店序号: 商店归属者实体的商店组件对应的商店序号
-   * @param shopItemId
-   *
-   * 商品序号
-   * @param itemConfigId
-   *
-   * 道具配置ID
-   * @param sellCurrencyDictionary
-   *
-   * 出售货币字典
-   * @param affiliatedTabId 1 Equipment, 2 Consumables, 3 Materials, 4 Valuables
-   *
-   * 所属页签序号: 1装备、2消耗品、3材料、4贵重物品
-   * @param limitPurchase
-   *
-   * 是否限购
-   * @param purchaseLimit
-   *
-   * 限购数量
-   * @param sortPriority
-   *
-   * 排序优先级
-   * @param canBeSold
-   *
-   * 是否可出售
+   * @param shopOwnerEntity 상점 소유자 엔티티
+   * @param shopId 상점 번호: 상점 소유자 엔티티의 상점 컴포넌트에 대응하는 상점 번호
+   * @param shopItemId 상품 번호
+   * @param itemConfigId 아이템 설정 ID
+   * @param sellCurrencyDictionary 판매 화폐 딕셔너리
+   * @param affiliatedTabId 소속 탭 번호: 1 장비, 2 소모품, 3 재료, 4 귀중품
+   * @param limitPurchase 구매 제한 여부
+   * @param purchaseLimit 구매 제한 수량
+   * @param sortPriority 정렬 우선순위
+   * @param canBeSold 판매 가능 여부
    */
   modifyCustomShopItemSalesInfo(
     shopOwnerEntity: EntityValue,
@@ -7807,19 +6462,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Edit the value of the specified Affix on the Equipment instance
+   * 장비 인스턴스의 지정된 어픽스 값을 수정한다
    *
-   * 修改装备词条值: 修改指定装备实例对应词条上的值
-   *
-   * @param equipmentIndex Integer ID generated during Equipment Initialization to identify the equipment instance
-   *
-   * 装备索引: 【装备初始化】时生成的整数型索引来标识该装备实例
-   * @param affixId
-   *
-   * 词条序号
-   * @param affixValue
-   *
-   * 词条数值
+   * @param equipmentIndex 장비 인덱스: 장비 초기화 시 생성된 정수형 인덱스로 장비 인스턴스를 식별
+   * @param affixId 어픽스 번호
+   * @param affixValue 어픽스 수치
    */
   modifyEquipmentAffixValue(
     equipmentIndex: IntValue,
@@ -7838,16 +6485,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Remove the specified Affix from the Equipment instance
+   * 장비 인스턴스에서 지정된 어픽스를 제거한다
    *
-   * 移除装备词条: 移除指定装备实例的对应词条
-   *
-   * @param equipmentId Integer ID generated during Equipment Initialization to identify the equipment instance
-   *
-   * 装备索引: 【装备初始化】时生成的整数型索引来标识该装备实例
-   * @param affixId
-   *
-   * 词条序号
+   * @param equipmentId 장비 인덱스: 장비 초기화 시 생성된 정수형 인덱스로 장비 인스턴스를 식별
+   * @param affixId 어픽스 번호
    */
   removeEquipmentAffix(equipmentId: IntValue, affixId: IntValue): void {
     const equipmentIdObj = parseValue(equipmentId, 'int')
@@ -7861,22 +6502,12 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Add a preconfigured Affix to the specified Equipment instance, with the option to overwrite the Affix value
+   * 지정된 장비 인스턴스에 사전 설정된 어픽스를 추가한다. 어픽스 수치를 덮어쓸 수 있다
    *
-   * 装备添加词条: 对指定装备实例添加一条预先配置好的词条，可以覆写词条的数值
-   *
-   * @param equipmentId Integer ID generated during Equipment Initialization to identify the equipment instance
-   *
-   * 装备索引: 【装备初始化】时生成的整数型索引来标识该装备实例
-   * @param affixConfigId The Config ID of the preconfigured Affix defined in Equipment Data Management
-   *
-   * 词条配置ID: 装备数据管理中预先配置好的词条的对应配置ID
-   * @param overwriteAffixValue
-   *
-   * 是否覆写词条值
-   * @param affixValue Can overwrite the value on a pre-configured Affix
-   *
-   * 词条数值: 可以覆写预先配置好的词条上的数值
+   * @param equipmentId 장비 인덱스: 장비 초기화 시 생성된 정수형 인덱스로 장비 인스턴스를 식별
+   * @param affixConfigId 어픽스 설정 ID: 장비 데이터 관리에서 사전 설정된 어픽스의 설정 ID
+   * @param overwriteAffixValue 어픽스 수치 덮어쓰기 여부
+   * @param affixValue 어픽스 수치: 사전 설정된 어픽스의 수치를 덮어쓸 수 있음
    */
   addAffixToEquipment(
     equipmentId: IntValue,
@@ -7897,25 +6528,13 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Add a preconfigured Affix at the specified Affix ID on the Equipment instance, with the option to overwrite the Affix value
+   * 지정된 어픽스 번호 위치에 사전 설정된 어픽스를 추가한다. 어픽스 수치를 덮어쓸 수 있다
    *
-   * 装备指定序号添加词条: 对指定装备实例的指定词条序号位置添加预先配置好的词条，可以覆写词条的数值
-   *
-   * @param equipmentId Integer ID generated during Equipment Initialization to identify the equipment instance
-   *
-   * 装备索引: 【装备初始化】时生成的整数型索引来标识该装备实例
-   * @param affixConfigId The Config ID of the preconfigured Affix defined in Equipment Data Management
-   *
-   * 词条配置ID: 装备数据管理中预先配置好的词条的对应配置ID
-   * @param insertId
-   *
-   * 插入序号
-   * @param overwriteAffixValue
-   *
-   * 是否覆写词条值
-   * @param affixValue Can overwrite the value on a pre-configured Affix
-   *
-   * 词条数值: 可以覆写预先配置好的词条上的数值
+   * @param equipmentId 장비 인덱스: 장비 초기화 시 생성된 정수형 인덱스로 장비 인스턴스를 식별
+   * @param affixConfigId 어픽스 설정 ID: 장비 데이터 관리에서 사전 설정된 어픽스의 설정 ID
+   * @param insertId 삽입 번호
+   * @param overwriteAffixValue 어픽스 수치 덮어쓰기 여부
+   * @param affixValue 어픽스 수치: 사전 설정된 어픽스의 수치를 덮어쓸 수 있음
    */
   addAffixToEquipmentAtSpecifiedId(
     equipmentId: IntValue,
@@ -7938,24 +6557,12 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Replaces the specified equipment in the corresponding equipment slot of the target entity. If the equipment is
-   * already equipped in the equipment slot, the replacement will not take effect. If the target slot already
-   * contains an equipped item, that item will be replaced.
+   * 지정된 장비를 대상 엔티티의 해당 장비 슬롯으로 교체한다. 해당 장비가 이미 그 슬롯에 있으면 적용되지 않으며, 슬롯에 다른 장비가 있으면 교체된다
    *
-   * 替换装备到指定栏位: 将指定装备替换到目标实体的指定装备栏位。若该装备已在该栏位，则不生效；若该栏位已有装备，则会被替换
-   *
-   * @param targetEntity
-   *
-   * 目标实体
-   * @param equipmentRow
-   *
-   * 装备栏位行
-   * @param equipmentColumn
-   *
-   * 装备栏位列
-   * @param equipmentIndex The equipment instance is identified by an integer index generated during equipment initialization
-   *
-   * 装备索引: 通过装备初始化时生成的整数索引标识装备实例
+   * @param targetEntity 대상 엔티티
+   * @param equipmentRow 장비 슬롯 행
+   * @param equipmentColumn 장비 슬롯 열
+   * @param equipmentIndex 장비 인덱스: 장비 초기화 시 생성된 정수형 인덱스로 장비 인스턴스를 식별
    */
   replaceEquipmentToTheSpecifiedSlot(
     targetEntity: EntityValue,
@@ -7976,19 +6583,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Configure the Inventory Item drop data in Dictionary format, and specify the Drop Type
+   * 인벤토리 아이템 드롭 내용을 딕셔너리 형식으로 설정하고, 드롭 타입을 지정한다
    *
-   * 设置背包道具掉落内容: 以字典形式设置背包道具掉落内容，并可以设置掉落类型
-   *
-   * @param inventoryOwnerEntity
-   *
-   * 背包持有者实体
-   * @param itemDropDictionary
-   *
-   * 道具掉落字典
-   * @param lootType Types: Shared Reward (one share for all), Individualized Reward (one share per person)
-   *
-   * 掉落类型: 分为全员一份、每人一份
+   * @param inventoryOwnerEntity 인벤토리 소유자 엔티티
+   * @param itemDropDictionary 아이템 드롭 딕셔너리
+   * @param lootType 드롭 타입: 전원 공유(1인분), 개인별(1인분씩)
    */
   setInventoryItemDropContents(
     inventoryOwnerEntity: EntityValue,
@@ -8007,22 +6606,12 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Set the type and quantity of Items or Currency for the Inventory drop
+   * 인벤토리 드롭 아이템/화폐의 타입과 수량을 설정한다
    *
-   * 设置背包掉落道具/货币数量: 设置背包掉落道具/货币的类型和数量
-   *
-   * @param inventoryOwnerEntity
-   *
-   * 背包持有者实体
-   * @param itemCurrencyConfigId
-   *
-   * 道具/货币配置ID
-   * @param quantityDropped
-   *
-   * 掉落数量
-   * @param lootType Types: Shared Reward (one share for all), Individualized Reward (one share per person)
-   *
-   * 掉落类型: 分为全员一份、每人一份
+   * @param inventoryOwnerEntity 인벤토리 소유자 엔티티
+   * @param itemCurrencyConfigId 아이템/화폐 설정 ID
+   * @param quantityDropped 드롭 수량
+   * @param lootType 드롭 타입: 전원 공유(1인분), 개인별(1인분씩)
    */
   setInventoryDropItemsCurrencyAmount(
     inventoryOwnerEntity: EntityValue,
@@ -8043,16 +6632,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Triggers a loot drop for the dropper entity, with configurable loot type.
+   * 드롭 엔티티에 대해 전리품 드롭을 트리거한다. 드롭 타입을 설정할 수 있다
    *
-   * 触发战利品掉落: 对掉落者实体触发一次战利品掉落，可设置其掉落类型
-   *
-   * @param dropperEntity
-   *
-   * 掉落者实体
-   * @param lootType Types: Shared Reward (one share for all), Individualized Reward (one share per person)
-   *
-   * 掉落类型: 分为全员一份、每人一份
+   * @param dropperEntity 드롭 엔티티
+   * @param lootType 드롭 타입: 전원 공유(1인분), 개인별(1인분씩)
    */
   triggerLootDrop(dropperEntity: EntityValue, lootType: ItemLootType): void {
     const dropperEntityObj = parseValue(dropperEntity, 'entity')
@@ -8066,16 +6649,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Configure the Loot drop data in the Loot Component on the Dropper Entity in Dictionary format
+   * 드롭 엔티티의 전리품 컴포넌트에 전리품 드롭 내용을 딕셔너리 형식으로 설정한다
    *
-   * 设置战利品掉落内容: 以字典形式设置掉落者实体上战利品组件中战利品的掉落内容
-   *
-   * @param dropperEntity
-   *
-   * 掉落者实体
-   * @param lootDropDictionary
-   *
-   * 战利品掉落字典
+   * @param dropperEntity 드롭 엔티티
+   * @param lootDropDictionary 전리품 드롭 딕셔너리
    */
   setLootDropContent(
     dropperEntity: EntityValue,
@@ -8092,19 +6669,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Edit the quantity of the specified Item in the Inventory
+   * 인벤토리 내 지정된 아이템의 수량을 수정한다
    *
-   * 修改背包道具数量: 修改背包内指定道具的数量
-   *
-   * @param inventoryOwnerEntity
-   *
-   * 背包持有者实体
-   * @param itemConfigId
-   *
-   * 道具配置ID
-   * @param changeValue New Value = Original Value + Change Value
-   *
-   * 变更值: 变更后的值=变更前的值+变更值
+   * @param inventoryOwnerEntity 인벤토리 소유자 엔티티
+   * @param itemConfigId 아이템 설정 ID
+   * @param changeValue 변경값: 변경 후 값 = 변경 전 값 + 변경값
    */
   modifyInventoryItemQuantity(
     inventoryOwnerEntity: EntityValue,
@@ -8123,19 +6692,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Edit the amount of the specified Currency in the Inventory
+   * 인벤토리 내 지정된 화폐의 수량을 수정한다
    *
-   * 修改背包货币数量: 修改背包内指定货币的数量
-   *
-   * @param inventoryOwnerEntity
-   *
-   * 背包持有者实体
-   * @param currencyConfigId
-   *
-   * 货币配置ID
-   * @param changeValue New Value = Original Value + Change Value
-   *
-   * 变更值: 变更后的值=变更前的值+变更值
+   * @param inventoryOwnerEntity 인벤토리 소유자 엔티티
+   * @param currencyConfigId 화폐 설정 ID
+   * @param changeValue 변경값: 변경 후 값 = 변경 전 값 + 변경값
    */
   modifyInventoryCurrencyQuantity(
     inventoryOwnerEntity: EntityValue,
@@ -8154,19 +6715,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Edit the quantity of the specified Item in the Loot Component on the Loot Prefab
+   * 드롭 프리팹의 드롭 컴포넌트에서 지정된 아이템의 수량을 수정한다
    *
-   * 修改掉落物组件道具数量: 修改掉落物元件上掉落物组件内指定道具的数量
-   *
-   * @param lootEntity
-   *
-   * 掉落物实体
-   * @param itemConfigId
-   *
-   * 道具配置ID
-   * @param changeValue New Value = Original Value + Change Value
-   *
-   * 变更值: 变更后的值=变更前的值+变更值
+   * @param lootEntity 드롭 엔티티
+   * @param itemConfigId 아이템 설정 ID
+   * @param changeValue 변경값: 변경 후 값 = 변경 전 값 + 변경값
    */
   modifyLootItemComponentQuantity(
     lootEntity: EntityValue,
@@ -8185,19 +6738,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Edit the amount of the specified Currency in the Loot Component on the Loot Prefab
+   * 드롭 프리팹의 드롭 컴포넌트에서 지정된 화폐의 수량을 수정한다
    *
-   * 修改掉落物组件货币数量: 修改掉落物元件上掉落物组件内指定货币的数量
-   *
-   * @param lootEntity
-   *
-   * 掉落物实体
-   * @param currencyConfigId
-   *
-   * 货币配置ID
-   * @param changeValue New Value = Original Value + Change Value
-   *
-   * 变更值: 变更后的值=变更前的值+变更值
+   * @param lootEntity 드롭 엔티티
+   * @param currencyConfigId 화폐 설정 ID
+   * @param changeValue 변경값: 변경 후 값 = 변경 전 값 + 변경값
    */
   modifyLootComponentCurrencyAmount(
     lootEntity: EntityValue,
@@ -8216,16 +6761,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Increase the maximum Inventory capacity of the specified Inventory Owner
+   * 지정된 인벤토리 소유자의 인벤토리 최대 용량을 증가시킨다
    *
-   * 增加背包最大容量: 增加指定背包持有者的背包最大容量
-   *
-   * @param inventoryOwnerEntity
-   *
-   * 背包持有者实体
-   * @param increaseCapacity
-   *
-   * 增加容量
+   * @param inventoryOwnerEntity 인벤토리 소유자 엔티티
+   * @param increaseCapacity 증가 용량
    */
   increaseMaximumInventoryCapacity(
     inventoryOwnerEntity: EntityValue,
@@ -8242,19 +6781,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * The mini-map marker at the specified ID in the Target Entity's Mini-map Marker Component is visible to all Players in the Player List
+   * 대상 엔티티의 미니맵 마커 컴포넌트에서 지정된 ID의 미니맵 마커를 플레이어 목록의 플레이어에게 표시한다
    *
-   * 修改可见小地图标识的玩家列表: 目标实体的小地图标识组件上对应序号的小地图标识对玩家列表中的玩家可见
-   *
-   * @param targetEntity Entity that owns the Mini-map Marker component to be edited
-   *
-   * 目标实体: 要修改的小地图标识组件归属的实体
-   * @param miniMapMarkerId ID of the specified Mini-map Marker to be edited
-   *
-   * 小地图标识序号: 要修改的指定小地图标识的序号
-   * @param playerList The specified Mini-map ID on the Target Entity, visible only to the Player providing input
-   *
-   * 玩家列表: 目标实体的指定小地图序号，只有输入玩家可见
+   * @param targetEntity 대상 엔티티: 수정할 미니맵 마커 컴포넌트가 속한 엔티티
+   * @param miniMapMarkerId 미니맵 마커 번호: 수정할 특정 미니맵 마커의 번호
+   * @param playerList 플레이어 목록: 대상 엔티티의 지정된 미니맵 번호를 볼 수 있는 플레이어 목록
    */
   modifyPlayerListForVisibleMiniMapMarkers(
     targetEntity: EntityValue,
@@ -8273,19 +6804,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * When the Player Marker option is selected and a corresponding Player Entity is linked in the Node Graph, the Target Entity's display on the mini-map changes to that Player's avatar
+   * 플레이어 마커 옵션이 선택된 경우, 노드 그래프에서 해당 플레이어 엔티티를 입력하면 대상 엔티티의 미니맵 표시가 해당 플레이어의 아바타로 변경된다
    *
-   * 修改小地图标识的玩家标记: 若小地图标识选择了玩家标记，在节点图输入对应玩家实体后，目标实体在小地图上的显示会变成输入玩家实体的头像
-   *
-   * @param targetEntity Entity that owns the Mini-map Marker component to be edited
-   *
-   * 目标实体: 要修改的小地图标识组件归属的实体
-   * @param miniMapMarkerId ID of the specified Mini-map Marker to be edited
-   *
-   * 小地图标识序号: 要修改的指定小地图标识的序号
-   * @param correspondingPlayerEntity Changes the avatar of the corresponding Player Entity
-   *
-   * 对应玩家实体: 修改后为对应玩家实体的头像
+   * @param targetEntity 대상 엔티티: 수정할 미니맵 마커 컴포넌트가 속한 엔티티
+   * @param miniMapMarkerId 미니맵 마커 번호: 수정할 특정 미니맵 마커의 번호
+   * @param correspondingPlayerEntity 대응 플레이어 엔티티: 수정 후 해당 플레이어 엔티티의 아바타로 표시됨
    */
   modifyPlayerMarkersOnTheMiniMap(
     targetEntity: EntityValue,
@@ -8304,19 +6827,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Edit the active state of mini-map markers on the Target Entity in batches using the input list of Mini-map Marker IDs
+   * 입력된 미니맵 마커 ID 목록을 이용해 대상 엔티티의 미니맵 마커 활성 상태를 일괄 수정한다
    *
-   * 修改小地图标识生效状态: 通过节点输入的小地图标识序号列表，批量修改目标实体的小地图标识生效状态
-   *
-   * @param targetEntity Entity that owns the Mini-map Marker component to be edited
-   *
-   * 目标实体: 要修改的小地图标识组件归属的实体
-   * @param miniMapMarkerIdList List of Mini-map Marker IDs to be set to the specified statusUnconfigured Mini-map Markers will be set to the opposite status
-   *
-   * 小地图标识序号列表: 需要指定状态的小地图标识序号列表未配置的小地图标识会改为相反状态
-   * @param active If input is True,the Mini-map Markers corresponding to the specified ID numbers in the input list will be set to EnabledFor IDs not in the input list, the corresponding Mini-map Markers will be set to Disabled
-   *
-   * 是否生效: 若输入为“是”，输入序号列表指定的序号，对应小地图标识状态改为生效状态不在序号列表中的序号，对应小地图标识状态改为不生效状态
+   * @param targetEntity 대상 엔티티: 수정할 미니맵 마커 컴포넌트가 속한 엔티티
+   * @param miniMapMarkerIdList 미니맵 마커 번호 목록: 지정 상태로 설정할 마커 번호 목록. 목록에 없는 마커는 반대 상태로 전환됨
+   * @param active 활성화 여부: True이면 목록에 지정된 마커를 활성화하고, 목록에 없는 마커는 비활성화함
    */
   modifyMiniMapMarkerActivationStatus(
     targetEntity: EntityValue,
@@ -8335,16 +6850,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Edit the map scale of the Target Player's mini-map UI control
+   * 대상 플레이어의 미니맵 UI 컨트롤의 지도 배율을 수정한다
    *
-   * 修改小地图缩放: 修改目标玩家的小地图界面控件的地图比例
-   *
-   * @param targetPlayer
-   *
-   * 目标玩家
-   * @param zoomDimensions
-   *
-   * 缩放尺寸
+   * @param targetPlayer 대상 플레이어
+   * @param zoomDimensions 줌 크기
    */
   modifyMiniMapZoom(targetPlayer: PlayerEntity, zoomDimensions: FloatValue): void {
     const targetPlayerObj = parseValue(targetPlayer, 'entity')
@@ -8358,19 +6867,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Set the mini-map marker at the specified ID on the Target Entity to Tracking Display for the input Player
+   * 대상 엔티티의 지정된 ID의 미니맵 마커를 입력된 플레이어에게 추적 표시로 설정한다
    *
-   * 修改追踪小地图标识的玩家列表: 将目标实体的对应序号的小地图标识对入参玩家修改为追踪表现
-   *
-   * @param targetEntity
-   *
-   * 目标实体
-   * @param miniMapMarkerId
-   *
-   * 小地图标识序号
-   * @param playerList
-   *
-   * 玩家列表
+   * @param targetEntity 대상 엔티티
+   * @param miniMapMarkerId 미니맵 마커 번호
+   * @param playerList 플레이어 목록
    */
   modifyPlayerListForTrackingMiniMapMarkers(
     targetEntity: EntityValue,
@@ -8389,16 +6890,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Immediately switch the patrol template for the Creation and move according to the new template
+   * 피조물의 순찰 템플릿을 즉시 전환하고 새 템플릿에 따라 이동한다
    *
-   * 切换造物巡逻模板: 造物切换的巡逻模板即刻切换，并按照新的巡逻模板进行移动
-   *
-   * @param creationEntity
-   *
-   * 造物实体
-   * @param patrolTemplateId
-   *
-   * 巡逻模板序号
+   * @param creationEntity 피조물 엔티티
+   * @param patrolTemplateId 순찰 템플릿 번호
    */
   switchCreationPatrolTemplate(creationEntity: CreationEntity, patrolTemplateId: IntValue): void {
     const creationEntityObj = parseValue(creationEntity, 'entity')
@@ -8412,19 +6907,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Set Player Leaderboard Score (Float)
+   * 플레이어 리더보드 점수를 부동소수점으로 설정한다
    *
-   * 以浮点数设置玩家排行榜分数: 以浮点数设置玩家排行榜分数
-   *
-   * @param playerIdList
-   *
-   * 玩家序号列表
-   * @param leaderboardScore
-   *
-   * 排行榜分数
-   * @param leaderboardId The ID corresponding to the specified Leaderboard in Peripheral System management
-   *
-   * 排行榜序号: 外围系统管理中指定排行榜对应的序号
+   * @param playerIdList 플레이어 번호 목록
+   * @param leaderboardScore 리더보드 점수
+   * @param leaderboardId 리더보드 번호: 외부 시스템 관리에서 지정된 리더보드에 대응하는 번호
    */
   setPlayerLeaderboardScoreAsAFloat(
     playerIdList: IntValue[],
@@ -8443,19 +6930,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Set Player Leaderboard Score (Integer)
+   * 플레이어 리더보드 점수를 정수로 설정한다
    *
-   * 以整数设置玩家排行榜分数: 以整数设置玩家排行榜分数
-   *
-   * @param playerIdList
-   *
-   * 玩家序号列表
-   * @param leaderboardScore
-   *
-   * 排行榜分数
-   * @param leaderboardId The ID corresponding to the specified Leaderboard in Peripheral System management
-   *
-   * 排行榜序号: 外围系统管理中指定排行榜对应的序号
+   * @param playerIdList 플레이어 번호 목록
+   * @param leaderboardScore 리더보드 점수
+   * @param leaderboardId 리더보드 번호: 외부 시스템 관리에서 지정된 리더보드에 대응하는 번호
    */
   setPlayerLeaderboardScoreAsAnInteger(
     playerIdList: IntValue[],
@@ -8474,19 +6953,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Change the progress counter for the specified Achievement ID on the Target Entity
+   * 대상 엔티티에서 지정된 업적 ID의 진행 카운터를 변경한다
    *
-   * 变更成就进度计数: 变更指定实体上对应成就序号的成就进度计数
-   *
-   * @param changeEntity
-   *
-   * 变更实体
-   * @param achievementId
-   *
-   * 成就序号
-   * @param progressTallyChangeValue New Value = Previous Value + Change Value
-   *
-   * 进度计数变更值: 变更后值=变更前值+变更值
+   * @param changeEntity 변경 엔티티
+   * @param achievementId 업적 번호
+   * @param progressTallyChangeValue 진행 카운터 변경값: 변경 후 값 = 변경 전 값 + 변경값
    */
   changeAchievementProgressTally(
     changeEntity: EntityValue,
@@ -8505,19 +6976,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Set the progress counter for the specified Achievement ID on the Target Entity
+   * 대상 엔티티에서 지정된 업적 ID의 진행 카운터를 설정한다
    *
-   * 设置成就进度计数: 设置指定实体上对应成就序号的成就进度计数
-   *
-   * @param setEntity
-   *
-   * 设置实体
-   * @param achievementId
-   *
-   * 成就序号
-   * @param progressTally Sets the Progress Count to the input value
-   *
-   * 进度计数: 修改后的进度计数为输入的值
+   * @param setEntity 설정 엔티티
+   * @param achievementId 업적 번호
+   * @param progressTally 진행 카운터: 수정 후 진행 카운터가 입력값으로 설정됨
    */
   setAchievementProgressTally(
     setEntity: EntityValue,
@@ -8536,16 +6999,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Configure rules for Scan Tags. The scanning logic is executed based on the configured rules
+   * 스캔 태그 규칙을 설정한다. 설정된 규칙에 따라 스캔 태그 로직이 실행된다
    *
-   * 设置扫描标签的规则: 设置扫描标签的规则，会以设置好的规则执行扫描标签的逻辑
-   *
-   * @param targetEntity
-   *
-   * 目标实体
-   * @param ruleType Options: Prioritize View or Prioritize Distance
-   *
-   * 规则类型: 分为视野优先、距离优先
+   * @param targetEntity 대상 엔티티
+   * @param ruleType 규칙 타입: 시야 우선, 거리 우선
    */
   setScanTagRules(targetEntity: EntityValue, ruleType: ScanRuleType): void {
     const targetEntityObj = parseValue(targetEntity, 'entity')
@@ -8559,16 +7016,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Set the Scan Tag with the specified ID in the Target Entity's Scan Tag Component to the active state
+   * 대상 엔티티의 스캔 태그 컴포넌트에서 지정된 ID의 스캔 태그를 활성 상태로 설정한다
    *
-   * 设置扫描组件的生效扫描标签序号: 将目标实体的扫描标签组件中对应序号的扫描标签设置为生效
-   *
-   * @param targetEntity
-   *
-   * 目标实体
-   * @param scanTagId
-   *
-   * 扫描标签序号
+   * @param targetEntity 대상 엔티티
+   * @param scanTagId 스캔 태그 번호
    */
   setScanComponentSActiveScanTagId(targetEntity: EntityValue, scanTagId: IntValue): void {
     const targetEntityObj = parseValue(targetEntity, 'entity')
@@ -8582,16 +7033,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Switch the active Scoring Group of the specified Player's Ranking by Scoring Group ID
+   * 지정된 플레이어의 경쟁 랭크에 적용되는 점수 그룹을 점수 그룹 ID로 전환한다
    *
-   * 切换玩家竞技段位生效的计分组: 以计分组的序号切换指定玩家竞技段位生效的计分组
-   *
-   * @param playerEntity
-   *
-   * 玩家实体
-   * @param scoreGroupId The ID corresponding to the specified Score Group in Peripheral System management
-   *
-   * 计分组序号: 外围系统管理中指定计分组对应的序号
+   * @param playerEntity 플레이어 엔티티
+   * @param scoreGroupId 점수 그룹 번호: 외부 시스템 관리에서 지정된 점수 그룹에 대응하는 번호
    */
   switchTheScoringGroupThatAffectsPlayerSCompetitiveRank(
     playerEntity: PlayerEntity,
@@ -8608,19 +7053,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Set the Player's rank score change based on the settlement status
+   * 정산 상태에 따라 플레이어의 랭크 점수 변화를 설정한다
    *
-   * 设置玩家段位变化分数: 根据结算状态设置玩家的段位变化分数
-   *
-   * @param playerEntity
-   *
-   * 玩家实体
-   * @param settlementStatus Includes: Undefined, Victory, Defeat, Escape
-   *
-   * 结算状态: 分为未定、胜利、失败、逃跑
-   * @param scoreChange
-   *
-   * 变化分数
+   * @param playerEntity 플레이어 엔티티
+   * @param settlementStatus 정산 상태: 미결정, 승리, 패배, 탈주
+   * @param scoreChange 변화 점수
    */
   setPlayerRankScoreChange(
     playerEntity: PlayerEntity,
@@ -8639,16 +7076,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Set whether escaping is permitted for the specified Player
+   * 지정된 플레이어의 탈주 허용 여부를 설정한다
    *
-   * 设置玩家逃跑合法性: 设置指定玩家逃跑的合法性
-   *
-   * @param playerEntity
-   *
-   * 玩家实体
-   * @param valid
-   *
-   * 是否合法
+   * @param playerEntity 플레이어 엔티티
+   * @param valid 허용 여부
    */
   setPlayerEscapeValidity(playerEntity: PlayerEntity, valid: BoolValue): void {
     const playerEntityObj = parseValue(playerEntity, 'entity')
@@ -8662,16 +7093,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Edit the Initial Creation Switch state of the Entity Layout Group
+   * 엔티티 배치 그룹의 초기 생성 스위치 상태를 수정한다
    *
-   * 激活/关闭实体布设组: 修改实体布设组初始创建开关的状态
-   *
-   * @param entityDeploymentGroupIndex
-   *
-   * 实体布设组索引
-   * @param activate If set to True, the Entity Layout Group's Initial Creation switch is enabled
-   *
-   * 是否激活: “是”则该实体布设组初始创建开关状态为开启
+   * @param entityDeploymentGroupIndex 엔티티 배치 그룹 인덱스
+   * @param activate 활성화 여부: True이면 해당 엔티티 배치 그룹의 초기 생성 스위치가 켜짐
    */
   activateDisableEntityDeploymentGroup(
     entityDeploymentGroupIndex: IntValue,
@@ -8688,16 +7113,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Set the Chat Channel switch
+   * 채팅 채널 스위치를 설정한다
    *
-   * 设置聊天频道开关: 设置聊天频道的开关
-   *
-   * @param channelIndex
-   *
-   * 频道索引
-   * @param textSwitch
-   *
-   * 文字开关
+   * @param channelIndex 채널 인덱스
+   * @param textSwitch 텍스트 스위치
    */
   setChatChannelSwitch(channelIndex: IntValue, textSwitch: BoolValue): void {
     const channelIndexObj = parseValue(channelIndex, 'int')
@@ -8711,16 +7130,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Set the Player's currently available channels. Channels in the list are available to the Player, and channels not in the list are unavailable
+   * 플레이어의 현재 사용 가능한 채널을 설정한다. 리스트에 있는 채널은 해당 플레이어가 사용 가능하고, 없는 채널은 사용 불가능하다
    *
-   * 设置玩家当前频道: 设置玩家当前可用的频道，在列表中的频道该玩家可用，不在的该玩家不可用
-   *
-   * @param playerGuid
-   *
-   * 玩家GUID
-   * @param channelIndexList
-   *
-   * 频道索引列表
+   * @param playerGuid 플레이어 GUID
+   * @param channelIndexList 채널 인덱스 리스트
    */
   setPlayerSCurrentChannel(playerGuid: GuidValue, channelIndexList: IntValue[]): void {
     const playerGuidObj = parseValue(playerGuid, 'guid')
@@ -8734,19 +7147,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Edit Player Channel Permissions
+   * 플레이어의 채널 권한을 수정한다
    *
-   * 修改玩家频道权限: 修改玩家频道权限
-   *
-   * @param playerGuid
-   *
-   * 玩家GUID
-   * @param channelIndex
-   *
-   * 频道索引
-   * @param join If set to True, the channel is available to the specified Player
-   *
-   * 是否加入: “是”则该频道指定玩家可用
+   * @param playerGuid 플레이어 GUID
+   * @param channelIndex 채널 인덱스
+   * @param join 가입 여부: True이면 해당 채널을 지정된 플레이어가 사용 가능하도록 설정
    */
   modifyPlayerChannelPermission(
     playerGuid: GuidValue,
@@ -8765,19 +7170,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Consume the specified Player's Wonderland Gift Box
+   * 지정된 플레이어의 원더랜드 선물 상자를 소모한다
    *
-   * 消耗礼盒: 可以消耗指定玩家的奇域礼盒
-   *
-   * @param playerEntity
-   *
-   * 玩家实体
-   * @param giftBoxIndex
-   *
-   * 礼盒索引
-   * @param consumptionQuantity
-   *
-   * 消耗数量
+   * @param playerEntity 플레이어 엔티티
+   * @param giftBoxIndex 선물 상자 인덱스
+   * @param consumptionQuantity 소모 수량
    */
   consumeGiftBox(
     playerEntity: PlayerEntity,
@@ -8796,29 +7193,16 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Outputs the x, y, and z components of a 3D Vector as three Floating Point Numbers
+   * 3D 벡터의 x, y, z 컴포넌트를 세 개의 부동소수점 수로 출력한다
    *
-   * 拆分三维向量: 将三维向量的x、y、z分量输出为三个浮点数
-   *
-   * @param _3dVector
-   *
-   * 三维向量
+   * @param _3dVector 3D 벡터
    */
   split3dVector(_3dVector: Vec3Value): {
-    /**
-     *
-     * X分量
-     */
+    /** X 컴포넌트 */
     xComponent: number
-    /**
-     *
-     * Y分量
-     */
+    /** Y 컴포넌트 */
     yComponent: number
-    /**
-     *
-     * Z分量
-     */
+    /** Z 컴포넌트 */
     zComponent: number
   } {
     const _3dVectorObj = parseValue(_3dVector, 'vec3')
@@ -8858,16 +7242,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Performs multiplication, supporting Floating Point and Integer multiplication
-   *
-   * 乘法运算: 乘法运算，支持浮点数乘法和整数乘法
+   * 곱셈 연산을 수행한다. 부동소수점 및 정수 곱셈을 지원한다
    *
    * @param input1
    * @param input2
-   *
-   * @returns
-   *
-   * 结果
+   * @returns 결과
    */
   multiplication(input1: FloatValue, input2: FloatValue): number
   multiplication(input1: IntValue, input2: IntValue): bigint
@@ -8895,16 +7274,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Performs division, supporting Floating Point division and Integer division. Integer division returns the quotient result; The divisor should not be 0, otherwise it may return an illegal value
-   *
-   * 除法运算: 除法运算，支持浮点数除法和整数除法。整数除法返回整除结果; 除数不应为0，否则可能返回非法值
+   * 나눗셈 연산을 수행한다. 부동소수점 및 정수 나눗셈을 지원한다. 정수 나눗셈은 몫을 반환하며, 제수는 0이 아니어야 한다 (0이면 비정상 값이 반환될 수 있다)
    *
    * @param input1
    * @param input2
-   *
-   * @returns
-   *
-   * 结果
+   * @returns 결과
    */
   division(input1: FloatValue, input2: FloatValue): number
   division(input1: IntValue, input2: IntValue): bigint
@@ -8947,23 +7321,12 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Creates a 3D Vector from x, y, and z components
+   * x, y, z 컴포넌트로 3D 벡터를 생성한다
    *
-   * 创建三维向量: 根据x、y、z分量创建一个三维向量
-   *
-   * @param xComponent
-   *
-   * X分量
-   * @param yComponent
-   *
-   * Y分量
-   * @param zComponent
-   *
-   * Z分量
-   *
-   * @returns
-   *
-   * 三维向量
+   * @param xComponent X 컴포넌트
+   * @param yComponent Y 컴포넌트
+   * @param zComponent Z 컴포넌트
+   * @returns 3D 벡터
    */
   create3dVector(xComponent: FloatValue, yComponent: FloatValue, zComponent: FloatValue): vec3 {
     const xComponentObj = parseValue(xComponent, 'float')
@@ -8989,20 +7352,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Calculates the logarithm of the argument with the specified base; The base should not be negative or equal to 1, and the argument should not be negative, otherwise illegal values may be generated
+   * 지정된 밑으로 진수의 로그를 계산한다. 밑은 음수이거나 1이면 안 되고, 진수는 음수이면 안 된다 (그렇지 않으면 비정상 값이 생성될 수 있다)
    *
-   * 对数运算: 计算以底数为底真数的对数; 底数不应为负数或等于1、真数不应为负数，否则可能产生非法值
-   *
-   * @param realNumber
-   *
-   * 真数
-   * @param base
-   *
-   * 底数
-   *
-   * @returns
-   *
-   * 结果
+   * @param realNumber 진수
+   * @param base 밑
+   * @returns 결과
    */
   logarithmOperation(realNumber: FloatValue, base: FloatValue): number {
     const realNumberObj = parseValue(realNumber, 'float')
@@ -9029,17 +7383,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Calculates the arccosine of the input and returns the value in radians
+   * 입력값의 아크코사인을 계산하여 라디안 값으로 반환한다
    *
-   * 反余弦函数: 计算输入的反余弦值，返回为弧度值
-   *
-   * @param input
-   *
-   * 输入
-   *
-   * @returns
-   *
-   * 弧度
+   * @param input 입력
+   * @returns 라디안
    */
   arccosineFunction(input: FloatValue): number {
     const inputObj = parseValue(input, 'float')
@@ -9057,17 +7404,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Calculates the arctangent of the input and returns the value in radians
+   * 입력값의 아크탄젠트를 계산하여 라디안 값으로 반환한다
    *
-   * 反正切函数: 计算输入的反正切值，返回为弧度值
-   *
-   * @param input
-   *
-   * 输入
-   *
-   * @returns
-   *
-   * 弧度
+   * @param input 입력
+   * @returns 라디안
    */
   arctangentFunction(input: FloatValue): number {
     const inputObj = parseValue(input, 'float')
@@ -9085,17 +7425,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Calculates the arcsine of the input and returns the value in radians
+   * 입력값의 아크사인을 계산하여 라디안 값으로 반환한다
    *
-   * 反正弦函数: 计算输入的反正弦值，返回为弧度值
-   *
-   * @param input
-   *
-   * 输入
-   *
-   * @returns
-   *
-   * 弧度
+   * @param input 입력
+   * @returns 라디안
    */
   arcsineFunction(input: FloatValue): number {
     const inputObj = parseValue(input, 'float')
@@ -9113,23 +7446,12 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Clamps the input value to the range [lower limit, upper limit] (both bounds inclusive) and outputs the result
+   * 입력값을 [하한, 상한] 범위로 클램프하여 결과를 출력한다 (양 끝값 포함)
    *
-   * 范围限制运算: 将输入值限制在[下限,上限]（上下限均包含）后输出。
-   *
-   * @param input
-   *
-   * 输入
-   * @param lowerLimit
-   *
-   * 下限
-   * @param upperLimit
-   *
-   * 上限
-   *
-   * @returns
-   *
-   * 结果
+   * @param input 입력
+   * @param lowerLimit 하한
+   * @param upperLimit 상한
+   * @returns 결과
    */
   rangeLimitingOperation(input: FloatValue, lowerLimit: FloatValue, upperLimit: FloatValue): number
   rangeLimitingOperation(input: IntValue, lowerLimit: IntValue, upperLimit: IntValue): bigint
@@ -9154,20 +7476,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Converts the Forward Vector and Upward Vector to Euler Angles
+   * 앞 벡터와 위 벡터를 오일러 각도로 변환한다
    *
-   * 方向向量转旋转: 给定向前向量和向上向量，转化为欧拉角
-   *
-   * @param forwardVector Represents the desired Orientation of the Unit
-   *
-   * 向前向量: 表示单位期望的朝向
-   * @param upwardVector Defines the Unit's Up direction (used to determine the rotation angle). Default is the positive Y-axis of the World Coordinate System
-   *
-   * 向上向量: 定义单位的上方向（用于确定旋转的旋转角度），默认值为世界坐标系Y轴正方向
-   *
-   * @returns
-   *
-   * 旋转
+   * @param forwardVector 앞 벡터: 유닛이 바라볼 방향을 나타낸다
+   * @param upwardVector 위 벡터: 유닛의 위쪽 방향을 정의한다 (회전 각도 결정에 사용). 기본값은 월드 좌표계의 Y축 양방향
+   * @returns 회전값
    */
   directionVectorToRotation(forwardVector: Vec3Value, upwardVector: Vec3Value): vec3 {
     const forwardVectorObj = parseValue(forwardVector, 'vec3')
@@ -9184,32 +7497,15 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Converts a formatted time to a timestamp
+   * 포맷된 시간을 타임스탬프로 변환한다
    *
-   * 根据格式化时间计算时间戳: 根据输入的格式化时间将其转化为时间戳
-   *
-   * @param year
-   *
-   * 年
-   * @param month
-   *
-   * 月
-   * @param day
-   *
-   * 日
-   * @param hour
-   *
-   * 时
-   * @param minute
-   *
-   * 分
-   * @param second
-   *
-   * 秒
-   *
-   * @returns
-   *
-   * 时间戳
+   * @param year 년
+   * @param month 월
+   * @param day 일
+   * @param hour 시
+   * @param minute 분
+   * @param second 초
+   * @returns 타임스탬프
    */
   calculateTimestampFromFormattedTime(
     year: IntValue,
@@ -9237,44 +7533,22 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Converts a timestamp to formatted time
+   * 타임스탬프를 포맷된 시간으로 변환한다
    *
-   * 根据时间戳计算格式化时间: 根据输入的时间戳将其转化为格式化时间
-   *
-   * @param timestamp
-   *
-   * 时间戳
+   * @param timestamp 타임스탬프
    */
   calculateFormattedTimeFromTimestamp(timestamp: IntValue): {
-    /**
-     *
-     * 年
-     */
+    /** 년 */
     year: bigint
-    /**
-     *
-     * 月
-     */
+    /** 월 */
     month: bigint
-    /**
-     *
-     * 日
-     */
+    /** 일 */
     day: bigint
-    /**
-     *
-     * 时
-     */
+    /** 시 */
     hour: bigint
-    /**
-     *
-     * 分
-     */
+    /** 분 */
     minute: bigint
-    /**
-     *
-     * 秒
-     */
+    /** 초 */
     second: bigint
   } {
     const timestampObj = parseValue(timestamp, 'int')
@@ -9319,17 +7593,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Converts a timestamp to the day of the week
+   * 타임스탬프를 요일로 변환한다
    *
-   * 根据时间戳计算星期几: 根据输入的时间戳将其转化为星期几
-   *
-   * @param timestamp
-   *
-   * 时间戳
-   *
-   * @returns
-   *
-   * 星期
+   * @param timestamp 타임스탬프
+   * @returns 요일
    */
   calculateDayOfTheWeekFromTimestamp(timestamp: IntValue): bigint {
     const timestampObj = parseValue(timestamp, 'int')
@@ -9345,17 +7612,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Converts radians to degrees
+   * 라디안을 도(degree)로 변환한다
    *
-   * 弧度转角度: 将弧度值转为角度值
-   *
-   * @param radianValue
-   *
-   * 弧度值
-   *
-   * @returns
-   *
-   * 角度值
+   * @param radianValue 라디안 값
+   * @returns 각도 값
    */
   radiansToDegrees(radianValue: FloatValue): number {
     const radianValueObj = parseValue(radianValue, 'float')
@@ -9373,16 +7633,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Adds two Floating Point Numbers or Integers
-   *
-   * 加法运算: 计算两个浮点数或整数的加法
+   * 두 부동소수점 수 또는 정수를 더한다
    *
    * @param input1
    * @param input2
-   *
-   * @returns
-   *
-   * 结果
+   * @returns 결과
    */
   addition(input1: FloatValue, input2: FloatValue): number
   addition(input1: IntValue, input2: IntValue): bigint
@@ -9410,16 +7665,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Subtracts two Floating Point Numbers or Integers
-   *
-   * 减法运算: 计算两个浮点数或整数的减法
+   * 두 부동소수점 수 또는 정수를 뺀다
    *
    * @param input1
    * @param input2
-   *
-   * @returns
-   *
-   * 结果
+   * @returns 결과
    */
   subtraction(input1: FloatValue, input2: FloatValue): number
   subtraction(input1: IntValue, input2: IntValue): bigint
@@ -9447,17 +7697,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Converts degrees to radians
+   * 도(degree)를 라디안으로 변환한다
    *
-   * 角度转弧度: 将角度值转为弧度值
-   *
-   * @param angleValue
-   *
-   * 角度值
-   *
-   * @returns
-   *
-   * 弧度值
+   * @param angleValue 각도 값
+   * @returns 라디안 값
    */
   degreesToRadians(angleValue: FloatValue): number {
     const angleValueObj = parseValue(angleValue, 'float')
@@ -9475,20 +7718,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns the larger of two inputs
+   * 두 입력 중 더 큰 값을 반환한다
    *
-   * 取较大值: 取出两个输入中较大的一个
-   *
-   * @param input1
-   *
-   * 输入1
-   * @param input2
-   *
-   * 输入2
-   *
-   * @returns
-   *
-   * 较大值
+   * @param input1 입력1
+   * @param input2 입력2
+   * @returns 더 큰 값
    */
   takeLargerValue(input1: FloatValue, input2: FloatValue): number
   takeLargerValue(input1: IntValue, input2: IntValue): bigint
@@ -9516,20 +7750,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns the smaller of two inputs
+   * 두 입력 중 더 작은 값을 반환한다
    *
-   * 取较小值: 取出两个输入中较小的一个
-   *
-   * @param input1
-   *
-   * 输入1
-   * @param input2
-   *
-   * 输入2
-   *
-   * @returns
-   *
-   * 较小值
+   * @param input1 입력1
+   * @param input2 입력2
+   * @returns 더 작은 값
    */
   takeSmallerValue(input1: FloatValue, input2: FloatValue): number
   takeSmallerValue(input1: IntValue, input2: IntValue): bigint
@@ -9557,17 +7782,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns the absolute value of the input
+   * 입력값의 절댓값을 반환한다
    *
-   * 绝对值运算: 返回输入的绝对值
-   *
-   * @param input
-   *
-   * 输入
-   *
-   * @returns
-   *
-   * 结果
+   * @param input 입력
+   * @returns 결과
    */
   absoluteValueOperation(input: FloatValue): number
   absoluteValueOperation(input: IntValue): bigint
@@ -9595,20 +7813,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Calculates the Euclidean distance between two coordinates
+   * 두 좌표 사이의 유클리드 거리를 계산한다
    *
-   * 两坐标点距离: 计算两个坐标点之间的欧式距离
-   *
-   * @param coordinatePoint1
-   *
-   * 坐标点1
-   * @param coordinatePoint2
-   *
-   * 坐标点2
-   *
-   * @returns
-   *
-   * 距离
+   * @param coordinatePoint1 좌표점1
+   * @param coordinatePoint2 좌표점2
+   * @returns 거리
    */
   distanceBetweenTwoCoordinatePoints(
     coordinatePoint1: Vec3Value,
@@ -9635,17 +7844,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Performs a logical NOT operation on the input Boolean value and returns the result
+   * 입력 불리언 값에 대해 논리 NOT 연산을 수행하고 결과를 반환한다
    *
-   * 逻辑非运算: 对输入的布尔值进行非运算后输出
-   *
-   * @param input
-   *
-   * 输入
-   *
-   * @returns
-   *
-   * 结果
+   * @param input 입력
+   * @returns 결과
    */
   logicalNotOperation(input: BoolValue): boolean {
     const inputObj = parseValue(input, 'bool')
@@ -9663,20 +7865,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Performs a logical OR operation on the two input Boolean values and returns the result
+   * 두 입력 불리언 값에 대해 논리 OR 연산을 수행하고 결과를 반환한다
    *
-   * 逻辑或运算: 对输入的两个布尔值进行或运算后输出
-   *
-   * @param input1
-   *
-   * 输入1
-   * @param input2
-   *
-   * 输入2
-   *
-   * @returns
-   *
-   * 结果
+   * @param input1 입력1
+   * @param input2 입력2
+   * @returns 결과
    */
   logicalOrOperation(input1: BoolValue, input2: BoolValue): boolean {
     const input1Obj = parseValue(input1, 'bool')
@@ -9695,20 +7888,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Performs a logical XOR operation on the two input Boolean values and returns the result
+   * 두 입력 불리언 값에 대해 논리 XOR 연산을 수행하고 결과를 반환한다
    *
-   * 逻辑异或运算: 对输入的两个布尔值进行异或运算后输出
-   *
-   * @param input1
-   *
-   * 输入1
-   * @param input2
-   *
-   * 输入2
-   *
-   * @returns
-   *
-   * 结果
+   * @param input1 입력1
+   * @param input2 입력2
+   * @returns 결과
    */
   logicalXorOperation(input1: BoolValue, input2: BoolValue): boolean {
     const input1Obj = parseValue(input1, 'bool')
@@ -9727,20 +7911,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Performs a logical AND operation on the two input Boolean values and returns the result
+   * 두 입력 불리언 값에 대해 논리 AND 연산을 수행하고 결과를 반환한다
    *
-   * 逻辑与运算: 对输入的两个布尔值进行与运算后输出
-   *
-   * @param input1
-   *
-   * 输入1
-   * @param input2
-   *
-   * 输入2
-   *
-   * @returns
-   *
-   * 结果
+   * @param input1 입력1
+   * @param input2 입력2
+   * @returns 결과
    */
   logicalAndOperation(input1: BoolValue, input2: BoolValue): boolean {
     const input1Obj = parseValue(input1, 'bool')
@@ -9759,20 +7934,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Raises the base to the given exponent and returns the result
+   * 밑을 지수만큼 거듭제곱한 결과를 반환한다
    *
-   * 幂运算: 计算底数的指数次幂
-   *
-   * @param base
-   *
-   * 底数
-   * @param exponent
-   *
-   * 指数
-   *
-   * @returns
-   *
-   * 结果
+   * @param base 밑
+   * @param exponent 지수
+   * @returns 결과
    */
   exponentiation(base: FloatValue, exponent: FloatValue): number
   exponentiation(base: IntValue, exponent: IntValue): bigint
@@ -9807,16 +7973,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns the modulus of Input 2 and Input 1
-   *
-   * 模运算: 返回输入2对输入1的取模运算
+   * 입력2를 입력1로 나눈 나머지를 반환한다
    *
    * @param input1
    * @param input2
-   *
-   * @returns
-   *
-   * 结果
+   * @returns 결과
    */
   moduloOperation(input1: IntValue, input2: IntValue): bigint {
     const input1Obj = parseValue(input1, 'int')
@@ -9840,17 +8001,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns the arithmetic square root of the input value
+   * 입력 값의 산술 제곱근을 반환한다
    *
-   * 算术平方根运算: 返回输入值的算术平方根
-   *
-   * @param input
-   *
-   * 输入
-   *
-   * @returns
-   *
-   * 结果
+   * @param input 입력
+   * @returns 결과
    */
   arithmeticSquareRootOperation(input: FloatValue): number {
     const inputObj = parseValue(input, 'float')
@@ -9868,17 +8022,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * When the input is positive, returns 1; When the input is negative, returns -1; When the input is 0, returns 0
+   * 입력이 양수이면 1, 음수이면 -1, 0이면 0을 반환한다
    *
-   * 取符号运算: 输入为正数时，返回1; 输入为负数时，返回-1; 输入为0时，返回0
-   *
-   * @param input
-   *
-   * 输入
-   *
-   * @returns
-   *
-   * 结果
+   * @param input 입력
+   * @returns 결과
    */
   signOperation(input: FloatValue): number
   signOperation(input: IntValue): bigint
@@ -9909,20 +8056,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Performs a rounding operation based on the rounding method and returns the rounded positive number
+   * 지정된 반올림 방식으로 취정수 연산을 수행하고 결과를 반환한다
    *
-   * 取整数运算: 根据取整方式进行一次取整运算，返回取整后的正数
-   *
-   * @param input
-   *
-   * 输入
-   * @param roundingMode Round: Rounds to the nearest integer according to standard rulesRound Up: Returns the smallest integer greater than the input value. For example: input 1.2 → 2; input −2.3 → −2 Round Down: Returns the largest integer smaller than the input value. For example: input 1.2 → 1; input −2.3 → −3 Truncate: Removes the decimal part of the floating point number (rounds toward zero). For example: input 1.2 → 1; input −2.3 → −2
-   *
-   * 取整方式: 四舍五入：按照四舍五入规则进行取整向上取整：返回大于输入且离输入值最近的一个整数，例如：输入为1.2时，返回2；输入为-2.3时，返回-2向下取整：返回小于输入且离输入值最近的一个整数。例如：输入为1.2时，返回1；输入为-2.3时，返回-3截尾取整：截去浮点数尾部的小数部分，也相当于向0方向取整。例如：输入为1.2时，返回1；输入为-2.3时，返回-2
-   *
-   * @returns
-   *
-   * 结果
+   * @param input 입력
+   * @param roundingMode 취정수 방식: 반올림(일반 규칙으로 취정수) / 올림(입력보다 크고 가장 가까운 정수. 예: 1.2→2, -2.3→-2) / 내림(입력보다 작고 가장 가까운 정수. 예: 1.2→1, -2.3→-3) / 버림(소수 부분 제거, 0 방향으로 취정수. 예: 1.2→1, -2.3→-2)
+   * @returns 결과
    */
   roundToIntegerOperation(input: FloatValue, roundingMode: RoundingMode): bigint {
     const inputObj = parseValue(input, 'float')
@@ -9939,17 +8077,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Normalizes the length of a 3D Vector and outputs the result
+   * 3D 벡터의 길이를 정규화하여 결과를 출력한다
    *
-   * 三维向量归一化: 将三维向量的长度归一化后输出
-   *
-   * @param _3dVector
-   *
-   * 三维向量
-   *
-   * @returns
-   *
-   * 结果
+   * @param _3dVector 3D 벡터
+   * @returns 결과
    */
   _3dVectorNormalization(_3dVector: Vec3Value): vec3 {
     const _3dVectorObj = parseValue(_3dVector, 'vec3')
@@ -9974,20 +8105,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Calculates the sum of two 3D Vectors
+   * 두 3D 벡터의 합을 계산한다
    *
-   * 三维向量加法: 计算两个三维向量的加法
-   *
-   * @param _3dVector1
-   *
-   * 三维向量1
-   * @param _3dVector2
-   *
-   * 三维向量2
-   *
-   * @returns
-   *
-   * 结果
+   * @param _3dVector1 3D 벡터1
+   * @param _3dVector2 3D 벡터2
+   * @returns 결과
    */
   _3dVectorAddition(_3dVector1: Vec3Value, _3dVector2: Vec3Value): vec3 {
     const _3dVector1Obj = parseValue(_3dVector1, 'vec3')
@@ -10010,20 +8132,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Calculates the angle between two 3D Vectors and outputs it in radians
+   * 두 3D 벡터 사이의 각도를 계산하여 라디안으로 출력한다
    *
-   * 三维向量夹角: 计算两个三维向量之间的夹角，以弧度输出
-   *
-   * @param _3dVector1
-   *
-   * 三维向量1
-   * @param _3dVector2
-   *
-   * 三维向量2
-   *
-   * @returns
-   *
-   * 夹角(弧度)
+   * @param _3dVector1 3D 벡터1
+   * @param _3dVector2 3D 벡터2
+   * @returns 끼인각 (라디안)
    */
   _3dVectorAngle(_3dVector1: Vec3Value, _3dVector2: Vec3Value): number {
     const _3dVector1Obj = parseValue(_3dVector1, 'vec3')
@@ -10055,20 +8168,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Calculates the difference of two 3D Vectors
+   * 두 3D 벡터의 차를 계산한다
    *
-   * 三维向量减法: 计算两个三维向量的减法
-   *
-   * @param _3dVector1
-   *
-   * 三维向量1
-   * @param _3dVector2
-   *
-   * 三维向量2
-   *
-   * @returns
-   *
-   * 结果
+   * @param _3dVector1 3D 벡터1
+   * @param _3dVector2 3D 벡터2
+   * @returns 결과
    */
   _3dVectorSubtraction(_3dVector1: Vec3Value, _3dVector2: Vec3Value): vec3 {
     const _3dVector1Obj = parseValue(_3dVector1, 'vec3')
@@ -10091,17 +8195,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Calculates the magnitude of the input 3D Vector
+   * 입력 3D 벡터의 크기(모)를 계산한다
    *
-   * 三维向量模运算: 计算输入的三维向量的模
-   *
-   * @param _3dVector
-   *
-   * 三维向量
-   *
-   * @returns
-   *
-   * 结果
+   * @param _3dVector 3D 벡터
+   * @returns 결과
    */
   _3dVectorModuloOperation(_3dVector: Vec3Value): number {
     const _3dVectorObj = parseValue(_3dVector, 'vec3')
@@ -10121,20 +8218,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Calculates the dot product of two input 3D Vectors
+   * 두 3D 벡터의 내적(점 곱)을 계산한다
    *
-   * 三维向量内积: 计算两个输入三维向量的内积（点乘）
-   *
-   * @param _3dVector1
-   *
-   * 三维向量1
-   * @param _3dVector2
-   *
-   * 三维向量2
-   *
-   * @returns
-   *
-   * 结果
+   * @param _3dVector1 3D 벡터1
+   * @param _3dVector2 3D 벡터2
+   * @returns 결과
    */
   _3dVectorDotProduct(_3dVector1: Vec3Value, _3dVector2: Vec3Value): number {
     const _3dVector1Obj = parseValue(_3dVector1, 'vec3')
@@ -10157,20 +8245,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Scales the input 3D Vector (scalar multiplication) and outputs the result
+   * 입력 3D 벡터를 스칼라 배율로 스케일링하여 결과를 출력한다
    *
-   * 三维向量缩放: 将输入的三维向量缩放后输出（三维向量数乘）
-   *
-   * @param _3dVector
-   *
-   * 三维向量
-   * @param zoomMultiplier
-   *
-   * 缩放倍率
-   *
-   * @returns
-   *
-   * 结果
+   * @param _3dVector 3D 벡터
+   * @param zoomMultiplier 스케일 배율
+   * @returns 결과
    */
   _3dVectorZoom(_3dVector: Vec3Value, zoomMultiplier: FloatValue): vec3 {
     const _3dVectorObj = parseValue(_3dVector, 'vec3')
@@ -10194,20 +8273,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Calculates the cross product of two 3D Vectors
+   * 두 3D 벡터의 외적(크로스 곱)을 계산한다
    *
-   * 三维向量外积: 计算两个三维向量的外积（叉乘）
-   *
-   * @param _3dVector1
-   *
-   * 三维向量1
-   * @param _3dVector2
-   *
-   * 三维向量2
-   *
-   * @returns
-   *
-   * 结果
+   * @param _3dVector1 3D 벡터1
+   * @param _3dVector2 3D 벡터2
+   * @returns 결과
    */
   _3dVectorCrossProduct(_3dVector1: Vec3Value, _3dVector2: Vec3Value): vec3 {
     const _3dVector1Obj = parseValue(_3dVector1, 'vec3')
@@ -10230,20 +8300,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Rotates the input 3D Vector by the Euler Angles specified by the rotation and returns the result
+   * 회전이 나타내는 오일러 각도에 따라 입력 3D 벡터를 회전하고 결과를 반환한다
    *
-   * 三维向量旋转: 将被旋转的三维向量，按照旋转所表示的欧拉角进行旋转后返回结果
-   *
-   * @param rotate This 3D input vector represents a specific rotation in Euler angles
-   *
-   * 旋转: 该输入的三维向量指代一个特定的旋转欧拉角
-   * @param rotated3dVector
-   *
-   * 被旋转的三维向量
-   *
-   * @returns
-   *
-   * 结果
+   * @param rotate 회전: 특정 오일러 각도 회전을 나타내는 3D 입력 벡터
+   * @param rotated3dVector 회전 대상 3D 벡터
+   * @returns 결과
    */
   _3dVectorRotation(rotate: Vec3Value, rotated3dVector: Vec3Value): vec3 {
     const rotateObj = parseValue(rotate, 'vec3')
@@ -10260,20 +8321,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns whether the left value is greater than the right value
+   * 좌값이 우값보다 큰지 여부를 반환한다
    *
-   * 数值大于: 返回左值是否大于右值
-   *
-   * @param leftValue
-   *
-   * 左值
-   * @param rightValue
-   *
-   * 右值
-   *
-   * @returns
-   *
-   * 结果
+   * @param leftValue 좌값
+   * @param rightValue 우값
+   * @returns 결과
    */
   greaterThan(leftValue: FloatValue, rightValue: FloatValue): boolean
   greaterThan(leftValue: IntValue, rightValue: IntValue): boolean
@@ -10298,20 +8350,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns whether the left value is greater than or equal to the right value
+   * 좌값이 우값 이상인지 여부를 반환한다
    *
-   * 数值大于等于: 返回左值是否大于等于右值
-   *
-   * @param leftValue
-   *
-   * 左值
-   * @param rightValue
-   *
-   * 右值
-   *
-   * @returns
-   *
-   * 结果
+   * @param leftValue 좌값
+   * @param rightValue 우값
+   * @returns 결과
    */
   greaterThanOrEqualTo(leftValue: FloatValue, rightValue: FloatValue): boolean
   greaterThanOrEqualTo(leftValue: IntValue, rightValue: IntValue): boolean
@@ -10336,20 +8379,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns whether the left value is less than the right value
+   * 좌값이 우값보다 작은지 여부를 반환한다
    *
-   * 数值小于: 返回左值是否小于右值
-   *
-   * @param leftValue
-   *
-   * 左值
-   * @param rightValue
-   *
-   * 右值
-   *
-   * @returns
-   *
-   * 结果
+   * @param leftValue 좌값
+   * @param rightValue 우값
+   * @returns 결과
    */
   lessThan(leftValue: FloatValue, rightValue: FloatValue): boolean
   lessThan(leftValue: IntValue, rightValue: IntValue): boolean
@@ -10374,20 +8408,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns whether the left value is less than or equal to the right value
+   * 좌값이 우값 이하인지 여부를 반환한다
    *
-   * 数值小于等于: 返回左值是否小于等于右值
-   *
-   * @param leftValue
-   *
-   * 左值
-   * @param rightValue
-   *
-   * 右值
-   *
-   * @returns
-   *
-   * 结果
+   * @param leftValue 좌값
+   * @param rightValue 우값
+   * @returns 결과
    */
   lessThanOrEqualTo(leftValue: FloatValue, rightValue: FloatValue): boolean
   lessThanOrEqualTo(leftValue: IntValue, rightValue: IntValue): boolean
@@ -10412,17 +8437,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Calculates the cosine of the input in radians
+   * 입력 라디안의 코사인을 계산한다
    *
-   * 余弦函数: 计算输入弧度的余弦
-   *
-   * @param radian
-   *
-   * 弧度
-   *
-   * @returns
-   *
-   * 结果
+   * @param radian 라디안
+   * @returns 결과
    */
   cosineFunction(radian: FloatValue): number {
     const radianObj = parseValue(radian, 'float')
@@ -10440,17 +8458,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Calculates the tangent of the input in radians
+   * 입력 라디안의 탄젠트를 계산한다
    *
-   * 正切函数: 计算输入弧度的正切
-   *
-   * @param radian
-   *
-   * 弧度
-   *
-   * @returns
-   *
-   * 结果
+   * @param radian 라디안
+   * @returns 결과
    */
   tangentFunction(radian: FloatValue): number {
     const radianObj = parseValue(radian, 'float')
@@ -10468,17 +8479,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Calculates the sine of the input in radians
+   * 입력 라디안의 사인을 계산한다
    *
-   * 正弦函数: 计算输入弧度的正弦
-   *
-   * @param radian
-   *
-   * 弧度
-   *
-   * @returns
-   *
-   * 结果
+   * @param radian 라디안
+   * @returns 결과
    */
   sineFunction(radian: FloatValue): number {
     const radianObj = parseValue(radian, 'float')
@@ -10496,20 +8500,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Performs a logical left shift on the input by the specified bit count and outputs the result
+   * 입력 값을 지정된 비트 수만큼 논리 왼쪽 시프트하여 결과를 출력한다
    *
-   * 左移运算: 将输入值作为二进制数逻辑左移一定位数后输出
-   *
-   * @param value
-   *
-   * 值
-   * @param leftShiftCount
-   *
-   * 左移位数
-   *
-   * @returns
-   *
-   * 结果
+   * @param value 값
+   * @param leftShiftCount 왼쪽 시프트 비트 수
+   * @returns 결과
    */
   leftShiftOperation(value: IntValue, leftShiftCount: IntValue): bigint {
     const valueObj = parseValue(value, 'int')
@@ -10533,20 +8528,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Performs a logical right shift on the input by the specified bit count and outputs the result; Performs an arithmetic right shift, preserving the sign bit
+   * 입력 값을 지정된 비트 수만큼 오른쪽 시프트하여 결과를 출력한다. 부호 비트를 보존하는 산술 오른쪽 시프트를 수행한다
    *
-   * 右移运算: 将输入值作为二进制数逻辑右移一定位数后输出
-   *
-   * @param value
-   *
-   * 值
-   * @param rightShiftCount
-   *
-   * 右移位数
-   *
-   * @returns
-   *
-   * 结果
+   * @param value 값
+   * @param rightShiftCount 오른쪽 시프트 비트 수
+   * @returns 결과
    */
   rightShiftOperation(value: IntValue, rightShiftCount: IntValue): bigint {
     const valueObj = parseValue(value, 'int')
@@ -10570,20 +8556,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Performs a bitwise AND operation on the two inputs and returns the result
+   * 두 입력 값에 대해 비트 AND 연산을 수행하고 결과를 반환한다
    *
-   * 按位与: 将输入的两个值作为二进制进行按位与运算后返回结果
-   *
-   * @param value1
-   *
-   * 值1
-   * @param value2
-   *
-   * 值2
-   *
-   * @returns
-   *
-   * 结果
+   * @param value1 값1
+   * @param value2 값2
+   * @returns 결과
    */
   bitwiseAnd(value1: IntValue, value2: IntValue): bigint {
     const value1Obj = parseValue(value1, 'int')
@@ -10602,20 +8579,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Performs a bitwise OR operation on the two inputs and returns the result
+   * 두 입력 값에 대해 비트 OR 연산을 수행하고 결과를 반환한다
    *
-   * 按位或: 将输入的两个值作为二进制进行按位或运算后返回结果
-   *
-   * @param value1
-   *
-   * 值1
-   * @param value2
-   *
-   * 值2
-   *
-   * @returns
-   *
-   * 结果
+   * @param value1 값1
+   * @param value2 값2
+   * @returns 결과
    */
   bitwiseOr(value1: IntValue, value2: IntValue): bigint {
     const value1Obj = parseValue(value1, 'int')
@@ -10634,20 +8602,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Performs a bitwise XOR operation on the two inputs and returns the result
+   * 두 입력 값에 대해 비트 XOR 연산을 수행하고 결과를 반환한다
    *
-   * 按位异或: 将输入的两个值作为二进制进行按位异或运算后返回结果
-   *
-   * @param value1
-   *
-   * 值1
-   * @param value2
-   *
-   * 值2
-   *
-   * @returns
-   *
-   * 结果
+   * @param value1 값1
+   * @param value2 값2
+   * @returns 결과
    */
   xorExclusiveOr(value1: IntValue, value2: IntValue): bigint {
     const value1Obj = parseValue(value1, 'int')
@@ -10666,17 +8625,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Performs a bitwise complement operation on the input and returns the result
+   * 입력 값에 대해 비트 보수(complement) 연산을 수행하고 결과를 반환한다
    *
-   * 按位取补运算: 将输入值作为二进制进行按位取补运算后返回结果
-   *
-   * @param value
-   *
-   * 值
-   *
-   * @returns
-   *
-   * 结果
+   * @param value 값
+   * @returns 결과
    */
   bitwiseComplement(value: IntValue): bigint {
     const valueObj = parseValue(value, 'int')
@@ -10694,26 +8646,13 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Writes the write value as a binary number to the [start bit, end bit] of the target value (also a binary number). The start bit is indexed from 0, and the write length includes both the start and end bits; If the binary significant length of the write value (counted from the first 1 from the left) exceeds the write length, the write fails and returns the original value; If the write value is negative, it also fails due to exceeding the write length (the first bit of a negative number's binary representation is the sign bit 1)
+   * 쓰기 값을 이진수로서 대상 값(마찬가지로 이진수)의 [시작 비트, 종료 비트]에 쓴다. 시작 비트는 0부터 시작하며, 쓰기 길이는 시작 비트와 종료 비트를 모두 포함한다. 쓰기 값의 이진 유효 자릿수(왼쪽에서 첫 번째 1부터 계산)가 쓰기 길이를 초과하면 쓰기에 실패하고 원래 값을 반환한다. 쓰기 값이 음수인 경우에도 쓰기 길이를 초과하므로 실패한다(음수의 이진수 첫 번째 비트는 부호 비트 1임)
    *
-   * 按位写入: 将写入值作为二进制数，写入被写入值（同样作为二进制数）的【起始位，结束位】。起始位从0开始算，写入的值长度包含起始位和结束位; 如果写入值的二进制有效数字长度（从左起第一个1开始计算）超过写入的长度，则写入失败，返回被写入值; 如果写入值是负数，也会因为写入值超出长度而写入失败（负数的二进制首位为符号位1）
-   *
-   * @param writtenValue
-   *
-   * 被写入值
-   * @param writeValue
-   *
-   * 写入值
-   * @param writeStartingPosition
-   *
-   * 写入起始位
-   * @param writeEndPosition
-   *
-   * 写入结束位
-   *
-   * @returns
-   *
-   * 结果
+   * @param writtenValue 대상 값: 쓰기가 적용될 값
+   * @param writeValue 쓰기 값: 쓸 값
+   * @param writeStartingPosition 시작 비트: 쓰기 시작 위치
+   * @param writeEndPosition 종료 비트: 쓰기 종료 위치
+   * @returns 결과
    */
   writeByBit(
     writtenValue: IntValue,
@@ -10737,23 +8676,12 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Reads the value from [start bit, end bit] of the value (in binary representation)
+   * 값(이진수 표현)의 [시작 비트, 종료 비트]에서 값을 읽어낸다
    *
-   * 按位读出: 从值（以二进制表示）的【起始位，结束位】读出值
-   *
-   * @param value
-   *
-   * 值
-   * @param readStartingPosition
-   *
-   * 读出起始位
-   * @param readEndPosition
-   *
-   * 读出结束位
-   *
-   * @returns
-   *
-   * 结果
+   * @param value 값
+   * @param readStartingPosition 읽기 시작 비트
+   * @param readEndPosition 읽기 종료 비트
+   * @returns 결과
    */
   readByBit(value: IntValue, readStartingPosition: IntValue, readEndPosition: IntValue): bigint {
     const valueObj = parseValue(value, 'int')
@@ -10771,9 +8699,7 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns all parameters of the specified Structure
-   *
-   * 拆分结构体: 获取指定结构体的所有参数
+   * 지정한 구조체의 모든 파라미터를 반환한다
    */
   splitStructure(): void {
     this.registry.registerNode({
@@ -10785,9 +8711,7 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Combines multiple parameters into a single Structure-type value
-   *
-   * 拼装结构体: 将多个参数拼合为一个结构体类型的值
+   * 여러 파라미터를 하나의 구조체 타입 값으로 합친다
    */
   assembleStructure(): void {
     this.registry.registerNode({
@@ -10799,20 +8723,13 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Searches the theoretical number of players entering the match, including players via Matchmaking or Room creation, and the method of entry
-   *
-   * 查询对局游玩方式及人数: 查询进入对局的理论人数，即参与匹配或开房间的人数和进入对局的方式
+   * 매칭 또는 방 생성을 통한 플레이어 수를 포함하여 대국에 입장하는 이론적 플레이어 수와 입장 방식을 조회한다
    */
   queryGameModeAndPlayerNumber(): {
-    /**
-     *
-     * 游玩人数
-     */
+    /** 플레이어 수 */
     playerCount: bigint
     /**
-     * Trial, Room, or Matchmaking
-     *
-     * 游玩方式: 分为试玩、房间游玩、匹配游玩
+     * 플레이 방식: 체험, 방 플레이, 매칭 플레이로 구분된다
      */
     playMode: GameplayMode
   } {
@@ -10837,13 +8754,9 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Searches the Server's timezone
+   * 서버의 시간대를 조회한다
    *
-   * 查询服务器时区: 可以查询服务器的时区
-   *
-   * @returns
-   *
-   * 时区
+   * @returns 시간대
    */
   queryServerTimeZone(): bigint {
     const ref = this.registry.registerNode({
@@ -10858,13 +8771,9 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Searches the current timestamp
+   * 현재 타임스탬프(UTC+0 기준)를 조회한다
    *
-   * 查询时间戳（UTC+0时区）: 可以查询当前的时间戳
-   *
-   * @returns
-   *
-   * 时间戳
+   * @returns 타임스탬프
    */
   queryTimestampUtc0(): bigint {
     const ref = this.registry.registerNode({
@@ -10879,20 +8788,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns a random Floating Point Number that is ≥ the lower limit and ≤ the upper limit. The range is inclusive
+   * 하한 이상 상한 이하의 무작위 부동소수점 수를 반환한다. 상하한 포함
    *
-   * 获取随机浮点数: 获取一个大于等于下限，小于等于上限的随机浮点数。注意该节点生成的随机数包含上下限
-   *
-   * @param lowerLimit
-   *
-   * 下限
-   * @param upperLimit
-   *
-   * 上限
-   *
-   * @returns
-   *
-   * 结果
+   * @param lowerLimit 하한
+   * @param upperLimit 상한
+   * @returns 결과
    */
   getRandomFloatingPointNumber(lowerLimit: FloatValue, upperLimit: FloatValue): number {
     const lowerLimitObj = parseValue(lowerLimit, 'float')
@@ -10909,20 +8809,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns a random Integer that is ≥ the lower limit and ≤ the upper limit. The range is inclusive
+   * 하한 이상 상한 이하의 무작위 정수를 반환한다. 상하한 포함
    *
-   * 获取随机整数: 获取一个大于等于下限，小于等于上限的随机整数。注意该节点生成的随机数包含上下限
-   *
-   * @param lowerLimit
-   *
-   * 下限
-   * @param upperLimit
-   *
-   * 上限
-   *
-   * @returns
-   *
-   * 结果
+   * @param lowerLimit 하한
+   * @param upperLimit 상한
+   * @returns 결과
    */
   getRandomInteger(lowerLimit: IntValue, upperLimit: IntValue): bigint {
     const lowerLimitObj = parseValue(lowerLimit, 'int')
@@ -10939,17 +8830,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Takes a list of weights and randomly selects an ID based on the weight distribution; For example, with a weight list {10, 20, 66, 4}, this node outputs 0, 1, 2, or 3 with probabilities 10%, 20%, 66%, and 4% respectively
+   * 가중치 리스트를 입력받아 가중치 분포에 따라 무작위로 인덱스를 선택한다. 예: 가중치 리스트가 {10, 20, 66, 4}이면 각각 10%, 20%, 66%, 4% 확률로 0, 1, 2, 3을 출력한다
    *
-   * 权重随机: 输入一组权重组成的权重列表，按照权重随机选择其中的一个序号; 例如：权重列表为{10，20，66，4}，那么此节点分别由10%、20%、66%、4%的概率输出0、1、2、3
-   *
-   * @param weightList
-   *
-   * 权重列表
-   *
-   * @returns
-   *
-   * 权重序号
+   * @param weightList 가중치 리스트
+   * @returns 가중치 인덱스
    */
   weightedRandom(weightList: IntValue[]): bigint {
     const weightListObj = parseValue(weightList, 'int_list')
@@ -10965,13 +8849,9 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Return (0,0,-1)
+   * (0,0,-1)을 반환한다
    *
-   * 三维向量：后方: 返回(0,0,-1)
-   *
-   * @returns
-   *
-   * (0,0,-1)
+   * @returns (0,0,-1)
    */
   _3dVectorBackward(): vec3 {
     if (isPrecomputeEnabled()) {
@@ -10989,13 +8869,9 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Return (0,0,0)
+   * (0,0,0)을 반환한다
    *
-   * 三维向量：零向量: 返回(0,0,0)
-   *
-   * @returns
-   *
-   * (0,0,0)
+   * @returns (0,0,0)
    */
   _3dVectorZeroVector(): vec3 {
     if (isPrecomputeEnabled()) {
@@ -11013,13 +8889,9 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Return (0,0,1)
+   * (0,0,1)을 반환한다
    *
-   * 三维向量：前方: 返回(0,0,1)
-   *
-   * @returns
-   *
-   * (0,0,1)
+   * @returns (0,0,1)
    */
   _3dVectorForward(): vec3 {
     if (isPrecomputeEnabled()) {
@@ -11037,13 +8909,9 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Return (0,1,0)
+   * (0,1,0)을 반환한다
    *
-   * 三维向量：上方: 返回(0,1,0)
-   *
-   * @returns
-   *
-   * (0,1,0)
+   * @returns (0,1,0)
    */
   _3dVectorUp(): vec3 {
     if (isPrecomputeEnabled()) {
@@ -11061,13 +8929,9 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Return (0,-1,0)
+   * (0,-1,0)을 반환한다
    *
-   * 三维向量：下方: 返回(0,-1,0)
-   *
-   * @returns
-   *
-   * (0,-1,0)
+   * @returns (0,-1,0)
    */
   _3dVectorDown(): vec3 {
     if (isPrecomputeEnabled()) {
@@ -11085,13 +8949,9 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Return (1,0,0)
+   * (1,0,0)을 반환한다
    *
-   * 三维向量：右侧: 返回(1,0,0)
-   *
-   * @returns
-   *
-   * (1,0,0)
+   * @returns (1,0,0)
    */
   _3dVectorRight(): vec3 {
     if (isPrecomputeEnabled()) {
@@ -11109,13 +8969,9 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Return (-1,0,0)
+   * (-1,0,0)을 반환한다
    *
-   * 三维向量：左侧: 返回(-1,0,0)
-   *
-   * @returns
-   *
-   * (-1,0,0)
+   * @returns (-1,0,0)
    */
   _3dVectorLeft(): vec3 {
     if (isPrecomputeEnabled()) {
@@ -11133,13 +8989,9 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns the approximate value of π (≈ 3.142)
+   * 원주율 π의 근삿값(≈ 3.142)을 반환한다
    *
-   * 圆周率: 返回圆周率π的近似值，约为3.142
-   *
-   * @returns
-   *
-   * 圆周率
+   * @returns 원주율
    */
   pi(): number {
     const ref = this.registry.registerNode({
@@ -11154,20 +9006,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Find the specified value in the list and return a list of IDs where it appears; For example, if the target list is {1,2,3,2,1} and the value is 1, the returned ID list is {0,4}, meaning 1 appears at IDs 0 and 4 in the target list
+   * 리스트에서 지정한 값을 찾아 해당 값이 나타나는 인덱스 리스트를 반환한다. 예: 대상 리스트가 {1,2,3,2,1}이고 값이 1이면 반환되는 인덱스 리스트는 {0,4}이다
    *
-   * 查找列表并返回值的序号: 从列表中查找指定值，并返回列表中该值出现的序号列表; 例如：目标列表为{1,2,3,2,1}，值为1，返回的序号列表为{0，4}，即1出现在目标列表的序号0和4
-   *
-   * @param targetList
-   *
-   * 目标列表
-   * @param value
-   *
-   * 值
-   *
-   * @returns Returns an empty list if not found
-   *
-   * 序号列表: 未找到则返回空列表
+   * @param targetList 대상 리스트
+   * @param value 값
+   * @returns 인덱스 리스트: 찾지 못하면 빈 리스트를 반환
    */
   searchListAndReturnValueId(targetList: FloatValue[], value: FloatValue): bigint[]
   searchListAndReturnValueId(targetList: IntValue[], value: IntValue): bigint[]
@@ -11225,20 +9068,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns the value at the specified ID in the list (0-based)
+   * 리스트에서 지정한 인덱스(0부터 시작)에 해당하는 값을 반환한다
    *
-   * 获取列表对应值: 返回列表中指定序号对应的值，序号从0开始
-   *
-   * @param list
-   *
-   * 列表
-   * @param id
-   *
-   * 序号
-   *
-   * @returns
-   *
-   * 值
+   * @param list 리스트
+   * @param id 인덱스
+   * @returns 값
    */
   getCorrespondingValueFromList(list: FloatValue[], id: IntValue): number
   getCorrespondingValueFromList(list: IntValue[], id: IntValue): bigint
@@ -11292,17 +9126,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns the length of the list (number of elements)
+   * 리스트의 길이(요소 개수)를 반환한다
    *
-   * 获取列表长度: 获取列表长度（列表中的元素个数）
-   *
-   * @param list
-   *
-   * 列表
-   *
-   * @returns
-   *
-   * 长度
+   * @param list 리스트
+   * @returns 길이
    */
   getListLength(list: FloatValue[]): bigint
   getListLength(list: IntValue[]): bigint
@@ -11355,17 +9182,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Applies only to Floating Point Number or Integer lists; returns the maximum value
+   * 부동소수점 또는 정수 리스트에만 적용된다. 리스트의 최댓값을 반환한다
    *
-   * 获取列表最大值: 仅对浮点数列表和整数列表有意义，返回列表中的最大值
-   *
-   * @param list
-   *
-   * 列表
-   *
-   * @returns
-   *
-   * 最大值
+   * @param list 리스트
+   * @returns 최댓값
    */
   getMaximumValueFromList(list: FloatValue[]): number
   getMaximumValueFromList(list: IntValue[]): bigint
@@ -11386,17 +9206,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Applies only to Floating Point Number or Integer lists; returns the minimum value
+   * 부동소수점 또는 정수 리스트에만 적용된다. 리스트의 최솟값을 반환한다
    *
-   * 获取列表最小值: 仅对浮点数列表和整数列表有意义，返回列表中的最小值
-   *
-   * @param list
-   *
-   * 列表
-   *
-   * @returns
-   *
-   * 最小值
+   * @param list 리스트
+   * @returns 최솟값
    */
   getMinimumValueFromList(list: FloatValue[]): number
   getMinimumValueFromList(list: IntValue[]): bigint
@@ -11417,20 +9230,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns whether the list contains the specified value
+   * 리스트에 지정한 값이 포함되어 있는지 여부를 반환한다
    *
-   * 列表是否包含该值: 返回列表中是否包含指定值
-   *
-   * @param list
-   *
-   * 列表
-   * @param value
-   *
-   * 值
-   *
-   * @returns
-   *
-   * 是否包含
+   * @param list 리스트
+   * @param value 값
+   * @returns 포함 여부
    */
   listIncludesThisValue(list: FloatValue[], value: FloatValue): boolean
   listIncludesThisValue(list: IntValue[], value: IntValue): boolean
@@ -11485,20 +9289,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns the value of the specified Preset Status for the Target Entity. Returns 0 if the Entity does not have that Preset Status
+   * 대상 엔티티의 지정된 프리셋 상태 값을 반환한다. 해당 프리셋 상태가 없으면 0을 반환한다
    *
-   * 获取预设状态: 获取目标实体的指定预设状态的预设状态值。如果该实体没有指定的预设状态，则返回0
-   *
-   * @param targetEntity
-   *
-   * 目标实体
-   * @param presetStatusIndex
-   *
-   * 预设状态索引
-   *
-   * @returns
-   *
-   * 预设状态值
+   * @param targetEntity 대상 엔티티
+   * @param presetStatusIndex 프리셋 상태 인덱스
+   * @returns 프리셋 상태 값
    */
   getPresetStatus(targetEntity: EntityValue, presetStatusIndex: IntValue): bigint {
     const targetEntityObj = parseValue(targetEntity, 'entity')
@@ -11515,20 +9310,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns the preset status value of the specified complex creation
+   * 지정된 복잡 피조물의 프리셋 상태 값을 반환한다
    *
-   * 获取复杂造物的预设状态值: 查询指定复杂造物的预设状态值
-   *
-   * @param targetEntity
-   *
-   * 目标实体
-   * @param presetStatusIndex
-   *
-   * 预设状态索引
-   *
-   * @returns
-   *
-   * 预设状态值
+   * @param targetEntity 대상 엔티티
+   * @param presetStatusIndex 프리셋 상태 인덱스
+   * @returns 프리셋 상태 값
    */
   getThePresetStatusValueOfTheComplexCreation(
     targetEntity: CreationEntity,
@@ -11548,28 +9334,16 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Can only be searched when the Character has the [Monitor Movement Speed] Unit Status effect
+   * 캐릭터가 [이동 속도 모니터링] 유닛 상태 효과를 보유하고 있을 때만 조회할 수 있다
    *
-   * 查询角色当前移动速度: 仅当角色拥有【监听移动速率】的单位状态效果时，才能查询
+   * GSTS 참고: 획득되는 속도는 기대 속도가 아닌 실제 운동 속도이며, 실제로 막혔을 때는 운동 중이라도 0이 된다
    *
-   * GSTS Note: The speed obtained is the actual movement speed, not the expected speed, and will be 0 when actually blocked, even when in motion
-   *
-   * GSTS 注: 获取到的速度是真实的运动速度, 而非期望速度, 被实际阻挡时速度将为0, 即使在运动
-   *
-   * @param characterEntity
-   *
-   * 角色实体
+   * @param characterEntity 캐릭터 엔티티
    */
   queryCharacterSCurrentMovementSpd(characterEntity: CharacterEntity): {
-    /**
-     *
-     * 当前速度
-     */
+    /** 현재 속도 */
     currentSpeed: number
-    /**
-     *
-     * 速度向量
-     */
+    /** 속도 벡터 */
     velocityVector: vec3
   } {
     const characterEntityObj = parseValue(characterEntity, 'entity')
@@ -11594,17 +9368,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Searches whether the specified Entity is present; Note that Character Entities are still considered present even when Downed
+   * 지정된 엔티티가 필드에 존재하는지 조회한다. 캐릭터 엔티티는 다운 상태여도 여전히 존재하는 것으로 간주된다
    *
-   * 查询实体是否在场: 查询指定实体是否在场; 注意角色实体即使处于倒下状态，仍然认为在场
-   *
-   * @param targetEntity
-   *
-   * 目标实体
-   *
-   * @returns
-   *
-   * 是否在场
+   * @param targetEntity 대상 엔티티
+   * @returns 필드 존재 여부
    */
   queryIfEntityIsOnTheField(targetEntity: EntityValue): boolean {
     const targetEntityObj = parseValue(targetEntity, 'entity')
@@ -11620,13 +9387,9 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns all Entities currently present in the scene. The number of Entities in this List may be large
+   * 현재 씬에 있는 모든 엔티티를 반환한다. 엔티티 리스트의 수가 많을 수 있다
    *
-   * 获取场上所有实体: 获取当前场上所有在场的实体，该实体列表的数量可能会较大
-   *
-   * @returns
-   *
-   * 实体列表
+   * @returns 엔티티 리스트
    */
   getAllEntitiesOnTheField(): entity[] {
     const ref = this.registry.registerNode({
@@ -11641,17 +9404,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns all Entities of the specified type currently in the scene. The number of Entities in this list may be large
+   * 현재 씬에 있는 지정된 타입의 모든 엔티티를 반환한다. 엔티티 리스트의 수가 많을 수 있다
    *
-   * 获取场上指定类型实体: 获取当前场上指定类型的所有实体，该实体列表的数量可能会较大
-   *
-   * @param entityType Includes Stage, Object, Player, Character, Creation
-   *
-   * 实体类型: 分为关卡、物件、玩家、角色、造物
-   *
-   * @returns
-   *
-   * 实体列表
+   * @param entityType 엔티티 타입: 스테이지, 오브젝트, 플레이어, 캐릭터, 피조물로 구분된다
+   * @returns 엔티티 리스트
    */
   getSpecifiedTypeOfEntitiesOnTheField(entityType: EntityType): entity[] {
     const entityTypeObj = parseValue(entityType, 'enumeration')
@@ -11667,17 +9423,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns all Entities currently in the scene that were created by the specified Prefab ID
+   * 현재 씬에서 지정된 프리팹 ID로 생성된 모든 엔티티를 반환한다
    *
-   * 获取场上指定元件ID的实体: 获取当前场上通过指定元件ID创建的所有实体
-   *
-   * @param prefabId
-   *
-   * 元件ID
-   *
-   * @returns
-   *
-   * 实体列表
+   * @param prefabId 프리팹 ID
+   * @returns 엔티티 리스트
    */
   getEntitiesWithSpecifiedPrefabOnTheField(prefabId: PrefabIdValue): entity[] {
     const prefabIdObj = parseValue(prefabId, 'prefab_id')
@@ -11693,64 +9442,30 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns the Base Attributes of the Character Entity
+   * 캐릭터 엔티티의 기본 속성을 반환한다
    *
-   * 获取角色属性: 获取角色实体的基础属性
-   *
-   * @param targetEntity
-   *
-   * 目标实体
+   * @param targetEntity 대상 엔티티
    */
   getCharacterAttribute(targetEntity: CharacterEntity): {
-    /**
-     *
-     * 等级
-     */
+    /** 레벨 */
     level: bigint
-    /**
-     *
-     * 当前生命值
-     */
+    /** 현재 HP */
     currentHp: number
-    /**
-     *
-     * 上限生命值
-     */
+    /** 최대 HP */
     maxHp: number
-    /**
-     *
-     * 当前攻击力
-     */
+    /** 현재 공격력 */
     currentAtk: number
-    /**
-     *
-     * 基础攻击力
-     */
+    /** 기본 공격력 */
     baseAtk: number
-    /**
-     *
-     * 当前防御力
-     */
+    /** 현재 방어력 */
     currentDef: number
-    /**
-     *
-     * 基础防御力
-     */
+    /** 기본 방어력 */
     baseDef: number
-    /**
-     *
-     * 受打断值上限
-     */
+    /** 경직 수치 상한 */
     interruptValueThreshold: number
-    /**
-     *
-     * 当前受打断值
-     */
+    /** 현재 경직 수치 */
     currentInterruptValue: number
-    /**
-     *
-     * 当前受打断状态
-     */
+    /** 현재 경직 상태 */
     currentInterruptStatus: InterruptStatus
   } {
     const targetEntityObj = parseValue(targetEntity, 'entity')
@@ -11815,49 +9530,24 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns the Advanced Attributes of the Entity
+   * 엔티티의 고급 속성을 반환한다
    *
-   * 获取实体进阶属性: 获取实体的进阶属性
-   *
-   * @param targetEntity
-   *
-   * 目标实体
+   * @param targetEntity 대상 엔티티
    */
   getEntityAdvancedAttribute(targetEntity: EntityValue): {
-    /**
-     *
-     * 暴击率
-     */
+    /** 치명타 확률 */
     critRate: number
-    /**
-     *
-     * 暴击伤害
-     */
+    /** 치명타 피해 */
     critDmg: number
-    /**
-     *
-     * 治疗加成
-     */
+    /** 치유 보너스 */
     healingBonus: number
-    /**
-     *
-     * 受治疗加成
-     */
+    /** 받는 치유 보너스 */
     incomingHealingBonus: number
-    /**
-     *
-     * 元素充能效率
-     */
+    /** 원소 충전 효율 */
     energyRecharge: number
-    /**
-     *
-     * 冷却缩减
-     */
+    /** 쿨다운 감소 */
     cdReduction: number
-    /**
-     *
-     * 护盾强效
-     */
+    /** 보호막 강화 */
     shieldStrength: number
   } {
     const targetEntityObj = parseValue(targetEntity, 'entity')
@@ -11907,17 +9597,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns the Entity Type of the Target Entity
+   * 대상 엔티티의 엔티티 타입을 반환한다
    *
-   * 获取实体类型: 获取目标实体的实体类型
-   *
-   * @param targetEntity
-   *
-   * 目标实体
-   *
-   * @returns Includes Player, Character, Stage, Object, Creation.
-   *
-   * 实体类型: 分为玩家、角色、关卡、物件、造物
+   * @param targetEntity 대상 엔티티
+   * @returns 엔티티 타입: 플레이어, 캐릭터, 스테이지, 오브젝트, 피조물 중 하나
    */
   getEntityType(targetEntity: EntityValue): EntityType {
     const targetEntityObj = parseValue(targetEntity, 'entity')
@@ -11933,24 +9616,14 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns the Location and Rotation of the Target Entity; Not applicable to Player Entities or Stage Entities
+   * 대상 엔티티의 위치와 회전을 반환한다. 플레이어 엔티티 및 스테이지 엔티티에는 적용되지 않는다
    *
-   * 获取实体位置与旋转: 获取目标实体的位置和旋转; 对玩家实体和关卡实体无意义
-   *
-   * @param targetEntity
-   *
-   * 目标实体
+   * @param targetEntity 대상 엔티티
    */
   getEntityLocationAndRotation(targetEntity: EntityOf<'character' | 'object' | 'creation'>): {
-    /**
-     *
-     * 位置
-     */
+    /** 위치 */
     location: vec3
-    /**
-     *
-     * 旋转
-     */
+    /** 회전 */
     rotate: vec3
   } {
     const targetEntityObj = parseValue(targetEntity, 'entity')
@@ -11975,17 +9648,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns the Forward Vector of the specified Entity (the positive Z-axis direction in the Entity's relative coordinate system)
+   * 지정된 엔티티의 전방 벡터를 반환한다 (엔티티 로컬 좌표계의 Z축 양의 방향)
    *
-   * 获取实体向前向量: 获取指定实体的向前向量（即该实体本地坐标系下的z轴正方向朝向）
-   *
-   * @param targetEntity
-   *
-   * 目标实体
-   *
-   * @returns
-   *
-   * 向前向量
+   * @param targetEntity 대상 엔티티
+   * @returns 전방 벡터
    */
   getEntityForwardVector(targetEntity: EntityValue): vec3 {
     const targetEntityObj = parseValue(targetEntity, 'entity')
@@ -12001,17 +9667,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns the Upward Vector of the specified Entity (the positive Y-axis direction in the Entity's relative coordinate system)
+   * 지정된 엔티티의 상향 벡터를 반환한다 (엔티티 로컬 좌표계의 Y축 양의 방향)
    *
-   * 获取实体向上向量: 获取指定实体的向上向量（即该实体本地坐标系下的y轴正方向朝向）
-   *
-   * @param targetEntity
-   *
-   * 目标实体
-   *
-   * @returns
-   *
-   * 向上向量
+   * @param targetEntity 대상 엔티티
+   * @returns 상향 벡터
    */
   getEntityUpwardVector(targetEntity: EntityValue): vec3 {
     const targetEntityObj = parseValue(targetEntity, 'entity')
@@ -12027,17 +9686,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns the Right Vector of the specified Entity (the positive X-axis direction in the Entity's relative coordinate system)
+   * 지정된 엔티티의 우측 벡터를 반환한다 (엔티티 로컬 좌표계의 X축 양의 방향)
    *
-   * 获取实体向右向量: 获取指定实体的向右向量（即该实体本地坐标系下的x轴正方向朝向）
-   *
-   * @param targetEntity
-   *
-   * 目标实体
-   *
-   * @returns
-   *
-   * 向右向量
+   * @param targetEntity 대상 엔티티
+   * @returns 우측 벡터
    */
   getEntityRightVector(targetEntity: EntityValue): vec3 {
     const targetEntityObj = parseValue(targetEntity, 'entity')
@@ -12053,17 +9705,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns a list of all Entities owned by the Target Entity
+   * 대상 엔티티가 소유한 모든 엔티티의 리스트를 반환한다
    *
-   * 获取实体拥有的实体列表: 获取所有以目标实体为拥有者的实体组成的列表
-   *
-   * @param targetEntity
-   *
-   * 目标实体
-   *
-   * @returns
-   *
-   * 实体列表
+   * @param targetEntity 대상 엔티티
+   * @returns 엔티티 리스트
    */
   getListOfEntitiesOwnedByTheEntity(targetEntity: EntityValue): entity[] {
     const targetEntityObj = parseValue(targetEntity, 'entity')
@@ -12079,94 +9724,42 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns the Element Attributes of the Target Entity
+   * 대상 엔티티의 원소 관련 속성을 반환한다
    *
-   * 获取实体元素属性: 获取目标实体的元素相关属性
-   *
-   * @param targetEntity
-   *
-   * 目标实体
+   * @param targetEntity 대상 엔티티
    */
   getEntityElementalAttribute(targetEntity: EntityValue): {
-    /**
-     *
-     * 火元素伤害加成
-     */
+    /** 불 원소 피해 보너스 */
     pyroDmgBonus: number
-    /**
-     *
-     * 火元素抗性
-     */
+    /** 불 원소 저항 */
     pyroRes: number
-    /**
-     *
-     * 水元素伤害加成
-     */
+    /** 물 원소 피해 보너스 */
     hydroDmgBonus: number
-    /**
-     *
-     * 水元素抗性
-     */
+    /** 물 원소 저항 */
     hydroRes: number
-    /**
-     *
-     * 草元素伤害加成
-     */
+    /** 풀 원소 피해 보너스 */
     dendroDmgBonus: number
-    /**
-     *
-     * 草元素抗性
-     */
+    /** 풀 원소 저항 */
     dendroRes: number
-    /**
-     *
-     * 雷元素伤害加成
-     */
+    /** 번개 원소 피해 보너스 */
     electroDmgBonus: number
-    /**
-     *
-     * 雷元素抗性
-     */
+    /** 번개 원소 저항 */
     electroRes: number
-    /**
-     *
-     * 风元素伤害加成
-     */
+    /** 바람 원소 피해 보너스 */
     anemoDmgBonus: number
-    /**
-     *
-     * 风元素抗性
-     */
+    /** 바람 원소 저항 */
     anemoRes: number
-    /**
-     *
-     * 冰元素伤害加成
-     */
+    /** 얼음 원소 피해 보너스 */
     cryoDmgBonus: number
-    /**
-     *
-     * 冰元素抗性
-     */
+    /** 얼음 원소 저항 */
     cryoRes: number
-    /**
-     *
-     * 岩元素伤害加成
-     */
+    /** 바위 원소 피해 보너스 */
     geoDmgBonus: number
-    /**
-     *
-     * 岩元素抗性
-     */
+    /** 바위 원소 저항 */
     geoRes: number
-    /**
-     *
-     * 物理伤害加成
-     */
+    /** 물리 피해 보너스 */
     physicalDmgBonus: number
-    /**
-     *
-     * 物理抗性
-     */
+    /** 물리 저항 */
     physicalRes: number
   } {
     const targetEntityObj = parseValue(targetEntity, 'entity')
@@ -12261,74 +9854,34 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Check entity's elemental effect status
+   * 엔티티의 원소 부착 상태를 확인한다
    *
-   * 查询实体的元素附着状态
-   *
-   * @param targetEntity
-   *
-   * 目标实体
+   * @param targetEntity 대상 엔티티
    */
   checkEntitySElementalEffectStatus(targetEntity: EntityValue): {
-    /**
-     *
-     * 是否附着水元素
-     */
+    /** 물 원소 부착 여부 */
     affectedByHydro: boolean
-    /**
-     *
-     * 是否附着冰元素
-     */
+    /** 얼음 원소 부착 여부 */
     affectedByCryo: boolean
-    /**
-     *
-     * 是否附着雷元素
-     */
+    /** 번개 원소 부착 여부 */
     affectedByElectro: boolean
-    /**
-     *
-     * 是否附着火元素
-     */
+    /** 불 원소 부착 여부 */
     affectedByPyro: boolean
-    /**
-     *
-     * 是否附着草元素
-     */
+    /** 풀 원소 부착 여부 */
     affectedByDendro: boolean
-    /**
-     *
-     * 是否附着风元素
-     */
+    /** 바람 원소 부착 여부 */
     affectedByAnemo: boolean
-    /**
-     *
-     * 是否附着岩元素
-     */
+    /** 바위 원소 부착 여부 */
     affectedByGeo: boolean
-    /**
-     *
-     * 是否处于冻结
-     */
+    /** 빙결 상태 여부 */
     affectedByFrozen: boolean
-    /**
-     *
-     * 是否处于感电（不包含月感电）
-     */
+    /** 감전 상태 여부 (월감전 제외) */
     affectedByElectroCharged: boolean
-    /**
-     *
-     * 是否处于燃烧
-     */
+    /** 연소 상태 여부 */
     affectedByBurning: boolean
-    /**
-     *
-     * 是否处于石化
-     */
+    /** 석화 상태 여부 */
     affectedByPetrification: boolean
-    /**
-     *
-     * 是否处于激化
-     */
+    /** 격화 상태 여부 */
     affectedByCatalyze: boolean
   } {
     const targetEntityObj = parseValue(targetEntity, 'entity')
@@ -12403,49 +9956,24 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns the Base Attributes of the Object
+   * 오브젝트의 기본 속성을 반환한다
    *
-   * 获取物件属性: 获取物件的相关基础属性
-   *
-   * @param objectEntity
-   *
-   * 物件实体
+   * @param objectEntity 오브젝트 엔티티
    */
   getObjectAttribute(objectEntity: ObjectEntity): {
-    /**
-     *
-     * 等级
-     */
+    /** 레벨 */
     level: bigint
-    /**
-     *
-     * 当前生命值
-     */
+    /** 현재 HP */
     currentHp: number
-    /**
-     *
-     * 上限生命值
-     */
+    /** 최대 HP */
     maxHp: number
-    /**
-     *
-     * 当前攻击力
-     */
+    /** 현재 공격력 */
     currentAtk: number
-    /**
-     *
-     * 基础攻击力
-     */
+    /** 기본 공격력 */
     baseAtk: number
-    /**
-     *
-     * 当前防御力
-     */
+    /** 현재 방어력 */
     currentDef: number
-    /**
-     *
-     * 基础防御力
-     */
+    /** 기본 방어력 */
     baseDef: number
   } {
     const objectEntityObj = parseValue(objectEntity, 'entity')
@@ -12495,17 +10023,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns the Owner Entity of the specified Target Entity
+   * 지정된 대상 엔티티의 소유자 엔티티를 반환한다
    *
-   * 获取拥有者实体: 获取指定目标实体的拥有者实体
-   *
-   * @param targetEntity
-   *
-   * 目标实体
-   *
-   * @returns
-   *
-   * 拥有者实体
+   * @param targetEntity 대상 엔티티
+   * @returns 소유자 엔티티
    */
   getOwnerEntity(targetEntity: EntityValue): entity {
     const targetEntityObj = parseValue(targetEntity, 'entity')
@@ -12521,23 +10042,12 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns a list of Entities within a specified spherical range from the Target Entity List
+   * 대상 엔티티 리스트에서 지정된 구형 범위 내에 있는 엔티티 리스트를 반환한다
    *
-   * 获取指定范围的实体列表: 在目标实体列表中获取指定球形范围内的实体列表
-   *
-   * @param targetEntityList
-   *
-   * 目标实体列表
-   * @param centerPoint
-   *
-   * 中心点
-   * @param radius
-   *
-   * 半径
-   *
-   * @returns
-   *
-   * 结果列表
+   * @param targetEntityList 대상 엔티티 리스트
+   * @param centerPoint 중심점
+   * @param radius 반경
+   * @returns 결과 리스트
    */
   getEntityListBySpecifiedRange(
     targetEntityList: EntityValue[],
@@ -12559,20 +10069,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns a list of specified Entity types from the Target Entity List
+   * 대상 엔티티 리스트에서 지정된 타입의 엔티티 리스트를 반환한다
    *
-   * 获取指定类型的实体列表: 在目标实体列表中获取指定类型的实体列表
-   *
-   * @param targetEntityList
-   *
-   * 目标实体列表
-   * @param entityType Includes Player, Character, Stage, Object, Creation.
-   *
-   * 实体类型: 分为玩家、角色、关卡、物件、造物
-   *
-   * @returns
-   *
-   * 结果列表
+   * @param targetEntityList 대상 엔티티 리스트
+   * @param entityType 엔티티 타입: 플레이어, 캐릭터, 스테이지, 오브젝트, 피조물 중 하나
+   * @returns 결과 리스트
    */
   getEntityListBySpecifiedType(targetEntityList: EntityValue[], entityType: EntityType): entity[] {
     const targetEntityListObj = parseValue(targetEntityList, 'entity_list')
@@ -12589,20 +10090,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns a list of Entities created with the specified Prefab ID from the Target Entity List
+   * 대상 엔티티 리스트에서 지정된 프리팹 ID로 생성된 엔티티 리스트를 반환한다
    *
-   * 获取指定元件ID的实体列表: 在目标实体列表中获取以指定元件ID创建的实体列表
-   *
-   * @param targetEntityList
-   *
-   * 目标实体列表
-   * @param prefabId
-   *
-   * 元件ID
-   *
-   * @returns
-   *
-   * 结果列表
+   * @param targetEntityList 대상 엔티티 리스트
+   * @param prefabId 프리팹 ID
+   * @returns 결과 리스트
    */
   getEntityListBySpecifiedPrefabId(
     targetEntityList: EntityValue[],
@@ -12622,20 +10114,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns the list of Entities belonging to a specific Faction from the Target Entity List
+   * 대상 엔티티 리스트에서 특정 진영에 속한 엔티티 리스트를 반환한다
    *
-   * 获取指定阵营的实体列表: 在目标实体列表中获取归属于某个阵营的实体列表
-   *
-   * @param targetEntityList
-   *
-   * 目标实体列表
-   * @param faction
-   *
-   * 阵营
-   *
-   * @returns
-   *
-   * 结果列表
+   * @param targetEntityList 대상 엔티티 리스트
+   * @param faction 진영
+   * @returns 결과 리스트
    */
   getEntityListBySpecifiedFaction(
     targetEntityList: EntityValue[],
@@ -12655,13 +10138,9 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns the Entity associated with this Node Graph
+   * 이 노드 그래프와 연결된 엔티티를 반환한다
    *
-   * 获取自身实体: 返回该节点图所关联的实体
-   *
-   * @returns
-   *
-   * 自身实体
+   * @returns 자신 엔티티
    */
   getSelfEntity(): entity {
     const ref = this.registry.registerNode({
@@ -12676,17 +10155,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Searches for the GUID of the specified Entity
+   * 지정된 엔티티의 GUID를 조회한다
    *
-   * 以实体查询GUID: 查询指定实体的GUID
-   *
-   * @param entity
-   *
-   * 实体
-   *
-   * @returns
-   *
-   * GUID
+   * @param entity 엔티티
+   * @returns GUID
    */
   queryGuidByEntity(entity: EntityValue): guid {
     const entityObj = parseValue(entity, 'entity')
@@ -12702,17 +10174,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Searches for an Entity by GUID
+   * GUID로 엔티티를 검색한다
    *
-   * 以GUID查询实体: 根据GUID查询实体
-   *
-   * @param guid
-   *
-   * GUID
-   *
-   * @returns
-   *
-   * 实体
+   * @param guid GUID
+   * @returns 엔티티
    */
   queryEntityByGuid(guid: GuidValue): entity {
     const guidObj = parseValue(guid, 'guid')
@@ -12728,21 +10193,15 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Searches the current Environment Time, in the range [0, 24)
-   *
-   * 查询当前环境时间: 查询当前的环境时间，范围为[0,24)
+   * 현재 환경 시간을 조회한다. 범위는 [0, 24)
    */
   queryCurrentEnvironmentTime(): {
     /**
-     * The value range is [0, 24)
-     *
-     * 当前环境时间: 获取到的值范围为[0,24)
+     * 현재 환경 시간: 값 범위는 [0, 24)
      */
     currentEnvironmentTime: number
     /**
-     * Number of Loop Days elapsed
-     *
-     * 当前循环天数: 当前已经循环了多少天
+     * 현재 루프 일수: 현재까지 몇 일이 경과했는지
      */
     currentLoopDay: bigint
   } {
@@ -12767,13 +10226,9 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Searches how long the game has been running, in seconds
+   * 게임이 진행된 시간을 조회한다. 단위는 초
    *
-   * 查询游戏已进行时间: 查询游戏已进行了多长时间，单位秒
-   *
-   * @returns
-   *
-   * 游戏已进行时间
+   * @returns 게임 경과 시간
    */
   queryGameTimeElapsed(): bigint {
     const ref = this.registry.registerNode({
@@ -12788,17 +10243,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Searches the Faction of the specified Entity
+   * 지정한 엔티티의 진영을 조회한다
    *
-   * 查询实体阵营: 查询指定实体的阵营
-   *
-   * @param targetEntity
-   *
-   * 目标实体
-   *
-   * @returns
-   *
-   * 阵营
+   * @param targetEntity 대상 엔티티
+   * @returns 진영
    */
   queryEntityFaction(targetEntity: EntityValue): faction {
     const targetEntityObj = parseValue(targetEntity, 'entity')
@@ -12814,20 +10262,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Searches whether two Factions are hostile to each other
+   * 두 진영이 서로 적대 관계인지 조회한다
    *
-   * 查询阵营是否敌对: 查询两个阵营是否敌对
-   *
-   * @param faction1
-   *
-   * 阵营1
-   * @param faction2
-   *
-   * 阵营2
-   *
-   * @returns
-   *
-   * 是否敌对
+   * @param faction1 진영 1
+   * @param faction2 진영 2
+   * @returns 적대 여부
    */
   queryIfFactionIsHostile(faction1: FactionValue, faction2: FactionValue): boolean {
     const faction1Obj = parseValue(faction1, 'faction')
@@ -12844,17 +10283,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Check if all of the player's characters are downed
+   * 플레이어의 모든 캐릭터가 쓰러졌는지 확인한다
    *
-   * 查询玩家角色是否全部倒下: 查询玩家的所有角色是否已全部倒下
-   *
-   * @param playerEntity
-   *
-   * 玩家实体
-   *
-   * @returns
-   *
-   * 结果
+   * @param playerEntity 플레이어 엔티티
+   * @returns 결과
    */
   queryIfAllPlayerCharactersAreDown(playerEntity: PlayerEntity): boolean {
     const playerEntityObj = parseValue(playerEntity, 'entity')
@@ -12870,21 +10302,12 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns the Player GUID based on Player ID, where the ID indicates which Player they are
+   * 플레이어 ID를 기반으로 플레이어 GUID를 반환한다. ID는 몇 번째 플레이어인지를 나타낸다
    *
-   * 根据玩家序号获取玩家GUID: 根据玩家序号获取玩家GUID，玩家序号即该玩家为玩家几
+   * GSTS 참고: ID는 1부터 시작한다
    *
-   * GSTS Note: The ID starts from 1
-   *
-   * GSTS 注: 从1开始
-   *
-   * @param playerId
-   *
-   * 玩家序号
-   *
-   * @returns
-   *
-   * 玩家GUID
+   * @param playerId 플레이어 ID
+   * @returns 플레이어 GUID
    */
   getPlayerGuidByPlayerId(playerId: IntValue): guid {
     const playerIdObj = parseValue(playerId, 'int')
@@ -12900,17 +10323,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns the Player ID based on Player GUID, where the ID indicates which Player they are
+   * 플레이어 GUID를 기반으로 플레이어 ID를 반환한다. ID는 몇 번째 플레이어인지를 나타낸다
    *
-   * 根据玩家GUID获取玩家序号: 根据玩家GUID获取玩家序号，玩家序号即该玩家为玩家几
-   *
-   * @param playerGuid
-   *
-   * 玩家GUID
-   *
-   * @returns
-   *
-   * 玩家序号
+   * @param playerGuid 플레이어 GUID
+   * @returns 플레이어 ID
    */
   getPlayerIdByPlayerGuid(playerGuid: GuidValue): bigint {
     const playerGuidObj = parseValue(playerGuid, 'guid')
@@ -12926,17 +10342,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns the Player's local input device type, as determined by the Interface mapping method
+   * 플레이어의 클라이언트 입력 장치 타입을 반환한다. UI 매핑 방식에 따라 결정된다
    *
-   * 获得玩家客户端输入设备类型: 获得玩家的客户端输入设备类型，根据用户界面的映射方式决定
-   *
-   * @param playerEntity
-   *
-   * 玩家实体
-   *
-   * @returns Includes keyboard/mouse, gamepad, touchscreen
-   *
-   * 输入设备类型: 分为键盘鼠标、手柄、触屏
+   * @param playerEntity 플레이어 엔티티
+   * @returns 입력 장치 타입: 키보드/마우스, 게임패드, 터치스크린으로 구분됨
    */
   getPlayerClientInputDeviceType(playerEntity: PlayerEntity): InputDeviceType {
     const playerEntityObj = parseValue(playerEntity, 'entity')
@@ -12952,17 +10361,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns the Player Entity that owns the Character Entity
+   * 캐릭터 엔티티가 속한 플레이어 엔티티를 반환한다
    *
-   * 获取角色归属的玩家实体: 获取角色实体所归属的玩家实体
-   *
-   * @param characterEntity
-   *
-   * 角色实体
-   *
-   * @returns
-   *
-   * 所属玩家实体
+   * @param characterEntity 캐릭터 엔티티
+   * @returns 소속 플레이어 엔티티
    */
   getPlayerEntityToWhichTheCharacterBelongs(characterEntity: CharacterEntity): PlayerEntity {
     const characterEntityObj = parseValue(characterEntity, 'entity')
@@ -12978,17 +10380,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns the revive duration of the specified Player Entity, in seconds
+   * 지정한 플레이어 엔티티의 부활 소요 시간을 반환한다. 단위는 초
    *
-   * 获取玩家复苏耗时: 获取指定玩家实体的复苏耗时，单位秒
-   *
-   * @param playerEntity
-   *
-   * 玩家实体
-   *
-   * @returns
-   *
-   * 时长
+   * @param playerEntity 플레이어 엔티티
+   * @returns 소요 시간
    */
   getPlayerReviveTime(playerEntity: PlayerEntity): bigint {
     const playerEntityObj = parseValue(playerEntity, 'entity')
@@ -13004,17 +10399,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns the Player's nickname
+   * 플레이어의 닉네임을 반환한다
    *
-   * 获取玩家昵称: 获取玩家的昵称
-   *
-   * @param playerEntity
-   *
-   * 玩家实体
-   *
-   * @returns
-   *
-   * 玩家昵称
+   * @param playerEntity 플레이어 엔티티
+   * @returns 플레이어 닉네임
    */
   getPlayerNickname(playerEntity: PlayerEntity): string {
     const playerEntityObj = parseValue(playerEntity, 'entity')
@@ -13030,17 +10418,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns the remaining number of revives for the specified Player Entity
+   * 지정한 플레이어 엔티티의 남은 부활 횟수를 반환한다
    *
-   * 获取玩家剩余复苏次数: 获取指定玩家实体的剩余复苏次数
-   *
-   * @param playerEntity
-   *
-   * 玩家实体
-   *
-   * @returns
-   *
-   * 剩余次数
+   * @param playerEntity 플레이어 엔티티
+   * @returns 남은 횟수
    */
   getPlayerRemainingRevives(playerEntity: PlayerEntity): bigint {
     const playerEntityObj = parseValue(playerEntity, 'entity')
@@ -13056,13 +10437,9 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns a list of all Player Entities present in the scene
+   * 현재 씬에 존재하는 모든 플레이어 엔티티 리스트를 반환한다
    *
-   * 获取在场玩家实体列表: 获取在场所有玩家实体组成的列表
-   *
-   * @returns
-   *
-   * 玩家实体列表
+   * @returns 플레이어 엔티티 리스트
    */
   getListOfPlayerEntitiesOnTheField(): PlayerEntity[] {
     const ref = this.registry.registerNode({
@@ -13077,17 +10454,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns a list of all Character Entities for the specified Player Entity
+   * 지정한 플레이어 엔티티의 모든 캐릭터 엔티티 리스트를 반환한다
    *
-   * 获取指定玩家所有角色实体: 获取指定玩家实体的所有角色实体列表
-   *
-   * @param playerEntity
-   *
-   * 玩家实体
-   *
-   * @returns
-   *
-   * 角色实体列表
+   * @param playerEntity 플레이어 엔티티
+   * @returns 캐릭터 엔티티 리스트
    */
   getAllCharacterEntitiesOfSpecifiedPlayer(playerEntity: PlayerEntity): CharacterEntity[] {
     const playerEntityObj = parseValue(playerEntity, 'entity')
@@ -13103,17 +10473,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Available only in Classic Mode. Returns the Character ID for the target character
+   * 클래식 모드 전용. 대상 캐릭터의 캐릭터 ID를 반환한다
    *
-   * 查询经典模式角色编号: 仅经典模式可用，查询指定角色的角色编号
-   *
-   * @param targetCharacter
-   *
-   * 目标角色
-   *
-   * @returns
-   *
-   * 角色编号
+   * @param targetCharacter 대상 캐릭터
+   * @returns 캐릭터 ID
    */
   checkClassicModeCharacterId(targetCharacter: CharacterEntity): bigint {
     const targetCharacterObj = parseValue(targetCharacter, 'entity')
@@ -13129,17 +10492,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Available only in Classic Mode, get the active character in the player's party
+   * 클래식 모드 전용. 플레이어 파티에서 현재 활성 캐릭터를 반환한다
    *
-   * 获取指定玩家的前台角色: 仅经典模式可用，获取玩家队伍内的前台角色
-   *
-   * @param playerEntity
-   *
-   * 玩家实体
-   *
-   * @returns
-   *
-   * 前台角色实体
+   * @param playerEntity 플레이어 엔티티
+   * @returns 활성 캐릭터 엔티티
    */
   getActiveCharacterOfSpecifiedPlayer(playerEntity: PlayerEntity): CharacterEntity {
     const playerEntityObj = parseValue(playerEntity, 'entity')
@@ -13155,23 +10511,17 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns the Target of the Follow Motion Device, including the Target Entity and its GUID
+   * 팔로우 모션 장치의 대상을 반환한다. 대상 엔티티와 그 GUID를 얻을 수 있다
    *
-   * 获取跟随运动器的目标: 获取跟随运动器的目标，可以获取目标实体和实体的GUID
-   *
-   * @param targetEntity
-   *
-   * 目标实体
+   * @param targetEntity 대상 엔티티
    */
   getFollowMotionDeviceTarget(targetEntity: EntityValue): {
     /**
-     *
-     * 跟随目标实体
+     * 팔로우 대상 엔티티
      */
     followTargetEntity: entity
     /**
-     *
-     * 跟随目标GUID
+     * 팔로우 대상 GUID
      */
     followTargetGuid: guid
   } {
@@ -13197,20 +10547,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns the current time of the specified Global Timer on the Target Entity
+   * 대상 엔티티에 있는 지정한 글로벌 타이머의 현재 시간을 반환한다
    *
-   * 获取全局计时器当前时间: 获取目标实体上指定全局计时器的当前时间
-   *
-   * @param targetEntity
-   *
-   * 目标实体
-   * @param timerName
-   *
-   * 计时器名称
-   *
-   * @returns
-   *
-   * 当前时间
+   * @param targetEntity 대상 엔티티
+   * @param timerName 타이머 이름
+   * @returns 현재 시간
    */
   getCurrentGlobalTimerTime(targetEntity: EntityValue, timerName: StrValue): number {
     const targetEntityObj = parseValue(targetEntity, 'entity')
@@ -13227,17 +10568,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns the ID of the currently active Interface Layout on the specified Player Entity
+   * 지정한 플레이어 엔티티에서 현재 활성화된 UI 레이아웃의 인덱스를 반환한다
    *
-   * 获取玩家当前界面布局: 获取指定玩家实体上当前生效的界面布局的索引
-   *
-   * @param playerEntity
-   *
-   * 玩家实体
-   *
-   * @returns
-   *
-   * 布局索引
+   * @param playerEntity 플레이어 엔티티
+   * @returns 레이아웃 인덱스
    */
   getPlayerSCurrentUiLayout(playerEntity: PlayerEntity): bigint {
     const playerEntityObj = parseValue(playerEntity, 'entity')
@@ -13253,17 +10587,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * The Target Entity varies with the Creation's current behavior; For example, when a Creation is attacking, its Target is the specified enemy Entity; For example, when a Creation is healing allies, its Target is the specified allied Entity
+   * 피조물의 현재 행동에 따라 대상 엔티티가 달라진다. 예를 들어 피조물이 적을 공격 중일 때는 적 엔티티가, 아군을 치유 중일 때는 아군 엔티티가 대상이 된다
    *
-   * 获取造物当前目标: 根据造物当前行为的不同，目标实体也不尽相同。; 例如当造物在攻击敌方时，造物的目标为敌方指定实体。; 例如当造物在对友方进行治疗时，造物的目标为友方指定实体。
-   *
-   * @param creationEntity Runtime Creation Entity
-   *
-   * 造物实体: 运行时的造物实体
-   *
-   * @returns Current intelligently selected Target Entity of the Creation
-   *
-   * 目标实体: 造物当前的智能选取目标实体
+   * @param creationEntity 피조물 엔티티: 런타임 피조물 엔티티
+   * @returns 대상 엔티티: 피조물이 현재 지능적으로 선택한 대상 엔티티
    */
   getCreationSCurrentTarget(creationEntity: CreationEntity): entity {
     const creationEntityObj = parseValue(creationEntity, 'entity')
@@ -13279,17 +10606,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns the Aggro List in Classic Mode. This Node only outputs a valid list when the Aggro Configuration is set to [Default Type]
+   * 클래식 모드의 어그로 리스트를 반환한다. 어그로 설정이 [기본 타입]일 때만 유효한 리스트를 출력한다
    *
-   * 获取造物的经典模式仇恨列表: 获取造物的经典仇恨模式的仇恨列表，即仅仇恨配置为【默认类型】时，该节点才会有正确的输出列表
-   *
-   * @param creationEntity Runtime Creation Entity
-   *
-   * 造物实体: 运行时的造物实体
-   *
-   * @returns Unordered list of Entities this Creation currently has Aggro against
-   *
-   * 仇恨列表: 造物当前对哪些实体有仇恨，该列表是无序的
+   * @param creationEntity 피조물 엔티티: 런타임 피조물 엔티티
+   * @returns 어그로 리스트: 피조물이 현재 어그로를 보유한 엔티티의 비정렬 리스트
    */
   getAggroListOfCreationInDefaultMode(creationEntity: CreationEntity): entity[] {
     const creationEntityObj = parseValue(creationEntity, 'entity')
@@ -13305,53 +10625,41 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns the Attributes of the specified Creation
+   * 지정한 피조물의 속성을 반환한다
    *
-   * 获取造物属性: 获取指定造物的属性
-   *
-   * @param creationEntity
-   *
-   * 造物实体
+   * @param creationEntity 피조물 엔티티
    */
   getCreationAttribute(creationEntity: CreationEntity): {
     /**
-     *
-     * 等级
+     * 레벨
      */
     level: bigint
     /**
-     *
-     * 当前生命值
+     * 현재 HP
      */
     currentHp: number
     /**
-     *
-     * 上限生命值
+     * 최대 HP
      */
     maxHp: number
     /**
-     *
-     * 当前攻击力
+     * 현재 공격력
      */
     currentAtk: number
     /**
-     *
-     * 基础攻击力
+     * 기본 공격력
      */
     baseAtk: number
     /**
-     *
-     * 受打断值上限
+     * 경직 수치 상한
      */
     interruptValueThreshold: number
     /**
-     *
-     * 当前受打断值
+     * 현재 경직 수치
      */
     currentInterruptValue: number
     /**
-     *
-     * 当前受打断状态
+     * 현재 경직 상태
      */
     currentInterruptStatus: InterruptStatus
   } {
@@ -13407,20 +10715,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Searches the Player's Level of the specified Class
+   * 플레이어의 지정한 클래스 레벨을 조회한다
    *
-   * 查询玩家职业的等级: 查询玩家指定职业的等级
-   *
-   * @param playerEntity
-   *
-   * 玩家实体
-   * @param classConfigId
-   *
-   * 职业配置ID
-   *
-   * @returns
-   *
-   * 等级
+   * @param playerEntity 플레이어 엔티티
+   * @param classConfigId 클래스 설정 ID
+   * @returns 레벨
    */
   queryPlayerClassLevel(playerEntity: PlayerEntity, classConfigId: ConfigIdValue): bigint {
     const playerEntityObj = parseValue(playerEntity, 'entity')
@@ -13437,17 +10736,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Searches the Player's current Class; outputs the Config ID of that Class
+   * 플레이어의 현재 클래스를 조회한다. 해당 클래스의 설정 ID를 출력한다
    *
-   * 查询玩家职业: 查询玩家当前的职业，会输出该职业的配置ID
-   *
-   * @param playerEntity
-   *
-   * 玩家实体
-   *
-   * @returns
-   *
-   * 职业配置ID
+   * @param playerEntity 플레이어 엔티티
+   * @returns 클래스 설정 ID
    */
   queryPlayerClass(playerEntity: PlayerEntity): configId {
     const playerEntityObj = parseValue(playerEntity, 'entity')
@@ -13463,20 +10755,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Searches the Skill in the specified slot of a Character; outputs that Skill's Config ID
+   * 캐릭터의 지정한 슬롯에 있는 스킬을 조회한다. 해당 스킬의 설정 ID를 출력한다
    *
-   * 查询角色技能: 查询角色指定槽位的技能，会输出该技能的配置ID
-   *
-   * @param characterEntity
-   *
-   * 角色实体
-   * @param characterSkillSlot
-   *
-   * 角色技能槽位
-   *
-   * @returns
-   *
-   * 技能配置ID
+   * @param characterEntity 캐릭터 엔티티
+   * @param characterSkillSlot 스킬 슬롯
+   * @returns 스킬 설정 ID
    */
   queryCharacterSkill(
     characterEntity: CharacterEntity,
@@ -13496,20 +10779,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Searches the list of all Slot IDs for the Unit Status with the specified Config ID on the Target Entity
+   * 대상 엔티티에서 지정한 설정 ID를 가진 유닛 상태의 모든 슬롯 ID 리스트를 조회한다
    *
-   * 查询单位状态的槽位序号列表: 查询指定目标实体上特定配置ID的单位状态的所有槽位序号列表
-   *
-   * @param targetEntity
-   *
-   * 查询目标实体
-   * @param unitStatusConfigId
-   *
-   * 单位状态配置ID
-   *
-   * @returns
-   *
-   * 槽位序号列表
+   * @param targetEntity 조회 대상 엔티티
+   * @param unitStatusConfigId 유닛 상태 설정 ID
+   * @returns 슬롯 ID 리스트
    */
   listOfSlotIdsQueryingUnitStatus(
     targetEntity: EntityValue,
@@ -13529,20 +10803,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Searches whether the specified Entity has a Unit Status with the given Config ID
+   * 지정한 엔티티가 특정 설정 ID의 유닛 상태를 보유하고 있는지 조회한다
    *
-   * 查询实体是否具有单位状态: 查询指定实体是否具有特定配置ID的单位状态
-   *
-   * @param targetEntity
-   *
-   * 目标实体
-   * @param unitStatusConfigId
-   *
-   * 单位状态配置ID
-   *
-   * @returns
-   *
-   * 是否具有
+   * @param targetEntity 대상 엔티티
+   * @param unitStatusConfigId 유닛 상태 설정 ID
+   * @returns 보유 여부
    */
   queryIfEntityHasUnitStatus(
     targetEntity: EntityValue,
@@ -13562,23 +10827,12 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Searches the Stack Count of the specified Unit Status on the Target Entity's designated Slot
+   * 대상 엔티티의 지정한 슬롯에 있는 유닛 상태의 스택 수를 조회한다
    *
-   * 根据槽位序号查询单位状态层数: 查询目标实体指定槽位上的特定单位状态的层数
-   *
-   * @param queryTargetEntity
-   *
-   * 查询目标实体
-   * @param unitStatusConfigId
-   *
-   * 单位状态配置ID
-   * @param slotId
-   *
-   * 槽位序号
-   *
-   * @returns
-   *
-   * 层数
+   * @param queryTargetEntity 조회 대상 엔티티
+   * @param unitStatusConfigId 유닛 상태 설정 ID
+   * @param slotId 슬롯 ID
+   * @returns 스택 수
    */
   queryUnitStatusStacksBySlotId(
     queryTargetEntity: EntityValue,
@@ -13600,23 +10854,12 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Searches the Applier of the specified Unit Status on the Target Entity's designated Slot
+   * 대상 엔티티의 지정한 슬롯에 있는 유닛 상태의 적용자를 조회한다
    *
-   * 根据槽位序号查询单位状态施加者: 查询目标实体指定槽位上的特定单位状态的施加者
-   *
-   * @param queryTargetEntity
-   *
-   * 查询目标实体
-   * @param unitStatusConfigId
-   *
-   * 单位状态配置ID
-   * @param slotId
-   *
-   * 槽位序号
-   *
-   * @returns
-   *
-   * 施加者实体
+   * @param queryTargetEntity 조회 대상 엔티티
+   * @param unitStatusConfigId 유닛 상태 설정 ID
+   * @param slotId 슬롯 ID
+   * @returns 적용자 엔티티
    */
   queryUnitStatusApplierBySlotId(
     queryTargetEntity: EntityValue,
@@ -13638,17 +10881,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns a list of all Entities in the scene that carry this Unit Tag
+   * 씬에서 해당 유닛 태그를 가진 모든 엔티티 리스트를 반환한다
    *
-   * 获取单位标签的实体列表: 获取在场所有携带该单位标签的实体列表
-   *
-   * @param unitTagIndex
-   *
-   * 单位标签索引
-   *
-   * @returns
-   *
-   * 实体列表
+   * @param unitTagIndex 유닛 태그 인덱스
+   * @returns 엔티티 리스트
    */
   getEntityListByUnitTag(unitTagIndex: IntValue): entity[] {
     const unitTagIndexObj = parseValue(unitTagIndex, 'int')
@@ -13664,17 +10900,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns a list of all Unit Tags carried by the Target Entity
+   * 대상 엔티티가 보유한 모든 유닛 태그 리스트를 반환한다
    *
-   * 获取实体单位标签列表: 获取目标实体上携带的所有单位标签组成的列表
-   *
-   * @param targetEntity
-   *
-   * 目标实体
-   *
-   * @returns
-   *
-   * 单位标签列表
+   * @param targetEntity 대상 엔티티
+   * @returns 유닛 태그 리스트
    */
   getEntityUnitTagList(targetEntity: EntityValue): bigint[] {
     const targetEntityObj = parseValue(targetEntity, 'entity')
@@ -13690,13 +10919,9 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Searches the Global Aggro Transfer Multiplier; it can be configured in [Stage Settings]
+   * 글로벌 어그로 전이 배율을 조회한다. [스테이지 설정]에서 구성할 수 있다
    *
-   * 查询全局仇恨转移倍率: 查询全局仇恨转移倍率，在【关卡设置】中可以配置
-   *
-   * @returns
-   *
-   * 全局仇恨转移倍率
+   * @returns 글로벌 어그로 전이 배율
    */
   queryGlobalAggroTransferMultiplier(): number {
     const ref = this.registry.registerNode({
@@ -13711,17 +10936,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Query Aggro Multiplier of Specific Entity
+   * 지정한 엔티티의 어그로 배율을 조회한다
    *
-   * 查询指定实体的仇恨倍率: 查询指定实体的仇恨倍率
-   *
-   * @param queryTarget
-   *
-   * 查询目标
-   *
-   * @returns
-   *
-   * 仇恨倍率
+   * @param queryTarget 조회 대상
+   * @returns 어그로 배율
    */
   queryTheAggroMultiplierOfTheSpecifiedEntity(queryTarget: EntityValue): number {
     const queryTargetObj = parseValue(queryTarget, 'entity')
@@ -13737,20 +10955,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Searches the Aggro Value of the Target Entity on its Aggro Owners
+   * 어그로 소유자에 대한 대상 엔티티의 어그로 수치를 조회한다
    *
-   * 查询指定实体的仇恨值: 查询目标实体在仇恨拥有者上的仇恨值
-   *
-   * @param queryTarget
-   *
-   * 查询目标
-   * @param aggroOwner
-   *
-   * 仇恨拥有者
-   *
-   * @returns
-   *
-   * 仇恨值
+   * @param queryTarget 조회 대상
+   * @param aggroOwner 어그로 소유자
+   * @returns 어그로 수치
    */
   queryTheAggroValueOfTheSpecifiedEntity(
     queryTarget: EntityValue,
@@ -13770,17 +10979,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Searches whether the specified Entity has entered battle
+   * 지정한 엔티티가 전투에 돌입했는지 조회한다
    *
-   * 查询指定实体是否已入战: 查询指定实体是否已经入战
-   *
-   * @param queryTarget
-   *
-   * 查询目标
-   *
-   * @returns
-   *
-   * 是否入战
+   * @param queryTarget 조회 대상
+   * @returns 전투 중 여부
    */
   queryIfSpecifiedEntityIsInCombat(queryTarget: EntityValue): boolean {
     const queryTargetObj = parseValue(queryTarget, 'entity')
@@ -13796,17 +10998,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Searches which Entities' Aggro Lists include the specified Target Entity
+   * 지정한 대상 엔티티를 어그로 리스트에 포함한 엔티티 목록을 조회한다
    *
-   * 获取目标所在仇恨列表的拥有者列表: 查询指定目标实体在哪些实体的仇恨列表中
-   *
-   * @param queryTarget
-   *
-   * 查询目标
-   *
-   * @returns
-   *
-   * 仇恨拥有者列表
+   * @param queryTarget 조회 대상
+   * @returns 어그로 소유자 리스트
    */
   getListOfOwnersWhoHaveTheTargetInTheirAggroList(queryTarget: EntityValue): entity[] {
     const queryTargetObj = parseValue(queryTarget, 'entity')
@@ -13822,17 +11017,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Searches which Entities have the Target Entity as their Aggro Target
+   * 대상 엔티티를 어그로 목표로 삼고 있는 엔티티 목록을 조회한다
    *
-   * 获取以目标为仇恨目标的拥有者列表: 查询哪些实体以目标实体为仇恨目标
-   *
-   * @param targetEntity
-   *
-   * 目标实体
-   *
-   * @returns
-   *
-   * 仇恨拥有者列表
+   * @param targetEntity 대상 엔티티
+   * @returns 어그로 소유자 리스트
    */
   getListOfOwnersThatHaveTheTargetAsTheirAggroTarget(targetEntity: EntityValue): entity[] {
     const targetEntityObj = parseValue(targetEntity, 'entity')
@@ -13848,17 +11036,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Get Specific Entity's Aggro List
+   * 지정한 엔티티의 어그로 리스트를 반환한다
    *
-   * 获取指定实体的仇恨列表: 获取指定实体的仇恨列表
-   *
-   * @param targetEntity
-   *
-   * 目标实体
-   *
-   * @returns
-   *
-   * 仇恨列表
+   * @param targetEntity 대상 엔티티
+   * @returns 어그로 리스트
    */
   getTheAggroListOfTheSpecifiedEntity(targetEntity: EntityValue): entity[] {
     const targetEntityObj = parseValue(targetEntity, 'entity')
@@ -13874,17 +11055,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Get Aggro Target of Specific Entity
+   * 지정한 엔티티의 어그로 목표를 반환한다
    *
-   * 获取指定实体的仇恨目标: 获取指定实体的仇恨目标
-   *
-   * @param aggroOwner
-   *
-   * 仇恨拥有者
-   *
-   * @returns
-   *
-   * 仇恨目标
+   * @param aggroOwner 어그로 소유자
+   * @returns 어그로 목표
    */
   getTheAggroTargetOfTheSpecifiedEntity(aggroOwner: EntityValue): entity {
     const aggroOwnerObj = parseValue(aggroOwner, 'entity')
@@ -13900,17 +11074,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Get the number of Waypoints in the Global Path
+   * 글로벌 경로의 웨이포인트 수를 반환한다
    *
-   * 获得全局路径的路点个数
-   *
-   * @param pathIndex
-   *
-   * 路径索引
-   *
-   * @returns
-   *
-   * 路点数量
+   * @param pathIndex 경로 인덱스
+   * @returns 웨이포인트 수
    */
   getTheNumberOfWaypointsInTheGlobalPath(pathIndex: IntValue): bigint {
     const pathIndexObj = parseValue(pathIndex, 'int')
@@ -13926,30 +11093,18 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Searches the specified Waypoint information for the given Path
+   * 지정한 경로의 특정 웨이포인트 정보를 조회한다
    *
-   * 获取指定路径点信息: 查询指定路径的特定路点信息
-   *
-   * @param pathIndex
-   *
-   * 路径索引
-   * @param pathWaypointId
-   *
-   * 路径路点序号
+   * @param pathIndex 경로 인덱스
+   * @param pathWaypointId 경로 웨이포인트 번호
    */
   getSpecifiedWaypointInfo(
     pathIndex: IntValue,
     pathWaypointId: IntValue
   ): {
-    /**
-     *
-     * 路点位置
-     */
+    /** 웨이포인트 위치 */
     waypointLocation: vec3
-    /**
-     *
-     * 路点朝向
-     */
+    /** 웨이포인트 방향 */
     waypointOrientation: vec3
   } {
     const pathIndexObj = parseValue(pathIndex, 'int')
@@ -13975,17 +11130,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Searches all Preset Points that carry the Unit Tag by its ID; outputs each Preset Point's ID
+   * 유닛 태그 ID로 해당 태그를 보유한 모든 프리셋 포인트 목록을 조회한다. 출력 값은 프리셋 포인트 인덱스다
    *
-   * 以单位标签获取预设点位列表: 根据单位标签索引查询所有携带该单位标签的预设点位列表，输出值为该预设点位的索引
-   *
-   * @param unitTagId
-   *
-   * 单位标签索引
-   *
-   * @returns
-   *
-   * 点位索引列表
+   * @param unitTagId 유닛 태그 인덱스
+   * @returns 포인트 인덱스 리스트
    */
   getPresetPointListByUnitTag(unitTagId: IntValue): bigint[] {
     const unitTagIdObj = parseValue(unitTagId, 'int')
@@ -14001,24 +11149,14 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Searches the Location and Rotation of the specified Preset Point
+   * 지정한 프리셋 포인트의 위치와 회전을 조회한다
    *
-   * 查询预设点位置旋转: 查询指定预设点的位置和旋转
-   *
-   * @param pointIndex
-   *
-   * 点位索引
+   * @param pointIndex 포인트 인덱스
    */
   queryPresetPointPositionRotation(pointIndex: IntValue): {
-    /**
-     *
-     * 位置
-     */
+    /** 위치 */
     location: vec3
-    /**
-     *
-     * 旋转
-     */
+    /** 회전 */
     rotate: vec3
   } {
     const pointIndexObj = parseValue(pointIndex, 'int')
@@ -14043,17 +11181,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Get Player Settlement Success Status
+   * 플레이어 정산 성공 상태를 반환한다
    *
-   * 获取玩家结算成功状态: 获取玩家结算成功状态
-   *
-   * @param playerEntity
-   *
-   * 玩家实体
-   *
-   * @returns Includes: Undetermined, Victory, Defeat
-   *
-   * 结算状态: 分为未定、胜利、失败
+   * @param playerEntity 플레이어 엔티티
+   * @returns 정산 상태: 미정, 승리, 패배
    */
   getPlayerSettlementSuccessStatus(playerEntity: PlayerEntity): SettlementStatus {
     const playerEntityObj = parseValue(playerEntity, 'entity')
@@ -14069,17 +11200,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns the Settlement ranking value for the specified Player Entity
+   * 지정한 플레이어 엔티티의 정산 순위 수치를 반환한다
    *
-   * 获取玩家结算排名数值: 获取指定玩家实体结算的排名数值
-   *
-   * @param playerEntity
-   *
-   * 玩家实体
-   *
-   * @returns
-   *
-   * 排名数值
+   * @param playerEntity 플레이어 엔티티
+   * @returns 순위 수치
    */
   getPlayerSettlementRankingValue(playerEntity: PlayerEntity): bigint {
     const playerEntityObj = parseValue(playerEntity, 'entity')
@@ -14095,17 +11219,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Get Faction Settlement Success Status
+   * 진영 정산 성공 상태를 반환한다
    *
-   * 获取阵营结算成功状态: 获取阵营结算成功状态
-   *
-   * @param faction
-   *
-   * 阵营
-   *
-   * @returns Includes: Undetermined, Victory, Defeat
-   *
-   * 结算状态: 分为未定、胜利、失败
+   * @param faction 진영
+   * @returns 정산 상태: 미정, 승리, 패배
    */
   getFactionSettlementSuccessStatus(faction: FactionValue): SettlementStatus {
     const factionObj = parseValue(faction, 'faction')
@@ -14121,17 +11238,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns the Settlement ranking value for the specified Faction
+   * 지정한 진영의 정산 순위 수치를 반환한다
    *
-   * 获取阵营结算排名数值: 获取指定阵营结算的排名数值
-   *
-   * @param faction
-   *
-   * 阵营
-   *
-   * @returns
-   *
-   * 排名数值
+   * @param faction 진영
+   * @returns 순위 수치
    */
   getFactionSettlementRankingValue(faction: FactionValue): bigint {
     const factionObj = parseValue(faction, 'faction')
@@ -14147,20 +11257,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Searches whether the specified Dictionary contains the specified Key
+   * 지정한 딕셔너리에 특정 키가 포함되어 있는지 조회한다
    *
-   * 查询字典是否包含特定键: 查询指定字典是否包含特定的键
-   *
-   * @param dictionary
-   *
-   * 字典
-   * @param key
-   *
-   * 键
-   *
-   * @returns
-   *
-   * 是否包含
+   * @param dictionary 딕셔너리
+   * @param key 키
+   * @returns 포함 여부
    */
   queryIfDictionaryContainsSpecificKey<K extends DictKeyType, V extends DictValueType>(
     dictionary: dict<K, V>,
@@ -14180,17 +11281,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Searches the number of Key-Value Pairs in the Dictionary
+   * 딕셔너리의 키-값 쌍 수를 조회한다
    *
-   * 查询字典长度: 查询字典中键值对的数量
-   *
-   * @param dictionary
-   *
-   * 字典
-   *
-   * @returns
-   *
-   * 长度
+   * @param dictionary 딕셔너리
+   * @returns 길이
    */
   queryDictionarySLength<K extends DictKeyType, V extends DictValueType>(
     dictionary: dict<K, V>
@@ -14208,17 +11302,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns a list of all Keys in the Dictionary. Because Key-Value Pairs are unordered, the Keys may not be returned in insertion order
+   * 딕셔너리의 모든 키 목록을 반환한다. 키-값 쌍은 순서가 없으므로, 반환되는 키 리스트가 삽입 순서와 다를 수 있다
    *
-   * 获取字典中键组成的列表: 获取字典中所有键组成的列表。由于字典中键值对是无序排列的，所以取出的键列表也不一定按照其插入顺序排列
-   *
-   * @param dictionary
-   *
-   * 字典
-   *
-   * @returns
-   *
-   * 键列表
+   * @param dictionary 딕셔너리
+   * @returns 키 리스트
    */
   getListOfKeysFromDictionary<K extends DictKeyType, V extends DictValueType>(
     dictionary: dict<K, V>
@@ -14236,39 +11323,22 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Searches sale information for a specified Item in the Inventory Shop
+   * 인벤토리 상점에서 지정한 아이템의 판매 정보를 조회한다
    *
-   * 查询背包商店商品出售信息: 查询背包商店种特定商品的出售信息
-   *
-   * @param shopOwnerEntity
-   *
-   * 商店归属者实体
-   * @param shopId
-   *
-   * 商店序号
-   * @param itemConfigId
-   *
-   * 道具配置ID
+   * @param shopOwnerEntity 상점 소유자 엔티티
+   * @param shopId 상점 번호
+   * @param itemConfigId 아이템 설정 ID
    */
   queryInventoryShopItemSalesInfo(
     shopOwnerEntity: EntityValue,
     shopId: IntValue,
     itemConfigId: ConfigIdValue
   ): {
-    /**
-     *
-     * 出售货币字典
-     */
+    /** 판매 화폐 딕셔너리 */
     sellCurrencyDictionary: dict<'config_id', 'int'>
-    /**
-     *
-     * 排序优先级
-     */
+    /** 정렬 우선순위 */
     sortPriority: bigint
-    /**
-     *
-     * 是否可出售
-     */
+    /** 판매 가능 여부 */
     canBeSold: boolean
   } {
     const shopOwnerEntityObj = parseValue(shopOwnerEntity, 'entity')
@@ -14300,20 +11370,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Search the inventory shop's sales list
+   * 인벤토리 상점의 판매 목록을 조회한다
    *
-   * 查询背包商店物品出售列表: 查询背包商店物品出售列表
-   *
-   * @param shopOwnerEntity
-   *
-   * 商店归属者实体
-   * @param shopId
-   *
-   * 商店序号
-   *
-   * @returns
-   *
-   * 道具配置ID列表
+   * @param shopOwnerEntity 상점 소유자 엔티티
+   * @param shopId 상점 번호
+   * @returns 아이템 설정 ID 리스트
    */
   queryInventoryShopItemSalesList(shopOwnerEntity: EntityValue, shopId: IntValue): configId[] {
     const shopOwnerEntityObj = parseValue(shopOwnerEntity, 'entity')
@@ -14330,20 +11391,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Search the shop's purchase list
+   * 상점의 매입 목록을 조회한다
    *
-   * 查询商店收购物品列表: 查询商店收购物品列表
-   *
-   * @param shopOwnerEntity
-   *
-   * 商店归属者实体
-   * @param shopId
-   *
-   * 商店序号
-   *
-   * @returns
-   *
-   * 道具配置ID列表
+   * @param shopOwnerEntity 상점 소유자 엔티티
+   * @param shopId 상점 번호
+   * @returns 아이템 설정 ID 리스트
    */
   queryShopPurchaseItemList(shopOwnerEntity: EntityValue, shopId: IntValue): configId[] {
     const shopOwnerEntityObj = parseValue(shopOwnerEntity, 'entity')
@@ -14360,34 +11412,20 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Searches purchase information for a specified Item in the Shop
+   * 상점에서 지정한 아이템의 매입 정보를 조회한다
    *
-   * 查询商店物品收购信息: 查询商店特定物品的收购信息
-   *
-   * @param shopOwnerEntity
-   *
-   * 商店归属者实体
-   * @param shopId
-   *
-   * 商店序号
-   * @param itemConfigId
-   *
-   * 道具配置ID
+   * @param shopOwnerEntity 상점 소유자 엔티티
+   * @param shopId 상점 번호
+   * @param itemConfigId 아이템 설정 ID
    */
   queryShopItemPurchaseInfo(
     shopOwnerEntity: EntityValue,
     shopId: IntValue,
     itemConfigId: ConfigIdValue
   ): {
-    /**
-     *
-     * 收购货币字典
-     */
+    /** 매입 화폐 딕셔너리 */
     purchaseCurrencyDictionary: dict<'config_id', 'int'>
-    /**
-     *
-     * 是否可收购
-     */
+    /** 매입 가능 여부 */
     purchasable: boolean
   } {
     const shopOwnerEntityObj = parseValue(shopOwnerEntity, 'entity')
@@ -14414,20 +11452,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Searches the Custom Shop sale list; the output parameter is a list of Item IDs
+   * 커스텀 상점의 판매 목록을 조회한다. 출력 파라미터는 상품 번호 리스트다
    *
-   * 查询自定义商店商品出售列表: 查询自定义商店商品出售列表，出参为商品序号组成的列表
-   *
-   * @param shopOwnerEntity
-   *
-   * 商店归属者实体
-   * @param shopId
-   *
-   * 商店序号
-   *
-   * @returns
-   *
-   * 商品序号列表
+   * @param shopOwnerEntity 상점 소유자 엔티티
+   * @param shopId 상점 번호
+   * @returns 상품 번호 리스트
    */
   queryCustomShopItemSalesList(shopOwnerEntity: EntityValue, shopId: IntValue): bigint[] {
     const shopOwnerEntityObj = parseValue(shopOwnerEntity, 'entity')
@@ -14444,59 +11473,30 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Searches sale information for a specified Item in the Custom Shop
+   * 커스텀 상점에서 지정한 상품의 판매 정보를 조회한다
    *
-   * 查询自定义商店商品出售信息: 查询自定义商店特定商品的出售信息
-   *
-   * @param shopOwnerEntity
-   *
-   * 商店归属者实体
-   * @param shopId
-   *
-   * 商店序号
-   * @param shopItemId
-   *
-   * 商品序号
+   * @param shopOwnerEntity 상점 소유자 엔티티
+   * @param shopId 상점 번호
+   * @param shopItemId 상품 번호
    */
   queryCustomShopItemSalesInfo(
     shopOwnerEntity: EntityValue,
     shopId: IntValue,
     shopItemId: IntValue
   ): {
-    /**
-     *
-     * 道具配置ID
-     */
+    /** 아이템 설정 ID */
     itemConfigId: configId
-    /**
-     *
-     * 出售货币字典
-     */
+    /** 판매 화폐 딕셔너리 */
     sellCurrencyDictionary: dict<'config_id', 'int'>
-    /**
-     *
-     * 所属页签序号
-     */
+    /** 소속 탭 번호 */
     affiliatedTabId: bigint
-    /**
-     *
-     * 是否限购
-     */
+    /** 구매 제한 여부 */
     limitPurchase: boolean
-    /**
-     *
-     * 限购数量
-     */
+    /** 구매 제한 수량 */
     purchaseLimit: bigint
-    /**
-     *
-     * 排序优先级
-     */
+    /** 정렬 우선순위 */
     sortPriority: bigint
-    /**
-     *
-     * 是否可出售
-     */
+    /** 판매 가능 여부 */
     canBeSold: boolean
   } {
     const shopOwnerEntityObj = parseValue(shopOwnerEntity, 'entity')
@@ -14548,23 +11548,12 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Get the equipment index of the specified equipment slot
+   * 지정한 장비 슬롯의 장비 인덱스를 반환한다
    *
-   * 获取指定装备栏位的装备索引
-   *
-   * @param targetEntity
-   *
-   * 目标实体
-   * @param row
-   *
-   * 装备栏位行
-   * @param column
-   *
-   * 装备栏位列
-   *
-   * @returns
-   *
-   * 装备索引
+   * @param targetEntity 대상 엔티티
+   * @param row 장비 슬롯 행
+   * @param column 장비 슬롯 열
+   * @returns 장비 인덱스
    */
   getTheEquipmentIndexOfTheSpecifiedEquipmentSlot(
     targetEntity: EntityValue,
@@ -14586,17 +11575,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Searches the list of all Tags on this Equipment instance
+   * 해당 장비 인스턴스의 모든 태그 목록을 조회한다
    *
-   * 查询装备标签列表: 查询该装备实例的所有标签组成的列表
-   *
-   * @param equipmentIndex
-   *
-   * 装备索引
-   *
-   * @returns
-   *
-   * 标签列表
+   * @param equipmentIndex 장비 인덱스
+   * @returns 태그 리스트
    */
   queryEquipmentTagList(equipmentIndex: IntValue): configId[] {
     const equipmentIndexObj = parseValue(equipmentIndex, 'int')
@@ -14612,17 +11594,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Searches the Equipment Config ID by Equipment ID. The Equipment Instance ID can be obtained in the [Equipment Initialization] event
+   * 장비 인덱스로 장비 설정 ID를 조회한다. 장비 인스턴스 인덱스는 [장비 초기화] 이벤트에서 얻을 수 있다
    *
-   * 根据装备索引查询装备配置ID: 根据装备索引查询装备配置ID，装备实例的索引可以在【装备初始化】事件中获取到
-   *
-   * @param equipmentIndex
-   *
-   * 装备索引
-   *
-   * @returns
-   *
-   * 装备配置ID
+   * @param equipmentIndex 장비 인덱스
+   * @returns 장비 설정 ID
    */
   queryEquipmentConfigIdByEquipmentId(equipmentIndex: IntValue): configId {
     const equipmentIndexObj = parseValue(equipmentIndex, 'int')
@@ -14638,17 +11613,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns a list of all Affixes on this Equipment instance; When Equipment is initialized, Affix values are randomized, so the Equipment Affixes on the Equipment instance also generate corresponding instances. Therefore, the data type is Integer rather than Config ID
+   * 해당 장비 인스턴스의 모든 어픽스 목록을 반환한다. 장비 초기화 시 어픽스 수치가 무작위로 결정되므로 장비 인스턴스의 어픽스도 별도 인스턴스를 생성한다. 따라서 데이터 타입은 설정 ID가 아닌 정수다
    *
-   * 获取装备词条列表: 获取该装备实例的所有词条组成的列表; 装备初始化时，词条的数值会发生随机，所以装备实例上的装备词条也会生成对应的实例，故数据类型为整数而不是配置ID
-   *
-   * @param equipmentIndex
-   *
-   * 装备索引
-   *
-   * @returns
-   *
-   * 装备词条列表
+   * @param equipmentIndex 장비 인덱스
+   * @returns 장비 어픽스 리스트
    */
   getEquipmentAffixList(equipmentIndex: IntValue): bigint[] {
     const equipmentIndexObj = parseValue(equipmentIndex, 'int')
@@ -14664,20 +11632,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns the Config ID of an Equipment Affix by its ID on the Equipment instance
+   * 장비 인스턴스에서 지정한 번호의 어픽스 설정 ID를 반환한다
    *
-   * 获取装备词条配置ID: 根据装备实例上装备词条的序号获取该词条的配置ID
-   *
-   * @param equipmentIndex
-   *
-   * 装备索引
-   * @param affixId
-   *
-   * 词条序号
-   *
-   * @returns
-   *
-   * 词条配置ID
+   * @param equipmentIndex 장비 인덱스
+   * @param affixId 어픽스 번호
+   * @returns 어픽스 설정 ID
    */
   getEquipmentAffixConfigId(equipmentIndex: IntValue, affixId: IntValue): configId {
     const equipmentIndexObj = parseValue(equipmentIndex, 'int')
@@ -14694,20 +11653,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns the value of the Affix at the specified ID on the Equipment instance
+   * 장비 인스턴스에서 지정한 ID의 어픽스 수치를 반환한다
    *
-   * 获取装备词条数值: 获取装备实例上对应序号词条的数值
-   *
-   * @param equipmentIndex
-   *
-   * 装备索引
-   * @param affixId
-   *
-   * 词条序号
-   *
-   * @returns
-   *
-   * 装备数值
+   * @param equipmentIndex 장비 인덱스
+   * @param affixId 어픽스 번호
+   * @returns 장비 수치
    */
   getEquipmentAffixValue(equipmentIndex: IntValue, affixId: IntValue): number {
     const equipmentIndexObj = parseValue(equipmentIndex, 'int')
@@ -14724,20 +11674,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns the quantity of the Item with the specified Config ID in the Inventory
+   * 인벤토리에서 지정한 설정 ID를 가진 아이템의 수량을 반환한다
    *
-   * 获取背包道具数量: 获取背包内特定配置ID的道具数量
-   *
-   * @param inventoryOwnerEntity
-   *
-   * 背包持有者实体
-   * @param itemConfigId
-   *
-   * 道具配置ID
-   *
-   * @returns
-   *
-   * 道具数量
+   * @param inventoryOwnerEntity 인벤토리 소유자 엔티티
+   * @param itemConfigId 아이템 설정 ID
+   * @returns 아이템 수량
    */
   getInventoryItemQuantity(inventoryOwnerEntity: EntityValue, itemConfigId: ConfigIdValue): bigint {
     const inventoryOwnerEntityObj = parseValue(inventoryOwnerEntity, 'entity')
@@ -14754,20 +11695,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns the amount of Currency with the specified Config ID in the Inventory
+   * 인벤토리에서 지정한 설정 ID를 가진 화폐의 수량을 반환한다
    *
-   * 获取背包货币数量: 获取背包内特定配置ID的货币数量
-   *
-   * @param inventoryOwnerEntity
-   *
-   * 背包持有者实体
-   * @param currencyConfigId
-   *
-   * 货币配置ID
-   *
-   * @returns
-   *
-   * 资源数量
+   * @param inventoryOwnerEntity 인벤토리 소유자 엔티티
+   * @param currencyConfigId 화폐 설정 ID
+   * @returns 화폐 수량
    */
   getInventoryCurrencyQuantity(
     inventoryOwnerEntity: EntityValue,
@@ -14787,17 +11719,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Get Inventory Capacity
+   * 인벤토리 용량을 반환한다
    *
-   * 获取背包容量: 获取背包容量
-   *
-   * @param inventoryOwnerEntity
-   *
-   * 背包持有者实体
-   *
-   * @returns
-   *
-   * 背包容量
+   * @param inventoryOwnerEntity 인벤토리 소유자 엔티티
+   * @returns 인벤토리 용량
    */
   getInventoryCapacity(inventoryOwnerEntity: EntityValue): bigint {
     const inventoryOwnerEntityObj = parseValue(inventoryOwnerEntity, 'entity')
@@ -14813,17 +11738,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns all Currencies in the Inventory, including types and corresponding amounts
+   * 인벤토리의 모든 화폐를 반환한다. 화폐 타입과 해당 수량을 포함한다
    *
-   * 获取背包所有货币: 获取背包所有货币，包括货币类型和对应的数量
-   *
-   * @param inventoryOwnerEntity
-   *
-   * 背包持有者实体
-   *
-   * @returns
-   *
-   * 货币字典
+   * @param inventoryOwnerEntity 인벤토리 소유자 엔티티
+   * @returns 화폐 딕셔너리
    */
   getAllCurrencyFromInventory(inventoryOwnerEntity: EntityValue): dict<'config_id', 'int'> {
     const inventoryOwnerEntityObj = parseValue(inventoryOwnerEntity, 'entity')
@@ -14839,17 +11757,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns all Basic Items in the Inventory, including Item types and their quantities
+   * 인벤토리의 모든 기본 아이템을 반환한다. 아이템 타입과 해당 수량을 포함한다
    *
-   * 获取背包所有基础道具: 获取背包所有基础道具，包括道具类型和对应的数量
-   *
-   * @param inventoryOwnerEntity
-   *
-   * 背包持有者实体
-   *
-   * @returns
-   *
-   * 基础道具字典
+   * @param inventoryOwnerEntity 인벤토리 소유자 엔티티
+   * @returns 기본 아이템 딕셔너리
    */
   getAllBasicItemsFromInventory(inventoryOwnerEntity: EntityValue): dict<'config_id', 'int'> {
     const inventoryOwnerEntityObj = parseValue(inventoryOwnerEntity, 'entity')
@@ -14865,17 +11776,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns all Equipment in the Inventory; the output parameter is a list of all Equipment IDs
+   * 인벤토리의 모든 장비를 반환한다. 출력 파라미터는 모든 장비 인덱스로 구성된 리스트다
    *
-   * 获取背包所有装备: 获取背包所有装备，出参为所有装备索引组成的列表
-   *
-   * @param inventoryOwnerEntity
-   *
-   * 背包持有者实体
-   *
-   * @returns
-   *
-   * 装备索引列表
+   * @param inventoryOwnerEntity 인벤토리 소유자 엔티티
+   * @returns 장비 인덱스 리스트
    */
   getAllEquipmentFromInventory(inventoryOwnerEntity: EntityValue): bigint[] {
     const inventoryOwnerEntityObj = parseValue(inventoryOwnerEntity, 'entity')
@@ -14891,20 +11795,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns the quantity of Items with the specified Config ID from the Loot Component on the Loot Prefab
+   * 드롭 프리팹의 드롭 컴포넌트에서 지정한 설정 ID를 가진 아이템의 수량을 반환한다
    *
-   * 获取掉落物组件道具数量: 获取掉落物元件上掉落物组件中特定配置ID的道具数量
-   *
-   * @param lootEntity
-   *
-   * 掉落物实体
-   * @param itemConfigId
-   *
-   * 道具配置ID
-   *
-   * @returns
-   *
-   * 道具数量
+   * @param lootEntity 드롭 엔티티
+   * @param itemConfigId 아이템 설정 ID
+   * @returns 아이템 수량
    */
   getLootComponentItemQuantity(lootEntity: EntityValue, itemConfigId: ConfigIdValue): bigint {
     const lootEntityObj = parseValue(lootEntity, 'entity')
@@ -14921,20 +11816,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns the amount of Currency with the specified Config ID from the Loot Component on the Loot Prefab
+   * 드롭 프리팹의 드롭 컴포넌트에서 지정한 설정 ID를 가진 화폐의 수량을 반환한다
    *
-   * 获取掉落物组件货币数量: 获取掉落物元件上掉落物组件中特定配置ID的货币数量
-   *
-   * @param lootEntity
-   *
-   * 掉落物实体
-   * @param currencyConfigId
-   *
-   * 货币配置ID
-   *
-   * @returns
-   *
-   * 货币数量
+   * @param lootEntity 드롭 엔티티
+   * @param currencyConfigId 화폐 설정 ID
+   * @returns 화폐 수량
    */
   getLootComponentCurrencyQuantity(
     lootEntity: EntityValue,
@@ -14954,17 +11840,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns all Equipment from the Loot Component on the Loot Prefab
+   * 드롭 프리팹의 드롭 컴포넌트에서 모든 장비를 반환한다
    *
-   * 获取掉落物组件所有装备: 获取掉落物元件上掉落物组件中的所有装备
-   *
-   * @param lootEntity
-   *
-   * 掉落物实体
-   *
-   * @returns
-   *
-   * 装备索引列表
+   * @param lootEntity 드롭 엔티티
+   * @returns 장비 인덱스 리스트
    */
   getAllEquipmentFromLootComponent(lootEntity: EntityValue): bigint[] {
     const lootEntityObj = parseValue(lootEntity, 'entity')
@@ -14980,17 +11859,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns all Items from the Loot Component on the Loot Prefab
+   * 드롭 프리팹의 드롭 컴포넌트에서 모든 아이템을 반환한다
    *
-   * 获取掉落物组件所有道具: 获取掉落物元件上掉落物组件中的所有道具
-   *
-   * @param dropperEntity
-   *
-   * 掉落者实体
-   *
-   * @returns
-   *
-   * 道具字典
+   * @param dropperEntity 드롭 엔티티
+   * @returns 아이템 딕셔너리
    */
   getAllItemsFromLootComponent(dropperEntity: EntityValue): dict<'config_id', 'int'> {
     const dropperEntityObj = parseValue(dropperEntity, 'entity')
@@ -15006,17 +11878,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns all Currencies from the Loot Component on the Loot Prefab
+   * 드롭 프리팹의 드롭 컴포넌트에서 모든 화폐를 반환한다
    *
-   * 获取掉落物组件所有货币: 获取掉落物元件上掉落物组件中的所有货币
-   *
-   * @param dropperEntity
-   *
-   * 掉落者实体
-   *
-   * @returns
-   *
-   * 货币字典
+   * @param dropperEntity 드롭 엔티티
+   * @returns 화폐 딕셔너리
    */
   getAllCurrencyFromLootComponent(dropperEntity: EntityValue): dict<'config_id', 'int'> {
     const dropperEntityObj = parseValue(dropperEntity, 'entity')
@@ -15032,20 +11897,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns all Entities within the Collision Trigger corresponding to a specific ID in the Collision Trigger Component on the Target Entity
+   * 대상 엔티티의 충돌 트리거 컴포넌트에서 지정한 ID에 해당하는 충돌 트리거 내의 모든 엔티티를 반환한다
    *
-   * 获取碰撞触发器内所有实体: 获取目标实体上碰撞触发器组件中特定序号对应的碰撞触发器内的所有实体
-   *
-   * @param targetEntity
-   *
-   * 目标实体
-   * @param triggerId
-   *
-   * 触发器序号
-   *
-   * @returns
-   *
-   * 实体列表
+   * @param targetEntity 대상 엔티티
+   * @param triggerId 트리거 번호
+   * @returns 엔티티 리스트
    */
   getAllEntitiesWithinTheCollisionTrigger(
     targetEntity: EntityValue,
@@ -15065,37 +11921,25 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Searches the information of the Mini-map Marker with the specified ID in the Mini-map Marker Component on the Target Entity
+   * 대상 엔티티의 미니맵 마커 컴포넌트에서 지정한 ID에 해당하는 미니맵 마커 정보를 조회한다
    *
-   * 查询指定小地图标识信息: 查询目标实体上小地图标识组件中特定序号对应的小地图标识的信息
-   *
-   * @param targetEntity Runtime Entity
-   *
-   * 目标实体: 运行时的实体
-   * @param miniMapMarkerId The Mini-map Marker ID to search
-   *
-   * 小地图标识序号: 要查询的指定小地图标识的序号
+   * @param targetEntity 대상 엔티티: 런타임 엔티티
+   * @param miniMapMarkerId 미니맵 마커 ID: 조회할 미니맵 마커의 번호
    */
   querySpecifiedMiniMapMarkerInformation(
     targetEntity: EntityValue,
     miniMapMarkerId: IntValue
   ): {
     /**
-     * The active state of the searched Mini-map Marker
-     *
-     * 生效状态: 查询的小地图标识的生效状态
+     * 조회한 미니맵 마커의 활성화 상태
      */
     activationStaet: boolean
     /**
-     * Returns the list of Players who can see this Marker
-     *
-     * 可见标识的玩家列表: 返回可见该标识的玩家列表
+     * 해당 마커를 볼 수 있는 플레이어 리스트
      */
     listOfPlayersWithVisibleMarkers: PlayerEntity[]
     /**
-     * Returns the list of Players tracking this Marker
-     *
-     * 追踪标识的玩家列表: 返回追踪该标识的玩家列表
+     * 해당 마커를 추적 중인 플레이어 리스트
      */
     listOfPlayersTrackingMarkers: PlayerEntity[]
   } {
@@ -15127,31 +11971,21 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Searches the configuration and activation status of the Entity's current Mini-map Marker
+   * 엔티티의 현재 미니맵 마커 설정 및 활성화 상태를 조회한다
    *
-   * 获取实体的小地图标识状态: 查询实体当前小地图标识的配置及生效情况
-   *
-   * @param targetEntity Runtime Entity
-   *
-   * 目标实体: 运行时的实体
+   * @param targetEntity 대상 엔티티: 런타임 엔티티
    */
   getEntitySMiniMapMarkerStatus(targetEntity: EntityValue): {
     /**
-     * Complete list of Mini-map Marker IDs for this Entity
-     *
-     * 全量小地图标识序号列表: 该实体的所有小地图标识枚举列表
+     * 해당 엔티티의 전체 미니맵 마커 ID 리스트
      */
     fullMiniMapMarkerIdList: bigint[]
     /**
-     * Complete list of active Mini-map Marker IDs for this Entity
-     *
-     * 生效的小地图标识序号列表: 该实体的所有生效小地图标识枚举列表
+     * 해당 엔티티에서 현재 활성화된 미니맵 마커 ID 리스트
      */
     activeMiniMapMarkerIdList: bigint[]
     /**
-     * Complete list of inactive Mini-map Marker IDs for this Entity
-     *
-     * 未生效的小地图标识序号列表: 该实体的所有未生效小地图标识枚举列表
+     * 해당 엔티티에서 현재 비활성화된 미니맵 마커 ID 리스트
      */
     inactiveMiniMapMarkerIdList: bigint[]
   } {
@@ -15182,31 +12016,21 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns the Patrol Template information of the specified Creation Entity
+   * 지정한 피조물 엔티티의 순찰 템플릿 정보를 반환한다
    *
-   * 获取当前造物的巡逻模板: 获取指定造物实体的巡逻模板信息
-   *
-   * @param creationEntity Runtime Creation Entity
-   *
-   * 造物实体: 运行时的造物实体
+   * @param creationEntity 피조물 엔티티: 런타임 피조물 엔티티
    */
   getCurrentCreationSPatrolTemplate(creationEntity: CreationEntity): {
     /**
-     * The Patrol Template ID currently active on this Creation
-     *
-     * 巡逻模板序号: 造物当前生效的巡逻模板序号
+     * 해당 피조물에 현재 적용 중인 순찰 템플릿 ID
      */
     patrolTemplateId: bigint
     /**
-     * The Path ID referenced by the Creation's currently active Patrol Template
-     *
-     * 路径索引: 造物当前生效的巡逻模板引用的路径索引
+     * 해당 피조물의 현재 순찰 템플릿이 참조하는 경로 인덱스
      */
     pathIndex: bigint
     /**
-     * The Waypoint ID the Creation will move to next
-     *
-     * 目标路点序号: 造物即将前往的路点序号
+     * 해당 피조물이 다음으로 이동할 웨이포인트 번호
      */
     targetWaypointIndex: bigint
   } {
@@ -15237,20 +12061,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Searches whether the Achievement corresponding to a specific ID on the Target Entity is complete
+   * 대상 엔티티에서 지정한 ID에 해당하는 업적이 완료되었는지 조회한다
    *
-   * 查询成就是否完成: 查询目标实体上特定序号对应的成就是否完成
-   *
-   * @param targetEntity
-   *
-   * 目标实体
-   * @param achievementId
-   *
-   * 成就序号
-   *
-   * @returns
-   *
-   * 是否完成
+   * @param targetEntity 대상 엔티티
+   * @param achievementId 업적 번호
+   * @returns 완료 여부
    */
   queryIfAchievementIsCompleted(targetEntity: EntityValue, achievementId: IntValue): boolean {
     const targetEntityObj = parseValue(targetEntity, 'entity')
@@ -15267,17 +12082,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns the Configuration ID of the currently active Scan Tags on the Target Entity
+   * 대상 엔티티에서 현재 활성화된 스캔 태그의 설정 ID를 반환한다
    *
-   * 获取当前生效的扫描标签配置ID: 获取目标实体上当前生效的扫描标签的配置ID
-   *
-   * @param targetEntity
-   *
-   * 目标实体
-   *
-   * @returns
-   *
-   * 扫描标签配置ID
+   * @param targetEntity 대상 엔티티
+   * @returns 스캔 태그 설정 ID
    */
   getTheCurrentlyActiveScanTagConfigId(targetEntity: EntityValue): configId {
     const targetEntityObj = parseValue(targetEntity, 'entity')
@@ -15293,20 +12101,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns the Rank change score for the Player Entity under different Settlement states
+   * 다양한 정산 상태에서 플레이어 엔티티의 랭크 변화 점수를 반환한다
    *
-   * 获取玩家段位变化分数: 获取玩家实体在不同结算状态下段位的变化分数
-   *
-   * @param playerEntity
-   *
-   * 玩家实体
-   * @param settlementStatus
-   *
-   * 结算状态
-   *
-   * @returns
-   *
-   * 分数
+   * @param playerEntity 플레이어 엔티티
+   * @param settlementStatus 정산 상태
+   * @returns 점수
    */
   getPlayerRankScoreChange(playerEntity: PlayerEntity, settlementStatus: SettlementStatus): bigint {
     const playerEntityObj = parseValue(playerEntity, 'entity')
@@ -15323,33 +12122,25 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Returns the Player's Rank-related information
+   * 플레이어의 랭크 관련 정보를 반환한다
    *
-   * 获取玩家段位信息: 获取玩家段位相关信息
-   *
-   * @param playerEntity
-   *
-   * 玩家实体
+   * @param playerEntity 플레이어 엔티티
    */
   getPlayerRankingInfo(playerEntity: PlayerEntity): {
     /**
-     *
-     * 玩家段位总分
+     * 플레이어 랭크 총점
      */
     playerRankTotalScore: bigint
     /**
-     *
-     * 玩家连胜次数
+     * 플레이어 연승 횟수
      */
     playerWinStreak: bigint
     /**
-     *
-     * 玩家连败次数
+     * 플레이어 연패 횟수
      */
     playerLoseStreak: bigint
     /**
-     *
-     * 玩家连续逃跑次数
+     * 플레이어 연속 이탈 횟수
      */
     playerConsecutiveEscapes: bigint
   } {
@@ -15385,17 +12176,10 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Get Player Escape Permission
+   * 플레이어의 이탈 허용 여부를 반환한다
    *
-   * 获取玩家逃跑合法性: 获取玩家逃跑合法性
-   *
-   * @param playerEntity
-   *
-   * 玩家实体
-   *
-   * @returns
-   *
-   * 是否合法
+   * @param playerEntity 플레이어 엔티티
+   * @returns 합법 여부
    */
   getPlayerEscapeValidity(playerEntity: PlayerEntity): boolean {
     const playerEntityObj = parseValue(playerEntity, 'entity')
@@ -15411,13 +12195,9 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Searches the list of Entity Layout Groups currently active in the Stage
+   * 현재 스테이지에서 활성화된 엔티티 배치 그룹 리스트를 조회한다
    *
-   * 查询当前激活的实体布设组列表: 查询当前关卡激活的实体布设组组成的列表
-   *
-   * @returns
-   *
-   * 实体布设组索引列表
+   * @returns 엔티티 배치 그룹 인덱스 리스트
    */
   getCurrentlyActiveEntityDeploymentGroups(): bigint[] {
     const ref = this.registry.registerNode({
@@ -15432,20 +12212,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Searches the quantity of the specified Gift Box on the Player Entity
+   * 플레이어 엔티티에서 지정한 선물 상자의 수량을 조회한다
    *
-   * 查询对应礼盒数量: 查询玩家实体上指定礼盒的数量
-   *
-   * @param playerEntity
-   *
-   * 玩家实体
-   * @param giftBoxIndex
-   *
-   * 礼盒索引
-   *
-   * @returns
-   *
-   * 数量
+   * @param playerEntity 플레이어 엔티티
+   * @param giftBoxIndex 선물 상자 인덱스
+   * @returns 수량
    */
   queryCorrespondingGiftBoxQuantity(playerEntity: PlayerEntity, giftBoxIndex: IntValue): bigint {
     const playerEntityObj = parseValue(playerEntity, 'entity')
@@ -15462,20 +12233,11 @@ export class ServerExecutionFlowFunctions {
   }
 
   /**
-   * Searches the consumed quantity of the specified Gift Box on the Player Entity
+   * 플레이어 엔티티에서 지정한 선물 상자의 소비 수량을 조회한다
    *
-   * 查询对应礼盒消耗数量: 查询玩家实体上指定礼盒的消耗数量
-   *
-   * @param playerEntity
-   *
-   * 玩家实体
-   * @param giftBoxIndex
-   *
-   * 礼盒索引
-   *
-   * @returns
-   *
-   * 数量
+   * @param playerEntity 플레이어 엔티티
+   * @param giftBoxIndex 선물 상자 인덱스
+   * @returns 수량
    */
   queryCorrespondingGiftBoxConsumption(playerEntity: PlayerEntity, giftBoxIndex: IntValue): bigint {
     const playerEntityObj = parseValue(playerEntity, 'entity')
