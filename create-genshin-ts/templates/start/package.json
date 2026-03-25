@@ -12,7 +12,7 @@
     "backup": "gsts open backup"
   },
   "dependencies": {
-    "genshin-ts": "latest"
+    "genshin-ts": "arca33352285/genshin-ts#personal"
   },
   "devDependencies": {
     "@types/node": "^24.10.1",
