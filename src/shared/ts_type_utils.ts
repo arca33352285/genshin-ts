@@ -25,6 +25,8 @@ export function isEntityLikeType(
   type: ts.Type,
   location?: ts.Node
 ): boolean {
+  if (type.flags & ts.TypeFlags.Any) return false
+
   const aliasName = type.aliasSymbol?.getName() ?? type.symbol?.getName()
   if (aliasName && looksLikeEntityTypeString(aliasName)) return true
 
