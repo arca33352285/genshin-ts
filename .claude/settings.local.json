@@ -18,7 +18,9 @@
       "Bash(awk 'NR>=1700 && NR<=2699' \"D:/MyDrive/Repos/MiliastraWonderland/genshin-ts/src/definitions/nodes.ts\")",
       "Bash(python3:*)",
       "Bash(node:*)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(xargs grep:*)",
+      "Bash(grep:*)"
     ]
   }
 }
