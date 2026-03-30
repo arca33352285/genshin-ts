@@ -22,8 +22,10 @@ import { detectLang, initCliI18n, type Lang } from '../i18n/index.js'
 import { injectGilFile } from '../injector/index.js'
 import { maybeCheckRemoteMarkdown } from './checks.js'
 import { ensureDataDirs } from './data.js'
+import { runInspect } from './gil_inspect.js'
 import { resolveGilFolder, resolveGilTarget } from './gil_paths.js'
 import { DEFAULT_RESOURCES_PATH, extractCustomResourcesFromGil } from './gil_resources.js'
+import { runScaffold } from './gil_scaffold.js'
 import { getMapKey, loadState, saveState } from './state.js'
 import { createUi } from './ui.js'
 import { openAndSelect, openDir } from './windows_open.js'
@@ -1479,6 +1481,28 @@ async function main() {
     .action(async (target: string | undefined) => {
       const opts = program.opts<GlobalOptions>()
       await runOpen(target, opts)
+    })
+
+  program
+    .command('inspect')
+    .description(t('cmdInspect'))
+    .argument('<file>', t('inspectArgFile'))
+    .option('--id <id>', t('inspectOptId'))
+    .option('--json', t('inspectOptJson'))
+    .option('--raw', t('inspectOptRaw'))
+    .action((file: string, cmdOpts: { id?: string; json?: boolean; raw?: boolean }) => {
+      runInspect(file, cmdOpts)
+    })
+
+  program
+    .command('scaffold')
+    .description(t('cmdScaffold'))
+    .argument('<file>', t('scaffoldArgFile'))
+    .requiredOption('--id <id>', t('scaffoldOptId'))
+    .option('--out <file>', t('scaffoldOptOut'))
+    .option('--force', t('scaffoldOptForce'))
+    .action(async (file: string, cmdOpts: { id: string; out?: string; force?: boolean }) => {
+      await runScaffold(file, cmdOpts)
     })
 
   program

@@ -5,6 +5,7 @@ argument-hint: "<file-path> <start-line>-<end-line>"
 context: fork
 model: sonnet
 allowed-tools: Read, Edit, Grep, Glob
+disable-model-invocation: true
 ---
 
 # JSDoc Korean Localization Skill

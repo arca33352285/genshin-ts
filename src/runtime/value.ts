@@ -50,6 +50,28 @@ export type RuntimeValueTypeMap = {
   struct_list: list<'struct'>
 }
 
+/**
+ * 시그널 커스텀 인자 하나의 정의. `name`은 인자 이름, `type`은 인자 타입 문자열.
+ */
+export type SignalArgDef = {
+  name: string
+  type: keyof RuntimeValueTypeMap
+}
+
+/**
+ * `SignalArgDef` 배열로부터 시그널 핸들러의 커스텀 인자 페이로드 타입을 유도한다.
+ *
+ * @example
+ * type P = SignalArgsToPayload<[
+ *   { name: 'targetEntity'; type: 'entity' },
+ *   { name: 'damageAmount'; type: 'int' }
+ * ]>
+ * // → { targetEntity: entity; damageAmount: int }
+ */
+export type SignalArgsToPayload<Args extends readonly SignalArgDef[]> = {
+  [K in Args[number] as K['name']]: RuntimeValueTypeMap[K['type']]
+}
+
 export type RuntimeParameterValueTypeMap = {
   bool: BoolValue
   int: IntValue

@@ -47,6 +47,7 @@ import {
   ReadonlyDict,
   RuntimeParameterValueTypeMap,
   RuntimeReturnValueTypeMap,
+  SignalArgDef,
   str,
   struct,
   StrValue,
@@ -5722,7 +5723,7 @@ export class ServerExecutionFlowFunctions {
    */
   sendSignal(
     signalName: StrValue,
-    signalArgs?: Array<{ name: string; type: string; value: any }>
+    signalArgs?: Array<SignalArgDef & { value: any }>
   ): void {
     const signalNameObj = ensureLiteralStr(signalName, 'signalName')
     const args: value[] = [signalNameObj]

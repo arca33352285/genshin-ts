@@ -6,6 +6,7 @@ import {
   faction,
   generic,
   guid,
+  value,
   vec3
 } from '../runtime/value.js'
 import {
@@ -984,7 +985,7 @@ export type ServerEventPayloads = {
      * 시그널 소스 엔티티: [시그널 전송] 노드를 사용하여 이 시그널을 전송한 엔티티
      */
     signalSourceEntity: entity
-  } & Record<string, any>
+  } & Record<string, value>
   /**
    * 플레이어가 덱 선택기 조작을 완료하거나 시간 제한으로 강제 닫힐 때 플레이어의 노드 그래프에서 트리거되는 이벤트. 출력 파라미터로 선택 결과와 완료 원인을 알 수 있다
    */

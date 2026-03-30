@@ -39,7 +39,9 @@ import {
   str,
   value,
   vec3,
-  type DictValueType
+  type DictValueType,
+  type SignalArgDef,
+  type SignalArgsToPayload
 } from './value.js'
 import {
   parseVariableDefinitions,
@@ -173,13 +175,21 @@ export type ServerGraphApi<
    * ])
    * ```
    */
+  onSignal<const Args extends readonly SignalArgDef[]>(
+    signalName: string,
+    handler: (
+      evt: ServerEventPayloadsByMode<Mode>['monitorSignal'] & SignalArgsToPayload<Args>,
+      f: ServerExecutionFlowFunctionsForLang<Vars, Lang, Mode>
+    ) => void,
+    signalArgs: Args
+  ): ServerGraphApi<Vars, Lang, Mode>
   onSignal(
     signalName: string,
     handler: (
-      evt: ServerEventPayloadsByMode<Mode>['monitorSignal'] & Record<string, any>,
+      evt: ServerEventPayloadsByMode<Mode>['monitorSignal'] & Record<string, value>,
       f: ServerExecutionFlowFunctionsForLang<Vars, Lang, Mode>
     ) => void,
-    signalArgs?: Array<{ name: string; type: string }>
+    signalArgs?: undefined
   ): ServerGraphApi<Vars, Lang, Mode>
 }
 
@@ -558,7 +568,7 @@ export class MetaCallRegistry {
     // Signal arguments: add dynamic output pins for monitor_signal custom args
     if (
       camelToSnake(eventName) === 'monitor_signal' &&
-      (inputArgs as value[] & { _signalArgs?: Array<{ name: string; type: string }> })._signalArgs
+      (inputArgs as value[] & { _signalArgs?: SignalArgDef[] })._signalArgs
     ) {
       const signalTypeClassMap: Record<string, new () => value> = {
         entity,
@@ -571,8 +581,7 @@ export class MetaCallRegistry {
         config_id: configId,
         prefab_id: prefabId
       }
-      const _signalArgs = (inputArgs as value[] & { _signalArgs?: Array<{ name: string; type: string }> })
-        ._signalArgs!
+      const _signalArgs = (inputArgs as value[] & { _signalArgs?: SignalArgDef[] })._signalArgs!
       for (const argDef of _signalArgs) {
         const isArray = argDef.type.endsWith('_list')
         const baseTypeName = isArray ? argDef.type.slice(0, -5) : argDef.type
@@ -882,13 +891,13 @@ function server<Vars extends VariablesDefinition = VariablesDefinition>(
     onSignal(
       signalName: string,
       handler: (
-        evt: ServerEventPayloadsByMode<ResolvedMode>['monitorSignal'] & Record<string, any>,
+        evt: ServerEventPayloadsByMode<ResolvedMode>['monitorSignal'] & Record<string, value>,
         f: ServerExecutionFlowFunctionsForLang<Vars, ResolvedLang, ResolvedMode>
       ) => void,
-      signalArgs?: Array<{ name: string; type: string }>
+      signalArgs?: SignalArgDef[]
     ) {
       const signalNameObj = ensureLiteralStr(signalName, 'signalName')
-      const inputArgs: value[] & { _signalArgs?: Array<{ name: string; type: string }> } = [signalNameObj]
+      const inputArgs: value[] & { _signalArgs?: SignalArgDef[] } = [signalNameObj]
       if (signalArgs && signalArgs.length > 0) {
         inputArgs._signalArgs = signalArgs
       }
